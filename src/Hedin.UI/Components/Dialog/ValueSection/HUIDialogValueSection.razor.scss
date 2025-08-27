@@ -1,0 +1,38 @@
+::deep .hui-module-value {
+    border: 1px solid var(--mud-palette-lines-inputs);
+    border-radius: var(--mud-default-borderradius);
+
+    .mud-expand-panel-header {
+        padding: 0 12px !important;
+        min-height: 39px;
+        border-radius: var(--mud-default-borderradius);
+    }
+
+    .mud-expand-panel-content {
+        padding: 20px !important;
+        border-radius: var(--mud-default-borderradius);
+        background-color: var(--mud-palette-gray-light);
+    }
+}
+
+::deep .hui-module-value-dark {
+    .mud-expand-panel-header {
+        background-color: var(--mud-palette-dark);
+    }
+
+    .mud-expand-panel-header:hover {
+        background-color: var(--mud-palette-background);
+    }
+}
+
+::deep .hui-module-value-light {
+    .mud-expand-panel-header {
+        background-color: var(--mud-palette-gray-light);
+    }
+}
+
+::deep .hui-module-value-selected {
+    .mud-expand-panel-header {
+        background-color: var(--mud-palette-background);
+    }
+}

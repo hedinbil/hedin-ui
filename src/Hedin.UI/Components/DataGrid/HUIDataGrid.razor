@@ -1,0 +1,280 @@
+﻿@using System.Globalization
+@namespace Hedin.UI
+@typeparam T
+@inject ITableStateService TableStateService
+@inject ILocalStorageSettingsService LocalStorage
+@attribute [CascadingTypeParameter(nameof(T))]
+
+<div class="hui-datagrid">
+    <MudDataGrid T="T"
+                 @ref="InnerGridRef"
+                 Items="@Items"
+                 ServerData="@ServerData"
+                 Loading="@(Loading || _loadingSettings)"
+                 LoadingProgressColor="Color.Primary"
+                 Filterable="@Filterable"
+                 SortMode="@SortMode"
+                 Groupable="@Groupable"
+                 HorizontalScrollbar="@HorizontalScrollbar"
+                 Hover="@Hover"
+                 Elevation="@Elevation"
+                 Striped="@Striped"
+                 RowStyleFunc="@RowStyleFunc"
+                 RowClassFunc="@SeverityRowClassFunc"
+                 DragDropColumnReordering="@DragDropColumnReordering"
+                 ColumnResizeMode="@ColumnResizeMode"
+                 ShowColumnOptions="@ShowColumnOptions"
+                 Columns="@Columns"
+                 RowClass="@RowClass"
+                 RowStyle="@_rowStyle"
+                 Class="@Class"
+                 HeaderClass="@($"hui-datagrid-header {HeaderClass}")"
+                 Hideable="@Hideable"
+                 Height="@Height"
+                 FixedHeader="@FixedHeader"
+                 Dense="@Dense"
+                 FooterClass="@FooterClass"
+                 PagerContent="GetPager()"
+                 NoRecordsContent="@NoRecordsContent"
+                 ToolBarContent="@ToolBarContent"
+                 MultiSelection="@MultiSelection"
+                 SelectedItems="@SelectedItems"
+                 SelectedItemsChanged="@HandleSelectedItemsChanged"
+                 ChildRowContent="@ChildRowContent"
+                 SelectOnRowClick="@SelectOnRowClick"
+                 SelectedItem="@SelectedItem"
+                 SelectedItemChanged="@HandleSelectedItemChanged"
+                 EditMode="@EditMode"
+                 StartedEditingItem="@StartedEditingItem"
+                 CanceledEditingItem="@CanceledEditingItem"
+                 CommittedItemChanges="@CommittedItemChanges"
+                 EditTrigger="@EditTrigger"
+                 ReadOnly="@ReadOnly"
+                 Breakpoint="@Breakpoint"
+                 Culture="@Culture"
+                 Virtualize="@Virtualize"
+                 VirtualizeServerData="@VirtualizeServerData"
+                 RowsPerPage="RowsPerPage"
+                 RowsPerPageChanged="RowsPerPageChanged"
+                 RowClick="@HandleRowClick"
+                 EditDialogOptions="@EditDialogOptions"
+                 CurrentPage="@CurrentPage"
+                 CurrentPageChanged="@HandleCurrentPageChanged">
+    </MudDataGrid>
+</div>
+
+@code {
+    [CascadingParameter(Name = "HUIPageTable")] public HUIPageTable<T>? ParentPageTable { get; set; }
+    // Parameters and internal state
+    [Parameter] public IEnumerable<T>? Items { get; set; }
+    [Parameter] public Func<GridState<T>, Task<GridData<T>>>? ServerData { get; set; }
+    [Parameter] public bool Loading { get; set; }
+    [Parameter] public bool Filterable { get; set; } = false;
+    [Parameter] public SortMode SortMode { get; set; } = SortMode.Multiple;
+    [Parameter] public bool Groupable { get; set; } = false;
+    [Parameter] public bool Hover { get; set; } = true;
+    [Parameter] public int Elevation { get; set; } = 1;
+    [Parameter] public bool Striped { get; set; } = true;
+    [Parameter] public Func<T, int, string> RowStyleFunc { get; set; }
+    [Parameter] public Func<T, int, string> RowClassFunc { get; set; }
+    [Parameter] public bool DragDropColumnReordering { get; set; } = true;
+    [Parameter] public ResizeMode ColumnResizeMode { get; set; } = ResizeMode.None;
+    [Parameter] public bool ShowColumnOptions { get; set; } = false;
+    [Parameter] public RenderFragment Columns { get; set; }
+    [Parameter] public string RowClass { get; set; }
+    [Parameter] public string RowStyle { get; set; }
+    [Parameter] public string Class { get; set; }
+    [Parameter] public string HeaderClass { get; set; }
+    [Parameter] public bool Hideable { get; set; } = true;
+    [Parameter] public string Height { get; set; }
+    [Parameter] public bool FixedHeader { get; set; } = true;
+    [Parameter] public bool Dense { get; set; } = false;
+    [Parameter] public bool HorizontalScrollbar { get; set; }
+    [Parameter] public string FooterClass { get; set; }
+    [Parameter] public RenderFragment PagerContent { get; set; }
+    [Parameter] public RenderFragment NoRecordsContent { get; set; }
+    [Parameter] public RenderFragment ToolBarContent { get; set; }
+    [Parameter] public bool MultiSelection { get; set; } = false;
+    [Parameter] public HashSet<T> SelectedItems { get; set; } = new();
+    [Parameter] public EventCallback<HashSet<T>> SelectedItemsChanged { get; set; }
+    [Parameter] public RenderFragment<CellContext<T>> ChildRowContent { get; set; }
+    [Parameter] public bool SelectOnRowClick { get; set; } = true;
+    [Parameter] public T SelectedItem { get; set; }
+    [Parameter] public EventCallback<T> SelectedItemChanged { get; set; }
+    [Parameter] public DataGridEditMode EditMode { get; set; } = DataGridEditMode.Cell;
+    [Parameter] public EventCallback<T> StartedEditingItem { get; set; }
+    [Parameter] public EventCallback<T> CanceledEditingItem { get; set; }
+    [Parameter] public EventCallback<T> CommittedItemChanges { get; set; }
+    [Parameter] public DataGridEditTrigger EditTrigger { get; set; } = DataGridEditTrigger.Manual;
+    [Parameter] public bool ReadOnly { get; set; } = true;
+    [Parameter] public Breakpoint Breakpoint { get; set; } = Breakpoint.Xs;
+    [Parameter] public CultureInfo Culture { get; set; }
+    [Parameter] public bool Virtualize { get; set; } = false;
+    [Parameter] public Func<GridStateVirtualize<T>, CancellationToken, Task<GridData<T>>> VirtualizeServerData { get; set; }
+    [Parameter] public EventCallback<DataGridRowClickEventArgs<T>> RowClick { get; set; }
+    [Parameter] public bool WrapCellContent { get; set; } = false;
+    [Parameter] public bool EnableSettingsMenu { get; set; } = false;
+    [Parameter] public string? Id { get; set; }
+    [Parameter] public EventCallback<T> OnRowClick { get; set; }
+    [Parameter] public bool ShowPager { get; set; } = true;
+    [Parameter] public int RowsPerPage { get; set; } = 10;
+    [Parameter] public EventCallback<int> RowsPerPageChanged { get; set; }
+    [Parameter] public DialogOptions EditDialogOptions { get; set; }
+    [Parameter] public int CurrentPage { get; set; } = 0;
+    [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
+
+    public MudDataGrid<T> InnerGridRef { get; private set; }
+
+    private string? _rowStyle => WrapCellContent ? null : "white-space:nowrap";
+    private bool _loadingSettings = false;
+    private string StorageColumnKey => $"hui-datagrid-column-{Id}";
+    private string StorageVisibilityKey => $"hui-datagrid-visibility-{Id}";
+    private Dictionary<string, int> _defaultColumnOrder = new();
+    private Dictionary<string, bool> _defaultColumnVisibility = new();
+
+    public bool CanSaveAndLoad => EnableSettingsMenu && !string.IsNullOrWhiteSpace(Id);
+
+    /// <summary>
+    /// Initialize the component and set the parent page table if available.
+    /// </summary>
+    protected override void OnInitialized()
+    {
+        if (ParentPageTable != null)
+        {
+            ParentPageTable.DataGrid = this;
+        }
+
+        Hover = true;
+    }
+
+    /// <summary>
+    /// Load the state of the grid after the first render.
+    /// </summary>
+    /// <param name="firstRender"></param>
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender && CanSaveAndLoad)
+        {
+            _defaultColumnOrder = GetColumnOrder();
+            _defaultColumnVisibility = GetColumnVisibility();
+            await LoadState();
+        }
+    }
+
+    // Custom event handlers
+    private async Task HandleRowClick(DataGridRowClickEventArgs<T> args)
+    {
+        await RowClick.InvokeAsync(args);
+        await OnRowClick.InvokeAsync(args.Item);
+    }
+    private async Task HandleCurrentPageChanged(int page)
+    {
+        CurrentPage = page;
+        await CurrentPageChanged.InvokeAsync(page);
+    }
+
+    private async Task HandleSelectedItemsChanged(HashSet<T> selectedItems)
+    {
+        SelectedItems = selectedItems;
+        await SelectedItemsChanged.InvokeAsync(selectedItems);
+    }
+
+    private async Task HandleSelectedItemChanged(T selectedItem)
+    {
+        SelectedItem = selectedItem;
+        await SelectedItemChanged.InvokeAsync(selectedItem);
+    }
+  
+    // Severity styling
+    private string SeverityRowClassFunc(T data, int i)
+    {
+        if (RowClassFunc != null)
+        {
+            return RowClassFunc.Invoke(data, i);
+        }
+        if (data is IHUIGridItem gridItem && gridItem.Severity is { } severity)
+        {
+            return severity switch
+            {
+                Severity.Info => "hui-datagrid-row-info",
+                Severity.Error => "hui-datagrid-row-error",
+                Severity.Success => "hui-datagrid-row-success",
+                Severity.Warning => "hui-datagrid-row-warning",
+                _ => ""
+            };
+        }
+        return string.Empty;
+    }
+
+    // State management
+    public void ApplyColumnOrder(Dictionary<string, int> newOrder)
+    {
+        TableStateService.ApplyColumnOrder(InnerGridRef, newOrder);
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Get the current column order of the grid.
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<string, int> GetColumnOrder() => TableStateService.GetColumnOrder(InnerGridRef);
+
+    /// <summary>
+    /// Apply the column visibility to the grid.
+    /// </summary>
+    /// <param name="visibility"></param>
+    public void ApplyColumnVisibility(Dictionary<string, bool> visibility)
+    {
+        TableStateService.ApplyColumnVisibility(InnerGridRef, visibility);
+    }
+
+    /// <summary>
+    /// Get the current column visibility of the grid.
+    /// </summary>
+    /// <returns></returns>
+    public Dictionary<string, bool> GetColumnVisibility() => TableStateService.GetColumnVisibility(InnerGridRef);
+
+    /// <summary>
+    /// Update the state of the grid.
+    /// </summary>
+    public async Task UpdateState() => await TableStateService.UpdateState(Id, InnerGridRef);
+
+    /// <summary>
+    /// Load the state of the grid.
+    /// </summary>
+    public async Task LoadState()
+    {
+        _loadingSettings = true;
+        StateHasChanged();
+        if (!await TableStateService.LoadStateAsync(Id!, InnerGridRef))
+        {
+            await ResetToDefault();
+        }
+        _loadingSettings = false;
+        StateHasChanged();
+    }
+
+    /// <summary>
+    /// Reset the state of the grid.
+    /// </summary>
+    public async Task ResetToDefault()
+    {
+        var settings = await LocalStorage.GetSettings();
+        foreach (var table in settings.TableSettings.Where(t => t.TableId == Id))
+        {
+            table.ColumnOrder = new Dictionary<string, int>();
+            table.ColumnVisibility = new Dictionary<string, bool>();
+        }
+
+        await LocalStorage.SetSettings(settings);
+        ApplyColumnOrder(_defaultColumnOrder);
+        ApplyColumnVisibility(_defaultColumnVisibility);
+        StateHasChanged();
+    }
+
+    private RenderFragment? GetPager() => ShowPager ? @<MudDataGridPager T="T" Class="hui-datagrid-pager" /> : null;
+    /// <summary>
+    /// Force the state of the component to change.
+    /// </summary>
+    public void ForceStateChange() => StateHasChanged();
+}

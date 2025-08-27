@@ -1,0 +1,11 @@
+@attribute [Route(PageRoute.AppBar)]
+@attribute [HUIPageSettings("AppBar")]
+
+<DemoPageLayout TItem="AppBar" HUIComponent="typeof(HUIAppBar)">
+    <MudText Class="my-6">This demo is buggy since the app does not support multiple AppBars.</MudText>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.AppBar.Examples.Example1)">
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.AppBar.Examples.Example2)">
+        <MudText Class="my-6">Appbar with custom content</MudText>
+    </DemoExample>
+</DemoPageLayout>

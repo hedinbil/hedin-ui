@@ -1,0 +1,76 @@
+﻿@namespace Hedin.UI
+
+<HUITooltip Text="@Tooltip">
+    @if (ShowInput && !Disabled)
+    {
+        <MudTextField AutoFocus="AutoFocus" T="string" Label="@Label" Margin="Margin.Dense"
+        Variant="Variant.Outlined" Class="my-0 hui-input-button" @bind-Value="Value"
+        Adornment="Adornment.End" IconSize="Size.Small" AdornmentIcon="@Icons.Material.Filled.Close"
+        OnAdornmentClick="HandleSearchCancelClick" @onclick:stopPropagation="true"
+        DebounceInterval="200" OnDebounceIntervalElapsed="HandleSearchDebounce"
+        OnKeyUp="HandleSearchKeyUp"></MudTextField>
+    }
+    else
+    {
+        <HUIIconButton Icon="@Icon" OnClick="HandleButtonClick" Disabled="Disabled"/>
+    }
+</HUITooltip>
+
+
+@code {
+    [Parameter] public string? Value { get; set; }
+    [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    [Parameter] public bool AutoFocus { get; set; }
+    [Parameter] public EventCallback<string?> OnEnterKey { get; set; }
+    [Parameter] public string? Tooltip { get; set; }
+    [Parameter] public string? Label { get; set; }
+    [Parameter] public string Icon { get; set; } = Icons.Material.Filled.Search;
+    [Parameter] public bool Disabled { get; set; } = false;
+    [Parameter] public bool ShowInput { get; set; } = false;
+    [Parameter] public EventCallback<bool> ShowInputChanged { get; set; }
+
+
+    private void HandleButtonClick()
+    {
+        ShowInput = true;
+        ShowInputChanged.InvokeAsync(ShowInput);
+    }
+    private void HandleSearchDebounce() => ValueChanged.InvokeAsync(Value);
+
+    private void HandleSearchCancelClick()
+    {
+        Value = "";
+        ValueChanged.InvokeAsync(null);
+        ShowInput = false;
+        ShowInputChanged.InvokeAsync(ShowInput);
+    }
+
+    private void HandleValueChanged(string v)
+    {
+        Value = v;
+    }
+
+    private void HandleSearchKeyUp(KeyboardEventArgs args)
+    {
+        if (args.Code == "Escape") HandleSearchCancelClick();
+        if (args.Code == "Enter" || args.Code == "NumpadEnter") OnEnterKey.InvokeAsync(Value);
+    }
+
+    /// <summary>
+    /// Simulate on click event. Opens the input field and sets focus if AutoFocus is true
+    /// </summary>
+    public async Task ActivateAsync()
+    {
+        HandleButtonClick();
+        await InvokeAsync(StateHasChanged);
+    }
+
+    /// <summary>
+    /// Simulate cancel click event. Closes the input field and clears the value
+    /// </summary>
+    public async Task DeactivateAsync()
+    {
+        HandleSearchCancelClick();
+        await InvokeAsync(StateHasChanged);
+    }
+}

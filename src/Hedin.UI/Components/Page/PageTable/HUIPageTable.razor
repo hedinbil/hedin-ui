@@ -1,0 +1,84 @@
+﻿@namespace Hedin.UI
+@using System.Diagnostics
+@inherits HUIComponentBase
+@inject InternaHUIlLocalizer Localizer
+@using Hedin.UI.Extensions.Helpers
+@using Hedin.UI.Internal
+@typeparam T
+@if (ChildContent != null)
+{
+    <CascadingValue Value="@this" Name="HUIPageTable">
+        <HUIModule Header="@Header" IsExpanded="true" ChildContent="ChildContent">
+            <Buttons>
+                @Buttons
+                @if (ShowSearchField)
+                {
+                    <HUIInputButton AutoFocus="true" Tooltip="@Localizer["HUIPageTable.QuickSearchToolTip"]" Label="@Localizer["HUIPageTable.QuickSearchLabel"]" ValueChanged="OnSearchInput" OnEnterKey="OnSearchInputEnterKey" />
+                }
+                @if (OnRefreshClick.HasDelegate)
+                {
+                    <HUIIconButton Tooltip="@Localizer["HUIPageTable.Refresh"]" Loading="isRefreshing" Icon="@Icons.Material.Filled.Autorenew" OnClick="HandleRefreshClick" />
+                }
+                @if (ShowExportButton)
+                {
+                    <HUIIconButton Tooltip="@Localizer["HUIPageTable.DownloadAsExcelButton"]" Loading="isExporting" Icon="@Icons.Material.Filled.Download" OnClick="HandleExportClick" />
+                }
+                @if (DataGrid?.CanSaveAndLoad ?? false)
+                {
+                    <TableContextMenu T="T" DataGrid="DataGrid"></TableContextMenu>
+                }
+            </Buttons>
+        </HUIModule>
+    </CascadingValue>
+}
+
+@code {
+    public HUIDataGrid<T>? DataGrid { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnExportClick { get; set; }
+    [Parameter] public string Header { get; set; } = "";
+    [Parameter] public bool ShowSearchField { get; set; } = true;
+    [Parameter] public bool ShowExportButton { get; set; } = true;
+    [Parameter] public EventCallback<string?> OnSearchInput { get; set; }
+    [Parameter] public EventCallback<string?> OnSearchInputEnterKey { get; set; }
+    [Parameter] public RenderFragment? Buttons { get; set; }
+
+    /// <summary>
+    /// EventCallback to the refresh button click. The refresh button will be visible only when this parameter is set.
+    /// </summary>
+    [Parameter] public EventCallback OnRefreshClick { get; set; }
+
+    private string searchString = "";
+    private bool showSearchField = false;
+    private bool isExporting = false;
+    private bool isRefreshing = false;
+
+    private async Task HandleExportClick()
+    {
+        isExporting = true;
+        await OnExportClick.InvokeDelayedAsync(500);
+        isExporting = false;
+        StateHasChanged();
+    }
+    private async void HandleRefreshClick()
+    {
+        isRefreshing = true;
+        await OnRefreshClick.InvokeDelayedAsync(500);
+        isRefreshing = false;
+        StateHasChanged();
+    }
+    private void HandleSearchClick() => showSearchField = true;
+    private void HandleSearchDebounce() => OnSearchInput.InvokeAsync(searchString);
+    private void HandleSearchCancelClick()
+    {
+        searchString = "";
+        OnSearchInput.InvokeAsync(null);
+        showSearchField = false;
+    }
+
+    private void HandleSearchKeyUp(KeyboardEventArgs args)
+    {
+        if (args.Code == "Escape") HandleSearchCancelClick();
+        if (args.Code == "Enter") OnSearchInputEnterKey.InvokeAsync(searchString);
+    }
+}

@@ -1,0 +1,18 @@
+﻿
+<div class="d-flex flex-column">
+    @if(Children?.Any() ?? false)
+    {
+        foreach(var type in Children)
+        {
+            <ApiDocs Type="type"></ApiDocs>
+        }
+    }
+    <ApiDocs Type="Type" IsVisible="true"></ApiDocs>
+</div>
+
+
+@code{
+    [Parameter, EditorRequired] public required Type Type { get; set; }
+    [Parameter] public List<Type>? Children { get; set; }
+
+}

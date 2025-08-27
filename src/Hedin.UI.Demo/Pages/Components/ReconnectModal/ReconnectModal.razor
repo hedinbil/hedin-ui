@@ -1,0 +1,30 @@
+@attribute [Route(PageRoute.ReconnectModal)]
+@attribute [HUIPageSettings("Reconnect modal")]
+@using Brism
+
+<DemoPageLayout TItem="ReconnectModal" HUIComponent="typeof(HUIReconnectModal)">
+    <HUIReconnectModal />
+
+    <MudText>
+        <strong>1. Place the component</strong>
+        <CodeBlock Language="CodeLanguage.Razor" Code="@(@"<HUIReconnectModal />")"></CodeBlock>
+        in the body of your App.razor page. It should be right above your blazor js import.
+    </MudText>
+
+    <MudText>
+        <strong>2. Set autostart to false</strong>
+        <CodeBlock Language="CodeLanguage.Razor" Code="@(@"<script src=""_framework/blazor.web.js"" autostart=""false""></script>")"></CodeBlock>
+    </MudText>
+
+
+    <MudText>
+        <strong>3. Import boot js</strong>
+        <CodeBlock Language="CodeLanguage.Razor" Code="@(@"<script src=""@Assets[""_content/Hedin.UI/js/boot-server.js""]""></script>")"></CodeBlock>
+    </MudText>
+
+    <MudText>If you are running blazor webasm then you need to implement your own boot.js script. Microsoft has an example <MudLink Underline="Underline.Always" Href="https://learn.microsoft.com/en-us/aspnet/core/blazor/fundamentals/signalr?view=aspnetcore-9.0#automatically-refresh-the-page-when-server-side-reconnection-fails">here</MudLink></MudText>
+    <MudText>The same way you could of course implement your own blazor server reconnect logic too. Replace boot-server.js by your own javascript.</MudText>
+</DemoPageLayout>
+
+
+

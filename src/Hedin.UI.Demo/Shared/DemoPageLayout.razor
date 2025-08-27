@@ -1,0 +1,55 @@
+﻿@using Brism
+@typeparam TItem
+@inject IJSRuntime JSRuntime
+@inject CodeBlockService cbService
+
+<CascadingValue TValue="Type" Value="HUIComponent" Name="HUIComponent">
+    <PageTitle>Hedin UI - @_title</PageTitle>
+    <MudContainer MaxWidth="MaxWidth">
+        @if (!string.IsNullOrEmpty(OriginalDocsUrl))
+        {
+            <span class="pa-3">
+                <MudLink Underline="Underline.Always" Class="cursor-pointer" Href="@OriginalDocsUrl" Target="_blank" Color="Color.Secondary">Open original docs</MudLink>
+            </span>
+        }
+        <MudTabs Class="mt-3" Elevation="4" Rounded="true" Border="true" PanelClass="pt-6">
+            <MudTabPanel Text="Preview" Icon="@Icons.Material.Filled.Preview">
+                <HUIPage Header="@_title">
+                    @ChildContent
+                </HUIPage>
+            </MudTabPanel>
+            @if(!string.IsNullOrWhiteSpace(_codeBlock))
+            {
+                <MudTabPanel Text="Code" Icon="@Icons.Material.Filled.Code">
+    
+                    <CodeBlock Code="@_codeBlock"
+                               Language="CodeLanguage.Razor"
+                               EnableLineNumbers="true" />
+                </MudTabPanel>
+            }
+            @if (HUIComponent != null)
+            {
+                <MudTabPanel Text="API" Icon="@Icons.Material.Filled.Api">
+                    <ApiDocsList Type="HUIComponent" Children="ChildHUIComponent"></ApiDocsList>
+                </MudTabPanel>
+            }
+        </MudTabs>
+    </MudContainer>
+</CascadingValue>
+
+@code {
+    [Parameter, EditorRequired] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? OriginalDocsUrl { get; set; }
+    [Parameter] public Type? HUIComponent { get; set; }
+    [Parameter] public List<Type>? ChildHUIComponent { get; set; }
+    [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.Large;
+
+    private string _title = "Hedin UI demo";
+    private string _codeBlock = "";
+
+    protected override async Task OnInitializedAsync()
+    {
+        _title = typeof(TItem).Name;
+        _codeBlock = await cbService.GetCodeExample(_title);
+    }
+}

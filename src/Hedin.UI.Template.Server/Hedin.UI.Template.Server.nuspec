@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Hedin.UI.Template.Server</id>
+    <version>1.0.0</version>
+    <authors>Hedin IT</authors>
+    <description>Hedin UI Blazor Starter App</description>
+    <packageTypes>
+      <packageType name="Template" />
+    </packageTypes>
+  </metadata>
+</package>

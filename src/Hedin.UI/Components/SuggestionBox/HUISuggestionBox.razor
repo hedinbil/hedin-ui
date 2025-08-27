@@ -1,0 +1,233 @@
+﻿@using FluentValidation
+@namespace Hedin.UI
+
+@inject InternaHUIlLocalizer Localizer
+
+<HUITooltip PointerEvents="none" Text="Open Suggestion Box">
+    <div @onclick="OpenSuggestionBox">
+        @if (ActivatorContent != null)
+        {
+            @ActivatorContent
+        }
+        else
+        {
+            <HUIIconButton Icon="@Icons.Material.Outlined.Chat" OnClick="OpenSuggestionBox" Variant="Variant.Text" />
+            
+        }
+    </div>
+
+    <div>
+        <MudPopover Open="@TogglePopover" AnchorOrigin="@AnchorOrigin" TransformOrigin="@TransformOrigin">
+            <div style="width:640px;">
+            <HUIModule Header="@Header" Expandable="false">
+                <Buttons>
+                    <HUIIconButton OnClick="CloseSuggestionBox"
+                                   Icon="@Icons.Material.Filled.Close"></HUIIconButton>
+                </Buttons>
+                <ChildContent>
+                    <MudStack Spacing="3">
+                        @if (!_feedbackSent)
+                        {
+                            <MudForm @ref="@_form" Validation="_validator.ValidateValue" Model="_model">
+                                @HUISuggestionBody
+                                <MudTextField AutoGrow
+                                              For="(() => _model.FeedbackText)"
+                                              Lines="3"
+                                              @bind-Value="@_model.FeedbackText"
+                                              Immediate="true" PlaceHolder="@Localizer["HUISuggestionBox.Placeholder"]"
+                                              FullWidth></MudTextField>
+                            </MudForm>
+                            <MudStack Spacing="0" AlignItems="AlignItems.End" Justify="Justify.FlexEnd"
+                                      Class="align-self-stretch">
+                                <HUIButton Variant="Variant.Filled" Color="Color.Primary"
+                                           OnClick="SendFeedback" Loading="_loading">
+                                    @Localizer["HUICommon.Send"]
+                                </HUIButton>
+                            </MudStack>
+                            @HUISuggestionFooter
+                        }
+                        else
+                        {
+                            <MudStack Style="width:640px" Class="pa-10" AlignItems="AlignItems.Center">
+                                <MudIcon Icon="@Icons.Material.Filled.VolunteerActivism"/>
+                                <MudText Typo="Typo.body2" Style="min-width: 100px">
+                                    @Localizer["HUISuggestionBox.FeedbackSent"]
+                                </MudText>
+                            </MudStack>
+                            <MudStack Spacing="0" AlignItems="AlignItems.End" Justify="Justify.FlexEnd"
+                                      Class="align-self-stretch">
+                                <HUIButton Color="Color.Primary" Variant="Variant.Filled"
+                                           OnClick="CloseSuggestionBox">
+                                    @Localizer["HUICommon.Close"]
+                                </HUIButton>
+                            </MudStack>
+                        }
+                    </MudStack>
+                </ChildContent>
+            </HUIModule>
+            </div>
+        </MudPopover>
+    </div>
+</HUITooltip>
+
+
+@code{
+    private MudForm _form;
+    private bool _feedbackSent;
+    private SuggestionBoxModel _model = new();
+    private bool _loading;
+    private SuggestionBoxFormValidator _validator = new SuggestionBoxFormValidator();
+
+    /// <summary>
+    /// Activator component for displaying the Suggestion Box popover.
+    /// </summary>
+    [Parameter] 
+    public RenderFragment ActivatorContent { get; set; }
+
+    /// <summary>
+    /// Footer component for the Suggestion Box.
+    /// </summary>
+    [Parameter] 
+    public RenderFragment HUISuggestionFooter { get; set; }
+
+    /// <summary>
+    /// Body component for Suggestion Box.
+    /// </summary>
+    [Parameter] 
+    public RenderFragment HUISuggestionBody { get; set; }
+
+    /// <summary>
+    /// Header shown at top of Suggestion Box.
+    /// </summary>
+    [Parameter]
+    public string Header { get; set; }
+
+    /// <summary>
+    /// Edit anchor origin for popover.
+    /// </summary>
+    [Parameter]
+    public Origin AnchorOrigin { get; set; } = Origin.BottomRight;
+
+    /// <summary>
+    /// Edit transform origin for popover.
+    /// </summary>
+    [Parameter]
+    public Origin TransformOrigin { get; set; } = Origin.TopRight;
+
+    /// <summary>
+    /// Indicates whether the popover is currently open or closed.
+    /// Controlled externally via TogglePopoverChanged.
+    /// </summary>
+    [Parameter]
+    public bool TogglePopover { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when the popover's visibility state changes.
+    /// Used for two-way binding with an external control.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> TogglePopoverChanged { get; set; }
+
+    /// <summary>
+    /// Event callback triggered when the form is submitted.
+    /// Sends the form data as a string parameter.
+    /// </summary>
+    [Parameter]
+    public EventCallback<string> OnSubmit { get; set; }
+
+
+    private async Task SendFeedback(MouseEventArgs arg)
+    {
+        await _form.Validate();
+        if (!_form.IsValid) return;
+
+        try
+        {
+            await SetLoadingState(true);
+
+            if (OnSubmit.HasDelegate)
+            {
+                await OnSubmit.InvokeAsync(_model.FeedbackText);
+            }
+
+            _model.FeedbackText = string.Empty;
+            await SetFeedbackSentState(true);
+        }
+        finally
+        {
+            await SetLoadingState(false);
+        }
+    }
+
+    private async Task SetLoadingState(bool isLoading)
+    {
+        if (_loading != isLoading)
+        {
+            _loading = isLoading;
+        }
+    }
+
+    private async Task SetFeedbackSentState(bool isSent)
+    {
+        if (_feedbackSent != isSent)
+        {
+            _feedbackSent = isSent;
+        }
+    }
+
+    private Func<object, IEnumerable<string>>? CustomValidation = value =>
+    {
+        var errors = new List<string>();
+
+        if (value is string str && string.IsNullOrWhiteSpace(str))
+        {
+            errors.Add("Value cannot be empty.");
+        }
+
+        return errors;
+    };
+
+
+    private void CloseSuggestionBox()
+    {
+        if (TogglePopover)
+        {
+            TogglePopoverChanged.InvokeAsync(false);
+            TogglePopover = false;
+        }
+
+        if (_feedbackSent)
+        {
+            _feedbackSent = false;
+        }
+    }
+
+    private void OpenSuggestionBox()
+    {
+        TogglePopover = true;
+    }
+
+    private class SuggestionBoxModel
+    {
+        public string FeedbackText { get; set; }
+        
+    }
+    private class SuggestionBoxFormValidator : CustomValidator<SuggestionBoxModel>
+    {
+        public SuggestionBoxFormValidator()
+        {
+            RuleFor(x => x.FeedbackText).NotEmpty();
+        }
+    }
+    private class CustomValidator<T> : AbstractValidator<T>
+    {
+        public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
+        {
+            var result = await ValidateAsync(ValidationContext<T>.CreateWithOptions((T)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
+    }
+
+}

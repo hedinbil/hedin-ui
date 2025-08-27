@@ -1,0 +1,61 @@
+﻿@inject NavigationManager NavigationManager
+
+<HUINavMenuHorizontal Items="horizontalMenu" ActiveItem="_activeMenuItem" RequireAuthorization="false"></HUINavMenuHorizontal>
+
+@code {
+    [Parameter, EditorRequired]
+    public required List<HUIMenuItem> Items { get; set; }
+
+    private HUIMenuItem? _activeMenuItem { get; set; }
+
+    private List<HUIMenuItem> horizontalMenu { get; set; } = [];
+
+    protected override Task OnInitializedAsync()
+    {
+        NavigationManager.LocationChanged += HandleLocationChanged;
+        UpdateHorizontalMenu();
+        return Task.CompletedTask;
+    }
+
+    private void HandleLocationChanged(object? sender, LocationChangedEventArgs e) => UpdateHorizontalMenu();
+
+    private void UpdateHorizontalMenu()
+    {
+        var url = "/" + NavigationManager.Uri.Replace(NavigationManager.BaseUri, "");
+        _activeMenuItem = FindActiveItem(Items, url);
+
+        if (_activeMenuItem != null)
+        {
+            if (_activeMenuItem.Parent != null && _activeMenuItem.Parent.Parent == null)
+                horizontalMenu = _activeMenuItem.SubItems;
+            else if (_activeMenuItem.Parent != null && _activeMenuItem.Parent.Parent != null)
+                horizontalMenu = _activeMenuItem.Parent.SubItems;
+            else
+                horizontalMenu = new();
+        }
+        else
+        {
+            horizontalMenu = new();
+        }
+        StateHasChanged();
+    }
+
+    private HUIMenuItem? FindActiveItem(List<HUIMenuItem> items, string url)
+    {
+        foreach (var item in items)
+        {
+            if (item.Url == url)
+                return item;
+
+            var subItem = FindActiveItem(item.SubItems, url);
+            if (subItem != null)
+                return subItem;
+        }
+        return null;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= HandleLocationChanged;
+    }
+}

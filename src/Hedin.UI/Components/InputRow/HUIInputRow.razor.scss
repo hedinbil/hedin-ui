@@ -1,0 +1,106 @@
+﻿::deep.hui-input-table {
+    display: flex;
+    align-items: stretch;
+
+    &:not(:first-child) {
+        margin-top: -1px;
+    }
+
+    .hui-input-table-grid {
+        display: flex;
+        flex-wrap: wrap;
+        flex-grow: 1;
+
+        > * {
+            .mud-input-outlined-border {
+                border-radius: 0px;
+            }
+
+            &:not(:first-child) {
+                margin-left: -1px;
+            }
+        }
+    }
+
+    .hui-input-table-buttons {
+        display: flex;
+        align-items: center;
+
+        .mud-icon-button {
+            width: 45px;
+            height: 45px;
+            border-radius: 0px;
+            margin-left: -1px; /* Move each button to the left */
+        }
+    }
+
+    .mud-input-control {
+        margin-top: 0 !important;
+        margin-bottom: 0 !important;
+        $border-width: 1px;
+        $disabled-opacity: 0.6;
+        $disabled-color: var(--mud-palette-text-primary);
+
+        .mud-input-outlined {
+            background-color: var(--mud-palette-gray-dark);
+            border-radius: var(--mud-default-borderradius);
+            height: 45px;
+        }
+
+        .mud-input-outlined:hover {
+            background-color: var(--mud-palette-gray-default);
+        }
+
+        .mud-input-outlined-border {
+            border-width: $border-width;
+        }
+
+        .mud-input-outlined:not(:focus-within):not(:hover) .mud-input-outlined-border {
+            border: $border-width solid var(--mud-palette-lines-inputs);
+        }
+
+        .mud-input-outlined:focus-within .mud-input-outlined-border {
+            border: $border-width solid var(--mud-palette-primary);
+        }
+
+        .mud-input-outlined:not(.mud-disabled):not(:focus-within):hover .mud-input-outlined-border {
+            border-width: $border-width;
+        }
+
+        .mud-input-label-outlined {
+            color: var(--mud-palette-text-primary) !important;
+            padding: 0 4px !important;
+        }
+
+        .mud-input-label-outlined.mud-input-label-margin-dense {
+            transform: translate(8px, 22px) scale(1);
+            height: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .mud-shrink ~ label.mud-input-label.mud-input-label-inputcontrol.mud-input-label-outlined,
+        .mud-input:focus-within ~ label.mud-input-label.mud-input-label-inputcontrol.mud-input-label-outlined {
+            transform: translate(9px, 12px) scale(.8);
+            height: calc($border-width + 1px);
+        }
+
+        .mud-input > input.mud-input-root-outlined.mud-input-root-margin-dense {
+            padding-top: 0;
+            padding-bottom: 0;
+            padding-left: 12px;
+            margin-top: 16px;
+            height: 45px;
+        }
+
+        .mud-input-outlined.mud-disabled {
+            color: $disabled-color;
+            opacity: $disabled-opacity;
+        }
+
+        .mud-input-label-outlined.mud-disabled {
+            color: $disabled-color !important;
+            opacity: $disabled-opacity;
+        }
+    }
+}

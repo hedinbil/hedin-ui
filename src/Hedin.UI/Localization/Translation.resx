@@ -1,0 +1,222 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="HUIPageFilter.SearchButtonText" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="HUICommon.Add" xml:space="preserve">
+    <value>Add</value>
+  </data>
+  <data name="HUICommon.Edit" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="HUICommon.Delete" xml:space="preserve">
+    <value>Delete</value>
+  </data>
+  <data name="HUIPageFilter.ManageFilterButtonText" xml:space="preserve">
+    <value>Manage filter settings</value>
+  </data>
+  <data name="HUIPageTable.DownloadAsExcelButton" xml:space="preserve">
+    <value>Download as Excel</value>
+  </data>
+  <data name="HUIPageTable.QuickSearchToolTip" xml:space="preserve">
+    <value>Search on all columns</value>
+  </data>
+  <data name="HUIDialogUnsavedChanges.Text" xml:space="preserve">
+    <value>You have unsaved changes that will be lost</value>
+  </data>
+  <data name="HUIDialogUnsavedChanges.ButtonTextClose" xml:space="preserve">
+    <value>Close window</value>
+  </data>
+  <data name="HUIDialogUnsavedChanges.ButtonTextCancel" xml:space="preserve">
+    <value>Cancel</value>
+  </data>
+  <data name="HUIDialogUnsavedChanges.TitleText" xml:space="preserve">
+    <value>Close window</value>
+  </data>
+  <data name="HUIInfoMessage.EditLink" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="HUIInfoMessage.MarkedAsRead" xml:space="preserve">
+    <value>Marked as read</value>
+  </data>
+  <data name="HUIInfoMessage.IHaveReadThisNotification" xml:space="preserve">
+    <value>I have read this notification</value>
+  </data>
+  <data name="HUIInfoMessage.MoveToArchive" xml:space="preserve">
+    <value>Move to archive</value>
+  </data>
+  <data name="HUIPageTable.QuickSearchLabel" xml:space="preserve">
+    <value>Search</value>
+  </data>
+  <data name="HUIBlogPost.EditLink" xml:space="preserve">
+    <value>Edit</value>
+  </data>
+  <data name="HUIBlogPost.AttachedFiles" xml:space="preserve">
+    <value>Attached files</value>
+  </data>
+  <data name="HUIBlogPost.Show" xml:space="preserve">
+    <value>Show</value>
+  </data>
+  <data name="HUIBlogPost.Less" xml:space="preserve">
+    <value>less</value>
+  </data>
+  <data name="HUIBlogPost.More" xml:space="preserve">
+    <value>more</value>
+  </data>
+  <data name="HUIPageFilter.ResetFilters" xml:space="preserve">
+    <value>Reset filters</value>
+  </data>
+  <data name="HUIPageTable.Refresh" xml:space="preserve">
+    <value>Refresh the list</value>
+  </data>
+  <data name="HUIAppDrawer.Tooltip" xml:space="preserve">
+    <value>Application drawer</value>
+  </data>
+  <data name="HUICommon.Back" xml:space="preserve">
+    <value>Back</value>
+  </data>
+  <data name="HUIAppDrawer.SwitchService" xml:space="preserve">
+    <value>Switch app</value>
+  </data>
+  <data name="HUIAppBar.DevMode" xml:space="preserve">
+    <value>You are currently in Devmode</value>
+  </data>
+  <data name="HUIDataGrid.ResetTableSettings" xml:space="preserve">
+    <value>Reset column settings to default</value>
+  </data>
+  <data name="HUIDataGrid.TableSettings" xml:space="preserve">
+    <value>Table settings</value>
+  </data>
+  <data name="HUIDataGrid.ManageTableSettings" xml:space="preserve">
+    <value>Manage table settings</value>
+  </data>
+  <data name="HUICommon.Send" xml:space="preserve">
+    <value>Send</value>
+  </data>
+  <data name="HUISuggestionBox.Placeholder" xml:space="preserve">
+    <value>Write suggestion or insights here</value>
+  </data>
+  <data name="HUISuggestionBox.FeedbackSent" xml:space="preserve">
+    <value>Thank you for your commitment to our product</value>
+  </data>
+  <data name="HUICommon.Close" xml:space="preserve">
+    <value>Close</value>
+  </data>
+</root>

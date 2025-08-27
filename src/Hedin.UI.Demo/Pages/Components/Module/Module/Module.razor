@@ -1,0 +1,20 @@
+﻿@attribute [Route(PageRoute.ModulePage)]
+@attribute [HUIPageSettings("Module", 0)]
+
+<DemoPageLayout TItem="Module" HUIComponent="typeof(HUIModule)" ChildHUIComponent="new List<Type>{ typeof(HUIModuleSection) }">
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Module.Examples.SimpleModule)">
+        <MudText>Simple module</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Module.Examples.AdvancedModule)">
+        <MudText>Advanced</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Module.Examples.NonExpandableModule)">
+        <MudText>Non expandable</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Module.Examples.GroupedModule)">
+        <MudText>Grouped modules</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Module.Examples.ButtonsVisibleModule)">
+        <MudText>Buttons always visible</MudText>
+    </DemoExample>
+</DemoPageLayout>

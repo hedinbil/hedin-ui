@@ -1,0 +1,28 @@
+﻿@inject InternaHUIlLocalizer Localizer
+@inject IOptions<TitleService> TitleService
+
+<HUIDialog OnCancelClick="Cancel" Class="hui-app-drawer">
+    <DialogContent>
+        <div class="d-flex flex-column gap-10 align-center mx-auto justify-center">
+            <MudText Typo="Typo.h1">@Localizer["HUIAppDrawer.SwitchService"]</MudText>
+            <div class="dp-app-icons d-flex justify-center flex-wrap">
+                @foreach (var app in Apps)
+                {
+                    <InternalAppIcon Icon="@app.Icon" AppName="@app.AppName" AppUrl="@app.AppUrl" />
+                }
+            </div>
+
+            <HUIButton OnClick="Cancel" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.ArrowBack">@Localizer["HUICommon.Back"]</HUIButton>
+        </div>
+    </DialogContent>
+</HUIDialog>
+@code {
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+
+    [Parameter] public List<HUIAppDrawerItem> Apps { get; set; } = new();
+
+    void Submit() => MudDialog?.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog?.Cancel();
+
+    private readonly string _executingAppName = System.AppDomain.CurrentDomain.FriendlyName;
+}

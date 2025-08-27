@@ -1,0 +1,70 @@
+@attribute [Route(PageRoute.BlogPost)]
+@attribute [HUIPageSettings("Blog Post")]
+
+<DemoPageLayout TItem="BlogPost" HUIComponent="typeof(HUIBlogPost)">
+
+    @foreach (var blog in blogs)
+    {
+        <HUIBlogPost Header="@blog.Header"
+                     SubHeader="@blog.SubHeader"
+                     BodyText="@blog.bodyText"
+                     ImgAlt=""
+                     ImgLazyLoad="true"
+                     ImgSrc="@blog.ImgSrc">
+            <HeaderContent>
+                <section class="d-flex justify-space-between pb-3">
+                    <span class="d-flex gap-3 align-center">
+                        <MudText Typo="Typo.body2" Class="mud-text-secondary">@blog.PublishedDate.ToString("yyyy-MM-dd, HH:mm") by @blog.PublisherName</MudText>
+                        @if (isAdmin)
+                        {
+                            <MudLink Typo="Typo.body1" Class="cursor-pointer hui-text-xs" Underline="Underline.Always" OnClick="() => {}" Color="Color.Secondary">Edit</MudLink>
+                        }
+                        <MudChipSet T="string" SelectionMode="SelectionMode.MultiSelection" Size="Size.Small" CheckMark="true">
+                            <MudChip Text="gray" Variant="Variant.Outlined" Color="Color.Default">Default</MudChip>
+                            <MudChip Text="purple" Variant="Variant.Outlined" Color="Color.Primary">Primary</MudChip>
+                            <MudChip Text="pink" Variant="Variant.Outlined" Color="Color.Secondary">Secondary</MudChip>
+                            <MudChip Text="blue" Variant="Variant.Outlined" Color="Color.Info">Info</MudChip>
+                        </MudChipSet>
+                    </span>
+                    @if (blog.Attchments?.Any() ?? false)
+                    {
+                        <MudMenu FullWidth="false" ActivationEvent="@MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Dense="true">
+                            <ActivatorContent>
+                                <MudLink Underline="Underline.Always" Color="Color.Secondary">Attached files</MudLink>
+                            </ActivatorContent>
+                            <ChildContent>
+                                @foreach (var attachedFile in blog.Attchments)
+                                {
+                                    <MudMenuItem OnClick="() => {}">
+                                        @attachedFile.Filename
+                                    </MudMenuItem>
+                                }
+                            </ChildContent>
+                        </MudMenu>
+                    }
+                </section>
+            </HeaderContent>
+
+        </HUIBlogPost>
+    }
+
+</DemoPageLayout>
+
+@code {
+    private bool isAdmin = true;
+    private static readonly string veryLongText = @"Lorem ipsum dolor sit amet consectetur. asdasd asdasdad Leo commodo potenti mattis interdum feugiat scelerisque. Arcu etiam cursus netus morbi netus augue et. Amet tortor fermentum vel laoreet commodo pellentesque sit. Vel nullam nunc ac metus eleifend non feugiat eros. Et sem molestie congue ut turpis imperdiet eu sit leo. Arcu ut a amet blandit accumsan vitae. Id commodo vitae arcu in ac eget. Fermentum aliquam sed erat aliquet nisi sit urna erat. Ut vitae facilisis volutpat etiam commodo egestas. Dictumst scelerisque cras faucibus volutpat. Posuere purus rhoncus elementum id eget eros eleifend ornare lacus. Mauris sagittis auctor tincidunt id enim. Tristique lobortis at nulla nibh.";
+    private static readonly List<HUIAttachmentModel> attachments = new() {
+    new() { BlobPath = "BlogPathTest", Filename = "Testfile.txt", Id = 0, UploadDate = DateTime.Now, UploadedBy = "Mr.Goodshow" },
+    new () { BlobPath = "BlogPathTest2", Filename = "Testfile2.txt", Id = 0, UploadDate = DateTime.Now, UploadedBy = "Mr.Goodshow again" }
+    };
+
+    private List<Blog> blogs = new()
+    {
+        new Blog("Test Header", "Test SubHeader", veryLongText, "./blog.png", "Demo Alt Text", DateTime.Now, "Hedin IT", null),
+        new Blog("Test Header", "Test SubHeader", veryLongText, "./blog.png", "Demo Alt Text", DateTime.Now, "Hedin IT", attachments),
+        new Blog("Test Header", "Test SubHeader", veryLongText, null, null, DateTime.Now, "Hedin IT", null),
+        new Blog("Test Header", "Test SubHeader", veryLongText, "./blog.png", "Demo Alt Text", DateTime.Now, "Hedin IT", attachments),
+        new Blog("Test Header", "Test SubHeader", veryLongText, "./blog.png", "Demo Alt Text", DateTime.Now, "Hedin IT", null)
+    };
+    private record Blog(string Header, string SubHeader, string bodyText, string? ImgSrc, string? ImgAlt, DateTime PublishedDate, string PublisherName, List<HUIAttachmentModel>? Attchments);
+}

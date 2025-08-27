@@ -1,0 +1,11 @@
+@attribute [Route(PageRoute.DataGrid)]
+@attribute [HUIPageSettings("Data Grid")]
+
+<DemoPageLayout TItem="DataGrid" OriginalDocsUrl="https://mudblazor.com/components/datagrid" HUIComponent="typeof(HUIDataGrid<object>)" ChildHUIComponent="new List<Type>{typeof(HUIIconColumn<object>)}">
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.DataGrid.Examples.DefaultGrid)">
+        <MudText>Default grid. Used in larger contexts.</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.DataGrid.Examples.DenseGrid)">
+        <MudText>Dense grid. Used in smaller portions of the screen.</MudText>
+    </DemoExample>
+</DemoPageLayout>

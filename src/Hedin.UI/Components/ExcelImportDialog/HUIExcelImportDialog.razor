@@ -1,0 +1,161 @@
+﻿@namespace Hedin.UI
+@using ClosedXML.Excel;
+@using System.IO;
+@using Microsoft.AspNetCore.Components.Forms;
+@inject ISnackbar Snackbar;
+
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6">@title</MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnInputFileChanged" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20 cursor-pointer" InputStyle="opacity:0" @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Accept="@supportedFileTypes">
+            <ActivatorContent>
+                <MudPaper Height="150px" Outlined="true" Class="@dragClass">
+                    <MudText Typo="Typo.h6">@DragDropText</MudText>
+                </MudPaper>
+            </ActivatorContent>
+        </MudFileUpload>
+        <div class="my-6">
+            @foreach (var file in selectedFiles)
+            {
+                <HUITooltip Text="@file.Name">
+                    <MudChip T="string" Color="@(file.IsValid ? Color.Dark : Color.Error)" Value="@Truncate(file.Name)" OnClose="() => RemoveFile(file)" @onclick:preventDefault="true" />
+                </HUITooltip>
+                <section class="px-9">
+                    @if (!file.IsValid)
+                    {
+                        @foreach (var error in file!.Errors)
+                        {
+                            <MudText Typo="Typo.body2" Color="Color.Error">@error</MudText>
+                        }
+                    }
+                </section>
+            }
+        </div>
+        @if (readingFile)
+        {
+            <MudProgressLinear Color="Color.Default" Indeterminate="true" Class="my-6" />
+        }
+    </DialogContent>
+    <DialogActions>
+        <HUIButton OnClick="ClearAll" Disabled="@(!selectedFiles.Any())" Variant="Variant.Outlined" Color="Color.Primary" Class="ml-2">@ClearText</HUIButton>
+        <MudSpacer />
+        <HUIButton OnClick="HandleCancelClick" Variant="Variant.Outlined" Color="Color.Primary">@CancelText</HUIButton>
+        <HUIButton OnClick="HandleSubmit" Disabled="@(!filesAreValid || readingFile)" Variant="Variant.Filled" Color="Color.Primary">@OkText</HUIButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+    [Parameter] public Func<XLWorkbook, FluentValidation.Results.ValidationResult>? ValidationMethod { get; set; }
+    [Parameter] public string CancelText { get; set; } = "Cancel";
+    [Parameter] public string OkText { get; set; } = "Confirm";
+    [Parameter] public string ClearText { get; set; } = "Clear";
+    [Parameter] public string DragDropText { get; set; } = "Drag and drop files here or click to open";
+    [Parameter] public bool MultipleFiles { get; set; } = false;
+
+    private int nameTruncateThreshold = 40;
+    private bool filesAreValid => selectedFiles.All((Func<CustomImportFile, bool>)(x => (bool)x.IsValid));
+    private bool readingFile;
+    private string title => MudDialog?.Title ?? "Import";
+    private string supportedFileTypes = ".xlsx";
+    private static string defaultDragClass = "relative rounded-lg border-2 border-dashed pa-4 mt-4 mud-width-full mud-height-full z-10";
+    private string dragClass = defaultDragClass;
+    private List<CustomImportFile> selectedFiles = new();
+    private long fileMaxSize = 1048576 * 15;
+
+    private void SetDragClass() => dragClass = $"{defaultDragClass} mud-border-primary";
+    private void ClearDragClass() => dragClass = defaultDragClass;
+    private void RemoveFile(CustomImportFile file) => selectedFiles.Remove(file);
+    private void ClearAll() => selectedFiles = new();
+
+    private void HandleSubmit()
+    {
+        var files = selectedFiles.Select(x => x.WorkBook).ToList();
+        MudDialog!.Close(DialogResult.Ok(files));
+    }
+
+    private void HandleCancelClick()
+    {
+        MudDialog!.Cancel();
+    }
+
+    private async Task OnInputFileChanged(InputFileChangeEventArgs e)
+    {
+        try
+        {
+            readingFile = true;
+            ClearDragClass();
+
+            var files = e.GetMultipleFiles();
+            files = MultipleFiles ? files : new List<IBrowserFile> { files[0] };
+
+            foreach (var file in e.GetMultipleFiles())
+            {
+                if (ValidateFile(file))
+                {
+                    var customFile = await ParseExcelFile(file);
+                    if (MultipleFiles) selectedFiles.Add(customFile);
+                    else selectedFiles = new() { customFile };
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            throw ex;
+        }
+        readingFile = false;
+    }
+
+    private bool ValidateFile(IBrowserFile file)
+    {
+        if (!file.ContentType.Equals("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+        {
+            Snackbar.Add("This file type is not supported", Severity.Warning);
+            return false;
+        }
+
+        if (selectedFiles.Any(x => x.Name.Equals(file.Name)))
+        {
+            Snackbar.Add("This file is already selected", Severity.Warning);
+            return false;
+        }
+
+        if (file.Size > fileMaxSize)
+        {
+            Snackbar.Add($"Max size of file is ({(fileMaxSize / 1024f) / 1024f}MB)", Severity.Warning);
+            return false;
+        }
+
+        return true;
+    }
+
+
+    private async Task<CustomImportFile> ParseExcelFile(IBrowserFile file)
+    {
+        var stream = new MemoryStream();
+        await file.OpenReadStream(fileMaxSize).CopyToAsync(stream);
+
+        var workbook = new XLWorkbook(stream);
+
+        if (ValidationMethod != null)
+        {
+            var validationResult = ValidationMethod.Invoke(workbook);
+            var customFile = new CustomImportFile(file.Name, workbook, validationResult.IsValid, validationResult.Errors.Select(x => x.ErrorMessage).ToList(), file.Size);
+            return customFile;
+        }
+        else
+        {
+            return new CustomImportFile(file.Name, workbook, true, null, file.Size);
+        }
+    }
+
+
+    public string Truncate(string value)
+    {
+        return value.Length <= nameTruncateThreshold ? value : value.Substring(0, nameTruncateThreshold) + "...";
+    }
+
+    private record CustomImportFile(string Name, XLWorkbook WorkBook, bool IsValid, List<string>? Errors, long Size);
+}

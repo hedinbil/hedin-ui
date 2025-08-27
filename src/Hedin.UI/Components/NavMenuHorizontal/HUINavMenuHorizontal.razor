@@ -1,0 +1,98 @@
+﻿@namespace Hedin.UI
+@inject NavigationManager NavigationManager
+@inject HUILocalizer Localizer
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.Extensions.Localization
+
+@if (Items.Any())
+{
+    <div class="tabs-wrapper">
+        <MudTabs ActivePanelIndex="GetActiveTabIndex()" Elevation="0" Color="Color.Transparent" Rounded="true" MinimumTabWidth="32px" HideSlider="true">
+            @foreach (var menuItem in Items)
+            {
+                <AuthorizeView Policy="@menuItem.Policy">
+                    <Authorized>
+                        @RenderPanel(menuItem)
+                    </Authorized>
+                    <NotAuthorized>
+                        @if (!RequireAuthorization)
+                        {
+                            @RenderPanel(menuItem)
+                        }
+                    </NotAuthorized>
+                </AuthorizeView>
+            }
+        </MudTabs>
+    </div>
+}
+
+@code {
+    [Parameter] public List<HUIMenuItem> Items { get; set; } = new();
+
+    /// <summary>
+    /// Programmatically sets the active tab index. Which UI wise means that the tab will be selected.
+    /// If this is set during initialization, the tab will be selected when the component is rendered.
+    /// </summary>
+    [Parameter] public HUIMenuItem? ActiveItem { get; set; }
+    [Parameter] public bool RequireAuthorization { get; set; } = true;
+ 
+    private int GetActiveTabIndex()
+    {
+        if (ActiveItem == null)
+        {
+            return -1;
+        }
+
+        return Items.IndexOf(ActiveItem);
+    }
+
+    private void HandleOnTabClick(HUIMenuItem menuItem)
+    {
+        NavigationManager.NavigateTo(menuItem.Url);
+    }
+
+    private RenderFragment RenderPanel(HUIMenuItem menuItem)
+    {
+        return @<MudTabPanel
+                    Class="px-6"
+                    OnClick="() => HandleOnTabClick(menuItem)"
+                    ToolTip="@menuItem.Tooltip"
+                    Icon="@menuItem.Icon">
+                    <TabContent>
+                        <MudStack Spacing="2" Row Justify="Justify.Center" AlignItems="AlignItems.Center">
+                            @if(!string.IsNullOrWhiteSpace(menuItem.Icon))
+                            {
+                                <MudIcon Icon="@menuItem.Icon" Size="Size.Small"/>
+                            }
+                            @Localizer[menuItem.DisplayName]
+                            @RenderBadge(menuItem)
+                        </MudStack>
+                    </TabContent>
+               </MudTabPanel>;
+    }
+    
+    /// <summary>
+    /// Calls StateHasChanged on the component
+    /// </summary>
+    public void ForceStateHasChanged()
+    {
+        StateHasChanged();
+    }
+}
+@code {
+    private RenderFragment? RenderBadge(HUIMenuItem menuItem)
+    {
+        if (menuItem.Dot != null)
+        {
+            return @<HUIStatusChip Severity="@menuItem.Dot.Value" />;
+        }
+        if (menuItem.BadgeData != null)
+        {
+            return @<MudChip T="string" Color="@menuItem.BadgeColor" Size="Size.Small">@menuItem.BadgeData</MudChip>;
+        }
+
+        return null;
+    }
+}
+

@@ -1,0 +1,37 @@
+﻿@using ApexCharts;
+
+<ApexChart TItem="MyData" Title="Order Net Value">
+    <ApexPointSeries TItem="MyData"
+                     Items="Data"
+                     Name="Gross Value"
+                     SeriesType="SeriesType.Line"
+                     XValue="@(e => e.Category)"
+                     YAggregate="@(e => e.Sum(m => m.Revenue))" />
+
+    <ApexPointSeries TItem="MyData"
+                     Items="Data"
+                     Name="Net Value"
+                     SeriesType="SeriesType.Line"
+                     XValue="@(e => e.Category)"
+                     YAggregate="@(e => e.Sum(m => m.Revenue - 3 ))"
+                     OrderByDescending="@(e=> e.Y!)" />
+</ApexChart>
+
+@code{
+    protected override void OnInitialized()
+    {
+        Data.Add(new MyData { Category = "Jan", NetProfit = 12, Revenue = 33 });
+        Data.Add(new MyData { Category = "Feb", NetProfit = 43, Revenue = 42 });
+        Data.Add(new MyData { Category = "Mar", NetProfit = 112, Revenue = 23 });
+        Data.Add(new MyData { Category = "Apr", NetProfit = 93, Revenue = 43 });
+    }
+
+    private List<MyData> Data { get; set; } = new();
+
+    public class MyData
+    {
+        public string Category { get; set; } = string.Empty;
+        public int NetProfit { get; set; }
+        public int Revenue { get; set; }
+    }
+}

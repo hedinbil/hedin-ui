@@ -1,0 +1,19 @@
+﻿@attribute [Route(PageRoute.Counter)]
+@attribute [HUIPageSettings("Counter", 1, Icons.Material.Filled.Numbers)]
+@rendermode InteractiveServer
+
+<HUIPage Header="Counter">
+    <MudText>Current count: @currentCount</MudText>
+    <span>
+        <HUIButton Color="Color.Primary" Variant="Variant.Filled" OnClick="IncrementCount">Click me</HUIButton>
+    </span>
+</HUIPage>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+}

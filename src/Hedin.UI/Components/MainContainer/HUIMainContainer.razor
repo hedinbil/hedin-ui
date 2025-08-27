@@ -1,0 +1,21 @@
+﻿@namespace Hedin.UI
+
+<MudMainContent>
+    <div class="d-flex flex-column">
+        <MudContainer MaxWidth="MaxWidth" Style="@($"z-index: {ZIndex}; {Style};")" Class="@Class">
+            @ChildContent
+        </MudContainer>
+    </div>
+</MudMainContent>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Overwrite the default ZIndex value for the main page content. This may need to be configured when setting custom z-index values for e.g. the top-bar or side-bars
+    /// </summary>
+    [Parameter] public int ZIndex { get; set; } = 1100;
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+    [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.False;
+}

@@ -1,0 +1,67 @@
+﻿@using System.Reflection
+@using Brism
+@inject CodeBlockService CodeService
+@inject AiMessageStateService MessageService
+
+<MudContainer Gutters="false" MaxWidth="MaxWidth">
+    @if(ChildContent != null)
+    {
+        <div class="pa-3">
+            @ChildContent
+        </div>
+    }
+    <MudPaper Style="background: var(--mud-palette-background)">
+
+        <div class="pa-6">
+            <DynamicComponent Type="@ComponentType" />
+        </div>
+
+        <MudDivider />
+
+        <!-- slim show-code toggle -->
+        <div class="d-flex pa-1 px-3 gap-3 justify-space-between align-items-center">
+
+
+            <span>
+                <MudIconButton Icon="@(_showCode ? Icons.Material.Filled.ExpandLess : Icons.Material.Filled.ExpandMore)" Size="Size.Small" Color="Color.Primary" Class="mr-1" OnClick="@HandeToggleCodeClick" />
+                <MudText Typo="Typo.caption" Class="cursor-pointer" @onclick="@HandeToggleCodeClick">@(_showCode ? "Hide code" : "Show code")</MudText>
+            </span>
+
+            <span>
+                <MudText Typo="Typo.caption" Class="cursor-pointer" @onclick="@HandleAskAlbotClick">Ask Albot</MudText>
+                <MudIconButton Icon="@Icons.Material.Filled.SmartToy" Size="Size.Small" Color="Color.Primary" Class="ml-1" OnClick="@HandleAskAlbotClick" />
+            </span>
+
+
+        </div>
+
+        <MudCollapse Expanded="@_showCode" Class="px-3 pb-1">
+            @if(_showCode)
+            {
+                <CodeBlock Code="@_code" Language="CodeLanguage.Razor" EnableLineNumbers="true" />
+            }
+        </MudCollapse>
+    </MudPaper>
+
+</MudContainer>
+
+@code {
+    [Parameter] public Type ComponentType { get; set; } = default!;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.Large;
+    [CascadingParameter(Name = "HUIComponent")] public Type HUIComponent { get; set; } = default!;
+    private string _code = "";
+    private bool _showCode;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // load the raw .razor from embedded resource
+        _code = await CodeService.GetCodeExample(ComponentType);
+    }
+    void HandeToggleCodeClick() => _showCode = !_showCode;
+
+    void HandleAskAlbotClick()
+    {
+        MessageService.Send($"Please give me a code example Hedin UI component: {HUIComponent?.Name}");
+    }
+}

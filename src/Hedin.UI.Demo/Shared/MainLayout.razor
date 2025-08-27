@@ -1,0 +1,162 @@
+﻿@inherits LayoutComponentBase
+@inject IHUIPageHelper HUIPageHelper
+@inject IOptions<TitleService> TitleService
+@inject AiMessageStateService MessageService
+
+<HUIThemeProvider Theme="_currentTheme" />
+<MudPopoverProvider />
+<MudDialogProvider CloseOnEscapeKey="false" BackdropClick="true" FullWidth="true" CloseButton="false" />
+<MudSnackbarProvider />
+<PageTitle>@TitleService.Value.AppTitle</PageTitle>
+
+<MudLayout>
+    <HUIAppBar MenuButtonVisibilityChanged="v => _drawerLeftOpen = v" MenuButtonClicked="DrawerToggle"
+    LogoBrandSrc="@(_darkMode ? "./hedin-ui_light.svg" : "./hedin-ui_dark.svg")" AppDrawerItems="_appDrawerItems"
+    LogoSrc="HedinUI.svg">
+        <ChildContent>
+            <MudText>@_currentVersion</MudText>
+            <MudSpacer />
+            <span class="d-flex gap-1">
+                <HUIIconButton Icon="@(_darkMode ? @Icons.Material.Rounded.DarkMode : Icons.Material.Rounded.WbSunny)" OnClick="HandleThemeButtonClick" Tooltip="Toggle theme"></HUIIconButton>
+                <MudBadge Dot="true" Color="Color.Info" Overlap="true">
+                    <HUIIconButton Icon="@Icons.Material.Outlined.Notifications" OnClick="ToggleNotifications"></HUIIconButton>
+                </MudBadge>
+                <HUIIconButton Icon="@Icons.Material.Outlined.SmartToy" OnClick="ToggleChat" Tooltip="Albot"></HUIIconButton>
+            </span>
+        </ChildContent>
+    </HUIAppBar>
+    <MudDrawer @bind-Open="_drawerLeftOpen" ClipMode="DrawerClipMode.Always" Elevation="0">
+        <HUINavMenu Items="_menuItems" MergeSubItemWithGroup="false" Expanded="false" RequireAuthorization="false" LevelsToRender="-1" />
+    </MudDrawer>
+    <HUIMainContainer Class="@_mainContainerClass" ZIndex="@(_animationOngoing ? 0 : 1100)">
+        <CascadingValue Value="_darkMode" TValue="bool" Name="DarkMode">
+            <TransitionComponent AnimationOngoing="v => _animationOngoing = v">
+                @Body
+            </TransitionComponent>
+        </CascadingValue>
+    </HUIMainContainer>
+
+
+    <MudDrawer Open="_activeRightPane != RightPane.None" ClipMode="DrawerClipMode.Always" Anchor="Anchor.End" Elevation="0" Style="color:var(--mud-palette-text-primary)">
+        @if (_activeRightPane == RightPane.Notifications)
+        {
+            <div class="d-flex justify-space-between px-3">
+                <MudText Typo="Typo.h1">Notifications</MudText>
+                <div class="d-flex gap-1">
+                    <MudIconButton Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" Variant="Variant.Outlined"></MudIconButton>
+                    <MudIconButton Icon="@Icons.Material.Filled.Close" Size="Size.Small" Variant="Variant.Outlined" OnClick="ToggleNotifications"></MudIconButton>
+                </div>
+            </div>
+            @foreach (var message in messageAlerts)
+            {
+                @if (!message.Archived)
+                {
+                    <HUIInformationMessage Class="my-3" Model="message" OnReadClick="() => HandleMessageReadClick(message)" OnArchiveClick="() => HandleMessageArchivedClick(message)" />
+                }
+            }
+
+        }
+        else if (_activeRightPane == RightPane.Chat)
+        {
+            <Chat @ref="chat" />
+        }
+
+    </MudDrawer>
+</MudLayout>
+
+@code {
+    Chat? chat;
+    private string? _currentVersion => AssemblyName.GetAssemblyName(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Hedin.UI.dll")).Version?.ToString();
+
+    private string _mainContainerClass => "px-3" + (_drawerLeftOpen ? " pl-md-0" : "");
+    private bool _darkMode = true;
+    private bool _animationOngoing = false;
+
+    private MudTheme _currentTheme => _darkMode
+    ? HUITheme.Dark.Override(customizePalette, customizeLayout)
+    : HUITheme.Light.Override(customizePalette, customizeLayout);
+
+    Action<Palette> customizePalette = palette =>
+    {
+        palette.Primary = "#1E7194";
+        palette.PrimaryLighten = palette.Primary.ColorLighten(0.075).Value;
+        palette.PrimaryDarken = palette.Primary.ColorDarken(0.075).Value;
+        palette.TableHover = palette.Primary;
+        //All theme colors can be customized here
+    };
+
+    private readonly Action<LayoutProperties> customizeLayout = layout =>
+    {
+        layout.DrawerWidthLeft = "260px";
+        layout.DrawerWidthRight = "400px";
+    };
+
+    private bool _drawerLeftOpen = true;
+    private RightPane _activeRightPane = RightPane.None;
+
+    private void DrawerToggle() => _drawerLeftOpen = !_drawerLeftOpen;
+    private void HandleThemeButtonClick() => _darkMode = !_darkMode;
+
+    private void HandleMessageReadClick(HUIInformationMessageModel message) => message.MarkAsRead();
+    private void HandleMessageArchivedClick(HUIInformationMessageModel message) => message.Archive();
+    private List<HUIInformationMessageModel> messageAlerts = new()
+    {
+        new(1, Severity.Info, DateTime.Now, "This is an example header", "This is an example body", false, false, false, false),
+        new(1, Severity.Error, DateTime.Now, "This is an example header", "This is an example body", true, false, false, false),
+        new(1, Severity.Success, DateTime.Now, "This is an example header", "This is an example body", false, true, false, false),
+        new(1, Severity.Normal, DateTime.Now, "This is an example header", "This is an example body", false, false, true, false),
+        new(1, Severity.Info, DateTime.Now, "This is an example header", "This is an example body", true, true, false, false),
+        new(1, Severity.Error, DateTime.Now, "This is an example header", "This is an example body", true, false, true, false),
+        new(1, Severity.Success, DateTime.Now, "This is an example header", "This is an example body", false, true, true, false),
+    };
+
+    List<HUIMenuItem> _menuItems = new();
+
+    private readonly List<HUIAppDrawerItem> _appDrawerItems =
+                        [
+            new HUIAppDrawerItem("HedinUI.svg", "Hedin Admin UI", "https://hedin-ui.hedinit.io/"),
+            new HUIAppDrawerItem("LinkedIn.svg", "LinkedIn", "https://www.linkedin.com/company/hedin-it"),
+            new HUIAppDrawerItem("github-mark.svg", "GitHub", "https://github.com/hedinbil/hedin-ui-admin"),
+            new HUIAppDrawerItem("MudBlazor.png", "MudBlazor", "https://mudblazor.com/")
+       ];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _menuItems = await HUIPageHelper.GetMenuItems([typeof(App).Assembly]);
+        MessageService.OnMessage += async msg => await HandleAiMessage(msg);
+    }
+
+    void ToggleNotifications()
+    {
+        _activeRightPane =
+            _activeRightPane == RightPane.Notifications
+            ? RightPane.None
+            : RightPane.Notifications;
+    }
+
+    void ToggleChat()
+    {
+        _activeRightPane =
+            _activeRightPane == RightPane.Chat
+            ? RightPane.None
+            : RightPane.Chat;
+    }
+
+    private async Task HandleAiMessage(string message)
+    {
+        _activeRightPane = RightPane.Chat;
+        await InvokeAsync(StateHasChanged);
+
+        await Task.Yield();
+        if (chat is not null)
+            await chat.Message(message);
+    }
+
+    private enum RightPane
+    {
+        None,
+        Notifications,
+        Chat
+    }
+
+}

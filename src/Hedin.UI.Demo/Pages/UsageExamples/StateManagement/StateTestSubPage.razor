@@ -1,0 +1,12 @@
+﻿@attribute [Route(PageRoute.DemoStateManagementSubPage)]
+@inherits StatefulComponentBase<PageModel>
+
+<HUIPage Header="Page A" PageDescription="Now navigate back and see the state of previous page remains."
+         Breadcrumbs="@(new List<BreadcrumbItem>{
+    new BreadcrumbItem("State demo (Beta)", PageRoute.DemoStateManagement),
+    new BreadcrumbItem("Page A", "", disabled: true)
+})">
+</HUIPage>
+
+@code {
+}

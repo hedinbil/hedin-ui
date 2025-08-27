@@ -1,0 +1,8 @@
+﻿@attribute [Route(PageRoute.Documents)]
+@attribute [HUIPageSettings("Documents")]
+
+<DemoPageLayout TItem="Documents" HUIComponent="typeof(HUIModuleDocument)" ChildHUIComponent="new List<Type>{ typeof(HUIDocument) }">
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Documents.Examples.AdvancedDocuments)">
+        <MudText>This is an advanced example with drag n drop functionality. This can be simplified.</MudText>
+    </DemoExample>
+</DemoPageLayout>

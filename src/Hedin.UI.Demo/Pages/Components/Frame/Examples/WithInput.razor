@@ -1,0 +1,29 @@
+﻿<HUIFrame>
+    <HUIFrameItem CanBeEdited>
+        <MudSelect T="string" Label="Dropdown" Variant="Variant.Outlined" Margin="Margin.Dense">
+            @foreach (var value in new List<string> { "One", "Two", "Three" })
+            {
+                <MudSelectItem Value="@value">@value</MudSelectItem>
+            }
+        </MudSelect>
+    </HUIFrameItem>
+    <HUIFrameItem CanBeEdited>
+        <MudRadioGroup @bind-Value="SelectedOption" Class="align-start">
+            <MudRadio Value="@("Radio 1")" Size="Size.Small" Dense="true">Hedin Certified</MudRadio>
+            <MudRadio Value="@("Radio 2")" Size="Size.Small" Dense="true">Mercedes-Benz Certified</MudRadio>
+            <MudRadio Value="@("Radio 3")" Size="Size.Small" Dense="true">Carstore Auction</MudRadio>
+        </MudRadioGroup>
+    </HUIFrameItem>
+    <HUIFrameItem CanBeEdited>
+        <MudNumericField T="int?" Label="Numeric Field" Clearable="true" @bind-Value="_numericValue"></MudNumericField>
+    </HUIFrameItem>
+    <HUIFrameItem CanBeEdited>
+        <MudCheckBox @bind-Value="_checkbox" Label="Checkbox" Size="Size.Small"></MudCheckBox>
+    </HUIFrameItem>
+</HUIFrame>
+@code
+{
+    public string SelectedOption { get; set; }
+    int? _numericValue = null;
+    private bool _checkbox = false;
+}

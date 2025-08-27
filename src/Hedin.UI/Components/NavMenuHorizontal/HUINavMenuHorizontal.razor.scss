@@ -1,0 +1,91 @@
+﻿::deep.tabs-wrapper {
+    $border-radius: 8px;
+    $dp-borderradius: $border-radius $border-radius 0px 0px;
+
+    .mud-tabs {
+        flex-direction: column;
+    }
+
+    .mud-tabs-tabbar-wrapper {
+        gap: 8px;
+
+        .mud-tooltip-root:first-child {
+            .mud-tab:not(.mud-tab-active) {
+                border-radius: $border-radius 0 0 0;
+            }
+        }
+        .mud-tooltip-root:last-child {
+            .mud-tab:not(.mud-tab-active) {
+                border-radius: 0 $border-radius 0 0;
+            }
+        }
+        .mud-tooltip-root:first-child:has(.mud-tab:not(.mud-tab-active)) .mud-tab,
+        div:first-child:has(.mud-tab:not(.mud-tab-active)) .mud-tab {
+            border-top-left-radius: $border-radius;
+        }
+        .mud-tooltip-root:last-child:has(.mud-tab:not(.mud-tab-active)) .mud-tab,
+        div:last-child:has(.mud-tab:not(.mud-tab-active)) .mud-tab{
+            border-top-right-radius: $border-radius;
+        }
+    }
+
+    .mud-chip>.mud-chip-content {  font-size: 12px !important;  font-weight: 600 !important;}
+
+    .mud-tab {
+        height: 33px;
+        min-height: 33px;
+        color: var(--mud-palette-text-secondary);
+        background-color: var(--mud-palette-surface);
+        box-shadow: var(--mud-elevation-4);
+        margin-top: 7px;
+        text-transform: initial;
+        font-size: 16px;
+        font-weight: initial;
+        border-radius: 0;
+        
+        &:has(.mud-badge-root) {
+            margin-right: 9px !important;
+            justify-content: start;
+        }        
+        &:has(.mud-badge-root):not(:has(.mud-badge-dot)) {
+            margin-right: 15px !important;
+        }
+    }
+
+    .mud-tab.mud-tab-active {
+        height: 41px;
+        background-color: var(--mud-palette-dark);
+        color: var(--mud-palette-text-primary);
+        margin-top: 0;
+        box-shadow: var(--mud-elevation-12);
+        border-bottom: none;
+        border-radius: $dp-borderradius !important;
+        /*        border: 1px solid var(--G-800, #272727);
+        background: var(--G-800, #272727);
+        box-shadow: 0px -4px 2px 0px rgba(0, 0, 0, 0.08) inset;*/
+    }
+
+    .mud-tabs-tabbar {
+        background-color: transparent;
+        
+        .mud-tabs-tabbar-content {
+            padding: 8px 12px 0;
+            height: 49px;
+        }
+    }
+
+    .mud-tabs-tabbar .mud-tabs-tabbar-inner {
+        min-height: 33px;
+    }
+    .mud-chip.mud-chip-size-small {
+        height: 16px;
+        padding: 0 4px;
+    }
+    .mud-chip>.mud-chip-content {
+        line-height: 1;
+        text-transform: initial;
+        font-size: 16px; 
+        font-weight: 400; 
+        letter-spacing: 0;
+    }
+}

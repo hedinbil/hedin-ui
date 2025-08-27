@@ -1,0 +1,91 @@
+﻿@inject NavigationManager NavigationManager
+
+<div class="transition-wrapper">
+    @if (nextPage != null)
+    {
+        <div class="@nextPageCssClass @transitionOngoingClass">
+            @nextPage
+        </div>
+    }
+</div>
+
+@code {
+    private RenderFragment? nextPage;
+    private string nextPageCssClass = "";
+    private string previousUrl = "";
+    private string transitionOngoingClass = "";
+    [Parameter] public EventCallback<bool> AnimationOngoing { get; set; }
+
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    // Define which URL pairs should animate
+    private readonly List<(string fromUrl, string toUrl)> animationRules = new()
+    {
+        (PageRoute.DemoStateManagement, PageRoute.DemoStateManagementSubPage),  // Animate from /page-a to /page-a/page-b
+    };
+
+    protected override void OnInitialized()
+    {
+        previousUrl = NavigationManager.Uri;
+        NavigationManager.LocationChanged += OnLocationChanged;
+        nextPage = ChildContent;  // Initialize with the current content
+    }
+
+    private void OnLocationChanged(object? sender, Microsoft.AspNetCore.Components.Routing.LocationChangedEventArgs e)
+    {
+        var currentUrl = e.Location;
+        if (currentUrl != previousUrl)
+        {
+            bool shouldAnimate = ShouldAnimate(previousUrl, currentUrl);
+            if (shouldAnimate)
+            {
+                bool navigatingForward = IsNavigatingForward(previousUrl, currentUrl);
+                nextPageCssClass = navigatingForward ? "fade-in-right" : "fade-in-left";
+                transitionOngoingClass = "transition-ongoing";
+                AnimationOngoing.InvokeAsync(true);
+                _ = Task.Delay(700).ContinueWith(_ =>
+                {
+                    InvokeAsync(() =>
+                    {
+                        transitionOngoingClass = "";
+                        nextPageCssClass = "";
+                        AnimationOngoing.InvokeAsync(false);
+                        StateHasChanged();
+                    });
+                });
+            }
+            else
+            {
+                nextPageCssClass = "";
+                transitionOngoingClass = "";
+            }
+
+            previousUrl = currentUrl;
+            nextPage = ChildContent; // Update to the new content
+            StateHasChanged();
+
+
+        }
+    }
+
+    private bool ShouldAnimate(string fromUrl, string toUrl)
+    {
+        fromUrl = "/" + fromUrl.Replace(NavigationManager.BaseUri, "");
+        toUrl = "/" + toUrl.Replace(NavigationManager.BaseUri, "");
+        return animationRules.Any(rule => (rule.fromUrl == fromUrl && rule.toUrl == toUrl) || (rule.fromUrl == toUrl && fromUrl == rule.toUrl));
+    }
+
+    private bool IsNavigatingForward(string fromUrl, string toUrl)
+    {
+        // Compare URL lengths or apply custom logic to determine direction
+        var fromParts = fromUrl.TrimEnd('/').Split('/');
+        var toParts = toUrl.TrimEnd('/').Split('/');
+
+        return toParts.Length > fromParts.Length;
+    }
+
+    public void Dispose()
+    {
+        NavigationManager.LocationChanged -= OnLocationChanged;
+    }
+}

@@ -1,0 +1,26 @@
+.hui-dialog-section {
+    ::deep .mud-expansion-panels {
+
+        .mud-panel-expanded {
+            background-color: transparent;
+        }
+
+        .mud-expand-panel-header {
+            min-height: 72px;
+        }
+
+        .mud-expand-panel-header:hover {
+            background-color: var(--mud-palette-gray-dark);
+        }
+
+        .mud-expand-panel {
+            .mud-expand-panel-content {
+                padding: 8px 20px 16px !important;
+            }
+
+            .mud-expand-panel-header {
+                padding: 20px;
+            }
+        }
+    }
+}

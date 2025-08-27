@@ -1,0 +1,21 @@
+﻿.hui-information-message {
+    border-radius: 0;
+    border-left: 3px solid transparent;
+    transition: all 0.3s ease-in-out;
+}
+
+.hui-border-severity-warning {
+    border-color: var(--mud-palette-warning);
+}
+
+.hui-border-severity-info {
+    border-color: var(--mud-palette-info);
+}
+
+.hui-border-severity-success {
+    border-color: var(--mud-palette-success);
+}
+
+.hui-border-severity-error {
+    border-color: var(--mud-palette-error);
+}

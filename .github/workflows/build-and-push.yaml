@@ -1,0 +1,94 @@
+name: Hedin UI Demo Site
+
+permissions:
+  id-token: write
+  contents: read
+  pull-requests: write
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  docker_build_push_acr:
+    name: 'Docker Build and Push to ACR'
+    runs-on: ubuntu-latest
+
+    environment: dev
+    
+    defaults:
+      run:
+        shell: bash
+    
+    steps:        
+      - uses: AutoModality/action-clean@v1
+      
+      ## Checkout the repo
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: hedin-ui-admin
+
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+          
+      - name: Az CLI login
+        uses: azure/login@v1
+        with:
+          client-id: ${{ vars.AZURE_CLIENT_ID }}
+          tenant-id: ${{ vars.AZURE_TENANT_ID }}
+          subscription-id: ${{ vars.OPERATIONS_HUB_CORE_PROD_AZURE_SUBSCRIPTION_ID }}
+      
+      - uses: benjlevesque/short-sha@v2.2
+        id: short-sha
+        with:
+          length: 7
+      - run: echo $SHA
+        env:
+          SHA: ${{ steps.short-sha.outputs.sha }}
+
+      - name: Build and push
+        run: |
+          az acr login --name hedinit
+          cd hedin-ui-admin/src/Hedin.UI.Demo/
+          dotnet publish . --os linux --arch x64 /t:PublishContainer -c Release -p ContainerImageTags='${{ env.SHA }}'  -p ContainerRegistryImageName='hedinit.azurecr.io/ims/hedin-ui-admin-demo'
+          docker push hedinit.azurecr.io/ims/hedin-ui-admin-demo:${{ env.SHA }}
+          
+  deploy_to_dev:
+    name: 'Deploy to dev'
+    runs-on: [self-hosted, linux, on-prem]
+    defaults:
+      run:
+        shell: bash
+    environment: dev
+    needs: docker_build_push_acr
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: hedin-applications-state
+          repository: hedinbil/hedin-applications-state
+          token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
+      - run: git config --global user.email "github-actions@hedinit.com"
+      - run: git config --global user.name "GitHub Actions - ims-hedin-ui-demo"
+      - uses: benjlevesque/short-sha@v2.2
+        id: short-sha
+        with:
+          length: 7
+      - run: echo $SHA
+        env:
+          SHA: ${{ steps.short-sha.outputs.sha }}
+
+      - name: Update Image Tag in Application State
+        run: |
+          export VERSION="${{ env.SHA }}"
+
+          cd hedin-applications-state
+          bash scripts/update-image-ims.sh hedinUiDev $VERSION
+          git add applications/ims/versions.json
+          git commit -m "DEV - updating image to $NEW_IMAGE"
+          git push

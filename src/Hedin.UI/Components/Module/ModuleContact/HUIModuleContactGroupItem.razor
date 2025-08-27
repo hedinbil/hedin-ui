@@ -1,0 +1,14 @@
+﻿@namespace Hedin.UI
+@if (ChildContent != null)
+{
+    <span class="@("d-flex mt-2 " + Class)">
+        <MudIcon Color="Color.Primary" Size="Size.Small" Class="mr-2" Icon="@Icon"></MudIcon>
+        @ChildContent
+    </span>
+}
+@code {
+    [Parameter] public string Icon { get; set; } = "";
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public string? Class { get; set; }
+
+}

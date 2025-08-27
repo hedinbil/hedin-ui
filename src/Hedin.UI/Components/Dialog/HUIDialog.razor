@@ -1,0 +1,40 @@
+﻿@namespace Hedin.UI
+@inherits MudDialog
+
+<MudDialog DialogContent="base.DialogContent" DialogActions="base.DialogActions" Gutters="base.Gutters" OnBackdropClick="HandleCancelClick" DefaultFocus="DefaultFocus" Class="@base.Class" Style="@base.Style">
+    <TitleContent>
+        <div class="d-flex justify-space-between">
+            <MudText Typo="Typo.h1">@MudDialog!.Title</MudText>
+            <span class="d-flex gap-1">
+                @TitleButtons
+                @if (OnCancelClick.HasDelegate)
+                {
+                    <HUIIconButton Icon="@Icons.Material.Filled.Close" OnClick="HandleCancelClick" />
+                }
+            </span>
+        </div>
+    </TitleContent>
+</MudDialog>
+<HUIDialogUnsavedChanges IsVisible="ShowUnsavedChanges" IsVisibleChanged="HandleUnsavedChangesToggled" OnCloseWindow="HandleCloseWindowClick"></HUIDialogUnsavedChanges>
+
+@code
+{
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+    [Parameter] public EventCallback OnCancelClick { get; set; }
+    /// <summary>
+    /// Shows the unsaved changes overlay
+    /// </summary>
+    [Parameter] public bool ShowUnsavedChanges { get; set; }
+    [Parameter] public EventCallback<bool> ShowUnsavedChangesChanged { get; set; }
+    [Parameter] public RenderFragment? TitleButtons { get; set; }
+
+    private void HandleUnsavedChangesToggled(bool value)
+    {
+        ShowUnsavedChanges = value;
+        ShowUnsavedChangesChanged.InvokeAsync(value);
+    }
+
+    private void HandleCancelClick() => OnCancelClick.InvokeAsync();
+
+    private void HandleCloseWindowClick() => MudDialog!.Cancel();
+}

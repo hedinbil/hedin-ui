@@ -1,0 +1,145 @@
+﻿@namespace Hedin.UI
+@using Microsoft.AspNetCore.Components
+@using System.Threading
+
+<div style="display:flex; flex-direction:column; height:calc(100vh - var(--mud-appbar-height));">
+    <!-- header -->
+    <div class="d-flex align-center justify-space-between pa-3">
+        <MudText Typo="Typo.h2">@Title</MudText>
+        @if (Buttons != null)
+        {
+            <div class="d-flex gap-3 align-center">@Buttons</div>
+        }
+    </div>
+
+    <!-- conversation -->
+    <div class="px-3 d-flex" style="flex:1 1 0; overflow-y:auto; min-height:0;">
+        <MudPaper Elevation="0" Class="rounded-0 align-content-end py-3"
+        style="@($"flex:1 1 0; overflow-y:auto; min-height:0; border:1px solid var(--mud-palette-divider);"
+                      + (!Conversation?.Any() == true ? " background-color: var(--mud-palette-background);" : ""))">
+            @if (Conversation == null || !Conversation.Any())
+            {
+                <div class="d-flex justify-center align-center" style="height:100%;">
+                    <MudText Typo="Typo.h1" Class="hui-text-semibold" style="text-align:center; text-wrap:balance;">
+                        @EmptyStateText
+                    </MudText>
+                </div>
+            }
+            else
+            {
+                <section class="d-flex flex-column gap-2 px-3">
+                    @foreach (var line in Conversation)
+                    {
+                        if (line.Role == HUIChatRole.User)
+                        {
+                            <div class="d-flex justify-end">
+                                <MudCard Elevation="0" Class="pa-1"
+                                style="max-width:80%; background-color:var(--mud-palette-gray-lighter); border:1px solid var(--mud-palette-lines-inputs);">
+                                    <MudCardContent Class="pa-1">
+                                        <MudText Typo="Typo.body1">@line.Text</MudText>
+                                    </MudCardContent>
+                                </MudCard>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="d-flex justify-start">
+                                @if (string.IsNullOrWhiteSpace(line.Text))
+                                {
+                                    <div class="d-flex flex-column gap-1">
+                                        <HUISkeletonList Count="1" Width="200px" Height="16px" Class="rounded" />
+                                        <HUISkeletonList Count="2" Width="150px" Height="12px" Class="rounded" />
+                                    </div>
+                                }
+                                else if (AssistantTemplate != null)
+                                {
+                                    @AssistantTemplate(line)
+                                }
+                            </div>
+                        }
+                    }
+                </section>
+            }
+        </MudPaper>
+    </div>
+
+    <!-- input + send/stop -->
+    <div class="d-flex gap-1 align-center pa-3">
+        <MudTextField @ref="_inputRef"
+        @bind-Value="_message"
+        Label="Write here…"
+        AutoGrow="true"
+        MaxLines="5"
+        Immediate="true"
+        Disabled="_isLoadingInternal"
+        OnKeyDown="@(async e => { if (e.Key == "Enter" && !e.ShiftKey) await TriggerSend(); })" />
+
+        <HUIIconButton Tooltip="@(_isLoadingInternal ? "Stop" : "Send")"
+        Variant="Variant.Filled"
+        Color="Color.Primary"
+        Icon="@(_isLoadingInternal ? Icons.Material.Filled.Stop : Icons.Material.Filled.ArrowForward)"
+        Disabled="@( !_isLoadingInternal && string.IsNullOrWhiteSpace(_message) )"
+        OnClick="TriggerSend" />
+    </div>
+</div>
+
+@code {
+    private string _message = "";
+    private bool _isLoadingInternal;
+    private CancellationTokenSource? _cts;
+    MudTextField<string>? _inputRef;
+
+    [Parameter, EditorRequired]
+    public List<HUIChatLine> Conversation { get; set; } = new();
+
+    [Parameter, EditorRequired]
+    public Func<string, CancellationToken, Task> OnSendMessage { get; set; } =
+        (_, _) => Task.CompletedTask;
+
+    [Parameter] public string Title { get; set; } = "Chat";
+    [Parameter] public string EmptyStateText { get; set; } = "Use AI to find out anything we know";
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public RenderFragment<HUIChatLine>? AssistantTemplate { get; set; }
+
+    private async Task TriggerSend()
+    {
+        if (_isLoadingInternal)
+        {
+            // Stop clicked!
+            _cts?.Cancel();
+            return;
+        }
+
+        var trimmed = _message?.Trim();
+        if (string.IsNullOrWhiteSpace(trimmed)) return;
+
+        _isLoadingInternal = true;
+        _cts = new CancellationTokenSource();
+        var token = _cts.Token;
+
+        // clear input immediately
+        var toSend = trimmed;
+
+        StateHasChanged();
+        try
+        {
+            await OnSendMessage(toSend, token);
+            _message = "";
+        }
+        catch
+        {
+            // optional: log
+        }
+        finally
+        {
+            _isLoadingInternal = false;
+            await InvokeAsync(StateHasChanged);
+            await Task.Yield(); // small delay for Blazor render to settle
+            if (_inputRef is not null)
+                await _inputRef.FocusAsync();
+        }
+    }
+
+    public enum HUIChatRole { User, Assistant }
+    public record HUIChatLine(HUIChatRole Role, string Text);
+}

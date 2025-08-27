@@ -1,0 +1,74 @@
+@attribute [Route(PageRoute.SuggestionBox)]
+@attribute [HUIPageSettings("Suggestion Box")]
+
+@inject NavigationManager NavigationManager
+@inject ISnackbar Snackbar
+
+<DemoPageLayout TItem="SuggestionBox" HUIComponent="typeof(HUISuggestionBox)">
+    <MudText>Used for enabling feedback suggestions from users.</MudText>
+    <MudText>Control the suggestion box visibility via some form of activator content.</MudText>
+    <div>
+        <HUISuggestionBox Header="Suggestion Box" @bind-TogglePopover="_popover" OnSubmit="SendFeedbackExample">
+            <ActivatorContent>
+                <HUIIconButton Icon="@Icons.Material.Outlined.Chat" OnClick="ToggleSuggestionBox" Variant="Variant.Outlined" />
+            </ActivatorContent>
+            <HUISuggestionBody>
+                <MudText GutterBottom="true" Typo="Typo.body2">
+                    Help us by sending feedback about your experience with our service.
+                </MudText>
+            </HUISuggestionBody>
+            <HUISuggestionFooter>
+                <MudText Typo="Typo.body2">
+                    For support cases please use
+                    <MudLink Href="https://support.hedinit.com/hitesc?id=sc_cat_item&sys_id=e4d32dce87978610c7d5433d8bbb3552"
+                             Typo="Typo.body2" Color="Color.Info" Underline="Underline.Always">
+                        ServiceNow
+                    </MudLink>
+                </MudText>
+            </HUISuggestionFooter>
+        </HUISuggestionBox>
+    </div>
+
+    <div>
+        @if (_displayFeedbackSent)
+        {
+            <MudText Typo="Typo.h5">New feedback recieved:</MudText>
+            <MudText>UserEmail: @_feedbackModel.UserEmail</MudText>
+            <MudText>CurrentPage: @_feedbackModel.CurrentPage</MudText>
+            <MudText>Company name: @_feedbackModel.CompanyName</MudText>
+            <MudText>Feedback: @_feedbackModel.FeedbackText</MudText>
+        }
+    </div>
+</DemoPageLayout>
+
+@code {
+
+    private FeedbackModel _feedbackModel = new();
+    private bool _popover;
+
+    private bool _displayFeedbackSent;
+
+    private class FeedbackModel
+    {
+        public string FeedbackText { get; set; }
+        public string CurrentPage { get; set; }
+        public string UserEmail { get; set; }
+        public string CompanyName { get; set; }
+    }
+
+    private async Task SendFeedbackExample(string message)
+    {
+        await Task.Delay(2000);
+        _feedbackModel.UserEmail = "feedback_sender@hedinit.com";
+        _feedbackModel.CurrentPage = NavigationManager.Uri;
+        _feedbackModel.FeedbackText = message;
+        _feedbackModel.CompanyName = "Hedin IT";
+        Snackbar.Add("Feedback sent", Severity.Success);
+        _displayFeedbackSent = true;
+    }
+
+    private void ToggleSuggestionBox()
+    {
+        _popover = !_popover;
+    }
+}

@@ -1,0 +1,85 @@
+﻿<HUIDialog OnCancelClick="HandleCancelClick" @bind-ShowUnsavedChanges="showUnsavedChanges" Gutters="!disableSidePadding">
+    <TitleButtons>
+        <MudIconButton Size="Size.Small" Variant="Variant.Outlined" Icon="@Icons.Material.Filled.CrueltyFree"></MudIconButton>
+    </TitleButtons>
+    <DialogContent>
+        <HUIDialogValueSection Class="mx-5 mb-3">
+            <Value>
+                <MudText Class="d-flex align-center"><MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Color="Color.Info" Class="mr-3"></MudIcon> Enabled</MudText>
+            </Value>
+            <ChildContent>
+                <div class="py-6">
+                    <MudText Class="mb-3">Test</MudText>
+                    <MudTextField Value="@("")" Variant="Variant.Outlined" Margin="Margin.Dense" Label="Test by"></MudTextField>
+                </div>
+            </ChildContent>
+            <Footer>
+                <HUIButton Variant="Variant.Filled" Color="Color.Primary">Test</HUIButton>
+            </Footer>
+        </HUIDialogValueSection>
+        <HUIDialogValueSection Class="mx-5 mb-3" Disabled="true">
+            <Value>
+                <MudText Class="d-flex align-center"><MudIcon Icon="@Icons.Material.Filled.ErrorOutline" Size="Size.Small" Color="Color.Info" Class="mr-3"></MudIcon> Disabled</MudText>
+            </Value>
+            <ChildContent>
+                Value Section
+            </ChildContent>
+        </HUIDialogValueSection>
+        <HUIDialogValueSection Class="mx-5 mb-3" Light="true">
+            <Value>
+                <MudText Class="d-flex align-center"><MudIcon Icon="@Icons.Material.Filled.Check" Size="Size.Small" Color="Color.Success" Class="mr-3"></MudIcon> Light</MudText>
+            </Value>
+            <ChildContent>
+                Value Section
+            </ChildContent>
+            <Footer>
+                Footer
+            </Footer>
+        </HUIDialogValueSection>
+        <HUIDialogSection>
+            <TitleContent>
+                <MudText Typo="Typo.h2">Dialog Section 1</MudText>
+            </TitleContent>
+            <ChildContent>
+                <MudSwitch @bind-Value="hasUnsavedChanges">Show unsaved changes on close</MudSwitch>
+                <MudSwitch @bind-Value="showCustomOverlay">Show custom overlay</MudSwitch>
+                <MudSwitch @bind-Value="disableSidePadding">Disable side padding</MudSwitch>
+            </ChildContent>
+        </HUIDialogSection>
+        <HUIDialogSection IsInitiallyExpanded="false">
+            <TitleContent>
+                <MudText Typo="Typo.h2">Dialog Section 2</MudText>
+            </TitleContent>
+            <ChildContent>
+                Content
+            </ChildContent>
+        </HUIDialogSection>
+    </DialogContent>
+    <DialogActions>
+        <HUIButton Variant="Variant.Outlined" OnClick="HandleCancelClick">Cancel</HUIButton>
+        <HUIButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleConfirmClick">Confirm</HUIButton>
+    </DialogActions>
+</HUIDialog>
+
+<HUIDialogOverlay IsVisible="showCustomOverlay" Center="false">
+    <MudText>Show whatever content you want.111</MudText>
+    <HUIButton OnClick="() => showCustomOverlay = false" Variant="Variant.Filled" Color="Color.Primary">Close overlay</HUIButton>
+</HUIDialogOverlay>
+
+@code {
+    [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+    private bool showUnsavedChanges = false;
+    private bool hasUnsavedChanges = false;
+    private bool showCustomOverlay = false;
+    private bool disableSidePadding = true;
+
+    private void HandleCancelClick()
+    {
+        if (hasUnsavedChanges)
+            showUnsavedChanges = true;
+        if (!hasUnsavedChanges)
+            MudDialog!.Cancel();
+    }
+
+    private void HandleConfirmClick() => MudDialog!.Close(DialogResult.Ok(true));
+}

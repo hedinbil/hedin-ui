@@ -1,0 +1,24 @@
+﻿@namespace Hedin.UI
+<div id="components-reconnect-modal">
+    <span class="d-flex flex-column gap-3 align-center">
+        @if(ChildContent != null)
+        {
+            @ChildContent
+        }
+        else
+        {
+            <MudProgressCircular Color="Color.Primary" Indeterminate="true" />
+            <MudText>There was a problem with the connection!</MudText>
+            <MudText>
+                (Current reconnect attempt:
+                <span id="components-reconnect-current-attempt"></span> /
+                <span id="components-reconnect-max-retries"></span>)
+            </MudText>
+        }
+    </span>
+</div>
+
+@code{
+
+    [Parameter] public RenderFragment? ChildContent { get; set; } 
+}

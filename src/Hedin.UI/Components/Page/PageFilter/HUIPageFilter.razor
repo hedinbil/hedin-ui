@@ -1,0 +1,46 @@
+﻿@namespace Hedin.UI
+@inherits HUIComponentBase
+@inject InternaHUIlLocalizer Localizer
+
+<HUIModule Class="@Class" Header="Filter" IsExpanded="true">
+    <Buttons>
+        @Buttons
+        <HUIIconButton Icon="@Icons.Material.Filled.RestartAlt" OnClick="HandleClearClick" Tooltip="@Localizer["HUIPageFilter.ResetFilters"]" />
+        @if (ShowOptionsButton)
+        {
+            @* <HUIButton Size="Size.Small" Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Build" OnClick="HandleOptionsClick">@Localizer["HUIPageFilter.ManageFilterButtonText"]</HUIButton> *@
+            <HUIIconButton Icon="@Icons.Material.Filled.Build" OnClick="HandleOptionsClick" Tooltip="@Localizer["HUIPageFilter.ManageFilterButtonText"]"></HUIIconButton>
+        }
+    </Buttons>
+    <ChildContent>
+        <div class="hui-page-filter">
+            @ChildContent
+        </div>
+    </ChildContent>
+    <Footer>
+        @if (ShowSearchButton)
+        {
+            <div class="d-flex justify-end mt-3">
+                <HUIButton Color="Color.Primary" Variant="Variant.Filled" OnClick="HandleSearchClick">@Localizer["HUIPageFilter.SearchButtonText"]</HUIButton>
+            </div>
+        }
+    </Footer>
+</HUIModule>
+
+@code {
+    /// <summary>
+    /// Place fields here, they will be formatted and sized correctly
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public EventCallback OnSearchClick { get; set; }
+    [Parameter] public EventCallback OnClearClick { get; set; }
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public bool ShowSearchButton { get; set; } = true;
+    [Parameter] public bool ShowOptionsButton { get; set; } = true;
+    [Parameter] public EventCallback OnOptionsClick { get; set; }
+    [Parameter] public string? Class { get; set; }
+
+    private void HandleOptionsClick() => OnOptionsClick.InvokeAsync();
+    private void HandleSearchClick() => OnSearchClick.InvokeAsync();
+    private void HandleClearClick() => OnClearClick.InvokeAsync();
+}

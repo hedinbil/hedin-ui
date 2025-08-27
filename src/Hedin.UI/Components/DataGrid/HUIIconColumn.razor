@@ -1,0 +1,58 @@
+﻿@namespace Hedin.UI
+@typeparam T
+@attribute [CascadingTypeParameter(nameof(T))]
+@inherits TemplateColumn<T>
+
+@code {
+    [Parameter] public EventCallback<T> OnClick { get; set; }
+    /// <summary>
+    /// Set the tooltip for the icon button.
+    /// </summary>
+    [Parameter] public string Tooltip { get; set; } = string.Empty;
+    [Parameter] public string Icon { get; set; }
+    [Parameter] public bool Dense { get; set; } = false;
+    [Parameter] public Variant Variant { get; set; } = Variant.Text;
+    /// <summary>
+    /// Set the icon for the badge. When set, a badge will be displayed on the icon button.
+    /// </summary>
+    [Parameter] public string BadgeIcon { get; set; } = string.Empty;
+    /// <summary>
+    /// Set to true to allow the badge to overlap the icon button.
+    /// </summary>
+    [Parameter] public bool BadgeOverlap { get; set; }
+    /// <summary>
+    /// Function to generate the Href for the icon button link.
+    /// </summary>
+    [Parameter] public Func<T, string> GetHref { get; set; }
+    /// <summary>
+    /// Target for the icon button link. Default is "_blank".
+    /// </summary>
+    [Parameter] public string Target { get; set; } = "_blank";
+    /// <summary>
+    /// Set the pointer events CSS property on the tooltip. auto is the default value.
+    /// Suitable values are "none", "auto", "visible", "visibleFill", "visiblePainted", and "visibleStroke".
+    /// </summary>
+    [Parameter] public string TooltipPointerEvents { get; set; } = "auto";
+
+    private const string DenseButtonStyles = "margin-top: -15px; margin-bottom: -12px; margin-left: -16px; margin-right: -12px; padding: 8px 12px 8px 12px; border-radius: 0;";
+    private const string ButtonStyles = "margin-top: -27px; margin-bottom: -25px; margin-left: -16px; margin-right: -12px; padding: 18px; border-radius: 0;";
+    private string _buttonStyles = "";
+    private bool BadgeIconSet => !string.IsNullOrEmpty(BadgeIcon);
+
+    protected override void OnInitialized()
+    {
+        _buttonStyles = Dense ? DenseButtonStyles : ButtonStyles;
+        CellTemplate = CustomCellTemplate;
+        base.OnInitialized();
+        
+    }
+
+    private RenderFragment<CellContext<T>> CustomCellTemplate => context =>
+        @<MudRender>
+            <HUITooltip PointerEvents="@TooltipPointerEvents" Text="@Tooltip">
+                <MudBadge Overlap="@BadgeOverlap" Icon="@BadgeIcon" Visible="@BadgeIconSet">
+                    <HUIIconButton Target="@Target" Href="@(GetHref?.Invoke(context.Item) ?? string.Empty)" Style="@_buttonStyles" Icon="@Icon" Variant="@Variant" OnClick="() => OnClick.InvokeAsync(context.Item)"></HUIIconButton>
+                </MudBadge>
+            </HUITooltip>
+        </MudRender>;
+}

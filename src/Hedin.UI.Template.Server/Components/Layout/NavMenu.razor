@@ -1,0 +1,13 @@
+﻿@rendermode InteractiveServer
+@inject IHUIPageHelper HUIPageHelper
+
+<HUINavMenuDrawer Items="_menuItems" Style="z-index: 1300; top: 0; margin-top: calc(var(--mud-appbar-height) + 8px)" />
+
+@code{
+    private List<HUIMenuItem> _menuItems = [];
+
+    protected override async Task OnInitializedAsync()
+    {
+        _menuItems = await HUIPageHelper.GetMenuItems([typeof(NavMenu).Assembly]);
+    }
+}

@@ -1,0 +1,16 @@
+﻿<HUIAppBar LogoSrc="HedinUI.svg" LogoBrandSrc="./hedin-ui_light.svg" MenuButtonVisibilityChanged="v => _drawerLeftOpen = v" MenuButtonClicked="HandleMenuButtonClicked" Fixed="false">
+    <TopContent>
+        <MudAlert Dense="true" ShowCloseIcon="true" Severity="Severity.Error" Variant="Variant.Filled" Class="rounded-0 align-center" NoIcon="true" ContentAlignment="HorizontalAlignment.Center">
+            Custom content
+        </MudAlert>
+    </TopContent>
+    <ChildContent>
+        <MudImage Height="20"></MudImage>
+        <MudSpacer />
+        <MudIconButton Icon="@Icons.Material.Outlined.MoreHoriz"></MudIconButton>
+    </ChildContent>
+</HUIAppBar>
+@code {
+    private bool _drawerLeftOpen = true;
+    private void HandleMenuButtonClicked() { }
+    }

@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json.schemastore.org/template",
+  "author": "Hedin IT",
+  "classifications": [ "Web", "Blazor" ],
+  "identity": "Hedin.UI.Template.Server",
+  "name": "Hedin UI Blazor Starter App",
+  "shortName": "hui-blazor-server",
+  "sourceName": "Hedin.UI.Template.Server",
+  "preferNameDirectory": true
+}

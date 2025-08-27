@@ -1,0 +1,278 @@
+﻿<MudGrid>
+    <MudItem xs="12" md="8" lg="6">
+        <HUIModule Header="Documents" IsExpanded="true">
+            <Buttons>
+                <HUIIconButton Icon="@Icons.Material.Filled.MoreVert" />
+                <HUIIconButton Icon="@Icons.Material.Filled.CreateNewFolder" />
+                <HUIIconButton Icon="@Icons.Material.Filled.Search" />
+                <HUIIconButton Icon="@Icons.Material.Filled.Refresh" OnClick="StateHasChanged" />
+            </Buttons>
+            <ChildContent>
+
+                <HUIModuleSection Header="Test">
+                    @foreach (var folder in folders)
+                    {
+                        <HUIModuleDocument Name="@folder.Name" HasDocuments="folder.HasDocuments" HasSubfolders="folder.HasFolders" IsRoot="true">
+                            <Buttons>
+                                @GetFolderButtons(folder)
+                            </Buttons>
+                            <ChildContent>
+                                @GetElementsRecursively(folder)
+                            </ChildContent>
+                        </HUIModuleDocument>
+                    }
+                </HUIModuleSection>
+
+                <HUIModuleSection Header="Test 2">
+                    @foreach (var folder in folders)
+                    {
+                        <HUIModuleDocument Name="@folder.Name" HasDocuments="folder.HasDocuments" HasSubfolders="folder.HasFolders" IsRoot="true">
+                            <Buttons>
+                                @GetFolderButtons(folder)
+                            </Buttons>
+                            <ChildContent>
+                                @GetElementsRecursively(folder)
+                            </ChildContent>
+                        </HUIModuleDocument>
+                    }
+                </HUIModuleSection>
+            </ChildContent>
+        </HUIModule>
+    </MudItem>
+</MudGrid>
+@code
+{
+    private RenderFragment GetElementsRecursively(HUIDocumentFolderModel folder)
+    {
+        var fragments = new List<RenderFragment>();
+
+        if (folder.HasFolders)
+        {
+            fragments.Add(@<MudDropContainer T="HUIDocumentFolderModel" Items="@folder.Folders" ItemDisabled="(v) => false" ItemsSelector="@((item,dropzone) => true)" Context="subfolder">
+        <ChildContent>
+            <MudDropZone T="HUIDocumentFolderModel" Identifier="1" AllowReorder="true" />
+        </ChildContent>
+        <ItemRenderer>
+            <HUIModuleDocument Name="@subfolder.Name" HasDocuments="subfolder.HasDocuments" HasSubfolders="subfolder.HasFolders" IsRoot="false" IsSearching="IsSearching">
+                <Buttons>
+                    @GetFolderButtons(subfolder)
+                </Buttons>
+                <ChildContent>
+                    @GetElementsRecursively(subfolder)
+                </ChildContent>
+            </HUIModuleDocument>
+
+        </ItemRenderer>
+    </MudDropContainer>);
+        }
+
+        if (folder.HasDocuments)
+        {
+
+
+            fragments.Add(@<MudDropContainer T="HUIDocumentAttachmentModel" Items="@folder.Documents" ItemDisabled="(v) => false" ItemsSelector="@((item,dropzone) => true)" Context="document">
+        <ChildContent>
+            <MudDropZone T="HUIDocumentAttachmentModel" Identifier="1" AllowReorder="true" />
+        </ChildContent>
+        <ItemRenderer>
+            <HUIDocument Extension="@document.Extension" Tooltip="@document.Tooltip" Name="@document.Name">
+                <Buttons>
+                    @if (AllowEdit)
+                {
+                    <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small" Style="margin-right: 1px;">
+                        @if (!document.IsFavorite)
+                    {
+                        <MudMenuItem OnClick="() => HandleOnDeleteClick(document)">Delete</MudMenuItem>
+                        <MudMenuItem OnClick="() => HandleOnMoveClick(document)">Move</MudMenuItem>
+                        <MudMenuItem OnClick="() => HandleOnFavoriteClick(document)">Favorite</MudMenuItem>
+                    }
+                    else
+                    {
+                        <MudMenuItem OnClick="() => HandleOnFavoriteClick(document)">Unfavorite</MudMenuItem>
+                    }
+
+                    </MudMenu>
+                }
+                    <MudIconButton Icon="@Icons.Material.Filled.FileDownload" Size="Size.Small" Class="pr-1" OnClick="() => HandleDownloadClick(document)"></MudIconButton>
+                </Buttons>
+            </HUIDocument>
+        </ItemRenderer>
+    </MudDropContainer>);
+        }
+
+        return builder =>
+        {
+            if (fragments != null)
+            {
+                foreach (var fragment in fragments)
+                {
+                    builder.AddContent(0, fragment);
+                }
+            }
+        };
+    }
+
+    public RenderFragment? GetFolderButtons(HUIDocumentFolderModel folder)
+    {
+        if (AllowEdit)
+        {
+            @if (!folder.IsFavorite)
+            {
+                return (@<MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small">
+        <MudMenuItem OnClick="() => HandleOnAddSubfolderClick(folder)">Add folder</MudMenuItem>
+        <MudMenuItem OnClick="() => HandleOnAddFileClick(folder)">Add document</MudMenuItem>
+        <MudMenuItem OnClick="() => HandleOnEditClick(folder)">Edit</MudMenuItem>
+        <MudMenuItem OnClick="() => HandleOnDeleteClick(folder)">Delete</MudMenuItem>
+        <MudMenuItem OnClick="() => HandleOnMoveClick(folder)">Move</MudMenuItem>
+        <MudMenuItem OnClick="() => HandleOnFavoriteClick(folder)">Favorite</MudMenuItem>
+    </MudMenu>);
+            }
+
+            return (@<text>
+        <MudMenu Icon="@Icons.Material.Filled.MoreVert" Size="Size.Small">
+            <MudMenuItem OnClick="() => HandleOnFavoriteClick(folder)">Remove favorite</MudMenuItem>
+        </MudMenu>
+    </text>);
+        }
+        return null;
+    }
+
+
+
+    private bool IsSearching = false;
+    private bool AllowEdit = true;
+
+    private void HandleOnDeleteClick(HUIDocumentAttachmentModel model) { }
+    private void HandleOnMoveClick(HUIDocumentAttachmentModel model) { }
+    private void HandleOnFavoriteClick(HUIDocumentAttachmentModel model) { }
+    private void HandleDownloadClick(HUIDocumentAttachmentModel model) { }
+
+    private void HandleOnAddSubfolderClick(HUIDocumentFolderModel model) { }
+    private void HandleOnAddFileClick(HUIDocumentFolderModel model) { }
+    private void HandleOnEditClick(HUIDocumentFolderModel model) { }
+    private void HandleOnDeleteClick(HUIDocumentFolderModel model) { }
+    private void HandleOnMoveClick(HUIDocumentFolderModel model) { }
+    private void HandleOnFavoriteClick(HUIDocumentFolderModel model) { }
+
+
+    public class HUIDocumentFolderModel
+    {
+        public string? Name { get; set; }
+        public bool IsFavorite { get; set; }
+        public List<HUIDocumentFolderModel> Folders { get; set; } = new();
+        public List<HUIDocumentAttachmentModel> Documents { get; set; } = new();
+
+        public bool HasDocuments => Documents.Any();
+        public bool HasFolders => Folders.Any();
+    }
+
+    public class HUIDocumentAttachmentModel
+    {
+        public bool IsFavorite { get; set; }
+        public string? Name { get; set; }
+        public string? Extension { get; set; }
+        public string? Url { get; set; }
+        public string? Tooltip { get; set; }
+    }
+
+
+    private static List<HUIDocumentFolderModel> folders = new()
+    {
+        new HUIDocumentFolderModel
+        {
+                Name = "Folder",
+                Documents = new List < HUIDocumentAttachmentModel > ()
+                {
+                    new HUIDocumentAttachmentModel
+                    {
+                        Name = "Presetation.ppt",
+                            Extension = ".txt",
+                            Url = "https://google.com",
+                            Tooltip = "This is a tooltip"
+                    },
+                    new HUIDocumentAttachmentModel
+                    {
+                        Name = "interesting-numbers-23",
+                            Extension = ".xlsx",
+                            Url = "https://google.com",
+                            Tooltip = "This is another tooltip"
+                    }
+                },
+                Folders = new List < HUIDocumentFolderModel > ()
+                {
+                    new HUIDocumentFolderModel()
+                        {
+                            Name = "Subfolder_01",
+                        },
+                        new HUIDocumentFolderModel()
+                        {
+                            Name = "Subfolder_02",
+                                Documents = new List < HUIDocumentAttachmentModel > ()
+                                {
+                                    new HUIDocumentAttachmentModel
+                                    {
+                                        Name = "image-01",
+                                            Extension = ".png",
+                                            Url = "https://google.com",
+                                            Tooltip = "This is a tooltip"
+                                    },
+                                    new HUIDocumentAttachmentModel
+                                    {
+                                        Name = "image-02",
+                                            Extension = ".png",
+                                            Url = "https://google.com",
+                                            Tooltip = "This is a tooltip"
+                                    }
+                                }
+                        }
+                }
+        },
+        new HUIDocumentFolderModel
+        {
+            Name = "Test",
+                Documents = new List < HUIDocumentAttachmentModel > ()
+                {
+                    new HUIDocumentAttachmentModel
+                    {
+                        IsFavorite = true,
+                        Name = "Test",
+                            Extension = ".txt",
+                            Url = "https://google.com",
+                            Tooltip = "This is a tooltip"
+                    }
+                },
+                Folders = new List < HUIDocumentFolderModel > ()
+                {
+                    new HUIDocumentFolderModel()
+                    {
+                        Name = "Test2",
+                            Documents = new List < HUIDocumentAttachmentModel > ()
+                            {
+                                new HUIDocumentAttachmentModel
+                                {
+                                    Name = "Test2",
+                                        Extension = ".pdf",
+                                        Url = "https://google.com",
+                                        Tooltip = "This is a tooltip"
+                                }
+                            }
+                    }
+                }
+        },
+        new HUIDocumentFolderModel
+        {
+            Name = "Nothing under",
+        },
+        new HUIDocumentFolderModel
+        {
+            Name = "One folder",
+                Folders = new List < HUIDocumentFolderModel >
+                {
+                    new HUIDocumentFolderModel
+                    {
+                        Name = "Nothing under."
+                    }
+                }
+        }
+    };
+}

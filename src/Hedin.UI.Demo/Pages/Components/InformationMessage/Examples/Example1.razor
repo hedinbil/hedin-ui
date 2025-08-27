@@ -1,0 +1,40 @@
+﻿<MudGrid>
+    <MudItem xs="12" md="6" lg="4">
+        <HUIModule Header="Active" IsExpanded="true">
+            @foreach (var message in messageAlerts.Where(x => !x.Archived).OrderBy(x => x.Pinned))
+            {
+                <HUIInformationMessage Class="my-3" Model="message"
+                                       OnEditClick="HandleEditClick"
+                                       OnArchiveClick="HandleArchivedClick"
+                                       OnReadClick="HandleReadClick" />
+            }
+        </HUIModule>
+    </MudItem>
+    <MudItem xs="12" md="6" lg="4">
+        <HUIModule Header="Archived" IsExpanded="true">
+            @foreach (var message in messageAlerts.Where(x => x.Archived))
+            {
+                <HUIInformationMessage Class="my-3" Model="message"
+                                       OnEditClick="HandleEditClick"
+                                       OnArchiveClick="HandleArchivedClick"
+                                       OnReadClick="HandleReadClick" />
+            }
+        </HUIModule>
+    </MudItem>
+</MudGrid>
+@code {
+    private void HandleReadClick(HUIInformationMessageModel message) => message.MarkAsRead();
+    private void HandleArchivedClick(HUIInformationMessageModel message) => message.Archive();
+    private void HandleEditClick(HUIInformationMessageModel message) { }
+
+    private List<HUIInformationMessageModel> messageAlerts = new List<HUIInformationMessageModel>
+    {
+        new HUIInformationMessageModel(1, Severity.Info, DateTime.Now, "This is an example header", "This is an example body", false, false, false, false, new string("Optional parameter")),
+        new HUIInformationMessageModel(1, Severity.Error, DateTime.Now, "This is an example header", "This is an example body", true, false, false, false),
+        new HUIInformationMessageModel(1, Severity.Success, DateTime.Now, "This is an example header", "This is an example body", false, true, false, false),
+        new HUIInformationMessageModel(1, Severity.Normal, DateTime.Now, "This is an example header", "This is an example body", false, false, true, false),
+        new HUIInformationMessageModel(1, Severity.Info, DateTime.Now, "This is an example header", "This is an example body", true, true, false, false),
+        new HUIInformationMessageModel(1, Severity.Error, DateTime.Now, "This is an example header", "This is an example body", true, false, true, false),
+        new HUIInformationMessageModel(1, Severity.Success, DateTime.Now, "This is an example header", "This is an example body", false, true, true, false),
+    };
+}

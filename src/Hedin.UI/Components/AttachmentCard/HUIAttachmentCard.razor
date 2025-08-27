@@ -1,0 +1,57 @@
+﻿@namespace Hedin.UI
+
+<div class="hui-attachment-card">
+    <MudCard Outlined="true" Square="true" Class="rounded-0 card">
+        <MudCardContent Class="pa-3">
+            <span class="d-flex justify-space-between mb-3">
+                <MudText Class="mud-text-secondary hui-text-s">Attached file</MudText>
+                <span class="d-flex flex-gap-2">
+                    @Buttons
+                </span>
+            </span>
+
+            <div class="d-flex gap-3">
+                @if (string.IsNullOrWhiteSpace(ImgSrc))
+                {
+                    <MudPaper Class="d-flex flex-column flex-grow-1 align-center justify-center file-paper" Outlined="true" @onclick="OnViewClick">
+                        <MudIcon Icon="@Icons.Material.Outlined.InsertDriveFile"></MudIcon>
+                        <MudText>Uploaded file</MudText>
+                    </MudPaper>
+                }
+                else
+                {
+                    <MudImage Src="@ImgSrc" Class="flex-grow-1 align-center justify-center file-paper" ObjectFit="ObjectFit.Cover" Width="196" @onclick="OnViewClick">
+                    </MudImage>
+                }
+                <div class="flex-grow-1 file-info">
+                    <MudText Class="mud-text-secondary hui-text-s mb-2">File information</MudText>
+                    @FileInformation
+                </div>
+            </div>
+        </MudCardContent>
+        <MudCardActions Class="card-actions">
+            @if (OnViewClick.HasDelegate)
+            {
+                <HUIButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.RemoveRedEye" Class="mr-3" OnClick="OnViewClick">View content</HUIButton>
+            }
+            @if (OnRemoveClick.HasDelegate)
+            {
+                <HUIButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.Delete" OnClick="OnRemoveClick">Remove</HUIButton>
+            }
+        </MudCardActions>
+    </MudCard>
+</div>
+
+@code {
+
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public RenderFragment? FileInformation { get; set; }
+
+    /// <summary>
+    /// If this is set, then the image will be shown instead of the file icon.
+    /// </summary>
+    [Parameter] public string? ImgSrc { get; set; }
+
+    [Parameter] public EventCallback OnViewClick { get; set; }
+    [Parameter] public EventCallback OnRemoveClick { get; set; }
+}

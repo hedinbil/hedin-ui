@@ -1,0 +1,33 @@
+﻿@namespace Hedin.UI
+
+<div class="@Class">
+    <MudExpansionPanels Elevation="0" Class="@("hui-module-value " + (light ? "hui-module-value-light" : "hui-module-value-dark") + (IsExpanded ? " hui-module-value-selected" : ""))">
+        <MudExpansionPanel Expanded="IsExpanded" ExpandedChanged="HandleIsExpandedChanged" TitleContent="Value" Disabled="Disabled">
+            <ChildContent>
+                @ChildContent
+                <div class="my-3">
+                    @Footer
+                </div>
+            </ChildContent>
+        </MudExpansionPanel>
+    </MudExpansionPanels>
+</div>
+@code {
+    private bool light => Light || Disabled;
+
+    [Parameter] public bool Light { get; set; }
+    [Parameter] public bool IsExpanded { get; set; }
+    [Parameter] public EventCallback<bool> IsExpandedChanged { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public RenderFragment? Value { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+
+    private async void HandleIsExpandedChanged(bool expanded)
+    {
+        IsExpanded = expanded;
+        await IsExpandedChanged.InvokeAsync(IsExpanded);
+    }
+}

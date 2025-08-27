@@ -1,0 +1,24 @@
+﻿.test{
+    ::deep .hui-input-button {
+        .mud-input {
+            height: 32px;
+            width: 100%;
+        }
+
+        $label-transformation: translate(8px,-11px) scale(.75);
+
+        .mud-input-label-outlined.mud-input-label-margin-dense {
+            transform: translate(8px, 7px) scale(1);
+        }
+
+        .mud-input:focus-within ~ label.mud-input-label.mud-input-label-inputcontrol.mud-input-label-outlined {
+            top: 6px;
+            transform: $label-transformation !important;
+        }
+
+        .mud-shrink ~ label.mud-input-label.mud-input-label-inputcontrol.mud-input-label-outlined {
+            top: 6px;
+            transform: $label-transformation !important;
+        }
+    }
+}

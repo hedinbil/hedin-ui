@@ -1,0 +1,64 @@
+﻿<HUIDataGrid Items="cars" T="Car" Height="340px" Dense="true" ShowPager="false">
+    <Columns>
+        <HUIIconColumn Icon="@Icons.Material.Filled.Edit" Dense="true" />
+        <PropertyColumn Property="x => x.OrderNo" Title="Order number" />
+        <PropertyColumn Property="x => x.Model" />
+        <PropertyColumn Property="x => x.RegNo" Title="Reg number" />
+        <PropertyColumn Property="x => x.VIN" />
+        <PropertyColumn Property="x => x.Description" />
+        <PropertyColumn Property="x => x.EntityCode" Title="Entity Code" />
+        <PropertyColumn Property="x => x.Color" />
+        <PropertyColumn Property="x => x.ChangeData" Title="Last factory change" Format="yyyy-MM-dd" />
+        <PropertyColumn Property="x => x.ETA" Title="ETA Port" Format="yyyy-MM-dd" />
+        <PropertyColumn Property="x => x.Status" />
+    </Columns>
+</HUIDataGrid>
+
+@code {
+    public List<Car> cars = new();
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            Severity severity = Severity.Normal;
+            if (i == 1) severity = Severity.Info;
+            if (i == 2) severity = Severity.Warning;
+            if (i == 3) severity = Severity.Success;
+            if (i == 4) severity = Severity.Error;
+            cars.Add(new Car($"R1542A{i}", "Megan E-Tech Electric", $"AAA00{i}", $"UU1dJF00970000{i}", "Megane Electric", "SLB7 MD 6U S", "OV369", DateTime.Now, DateTime.Now.AddDays(-6), "Factory order", severity));
+        }
+    }
+
+    //To be able to set Severity on rows, then IHUIGridItem needs to be inherited.
+    //Otherwise, inheritence is not required.
+    public class Car : IHUIGridItem
+    {
+        public string OrderNo { get; set; }
+        public string Model { get; set; }
+        public string RegNo { get; set; }
+        public string VIN { get; set; }
+        public string Description { get; set; }
+        public string EntityCode { get; set; }
+        public string Color { get; set; }
+        public DateTime ChangeData { get; set; }
+        public DateTime ETA { get; set; }
+        public string Status { get; set; }
+        public Severity Severity { get; set; }
+
+        public Car(string orderNo, string model, string regNo, string vin, string description, string entityCode, string color, DateTime changeData, DateTime eta, string status, Severity severity)
+        {
+            OrderNo = orderNo;
+            Model = model;
+            RegNo = regNo;
+            VIN = vin;
+            Description = description;
+            EntityCode = entityCode;
+            Color = color;
+            ChangeData = changeData;
+            ETA = eta;
+            Status = status;
+            Severity = severity;
+        }
+    }
+}

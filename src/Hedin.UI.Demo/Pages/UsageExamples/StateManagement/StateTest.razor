@@ -1,0 +1,27 @@
+﻿@attribute [Route(PageRoute.DemoStateManagement)]
+@inherits StatefulComponentBase<PageModel>
+@inject ISnackbar Snackbar
+
+<HUIPage Header="State demo (Beta)" PageDescription="Enter something into the textbox then navigate to the subpage">
+    <span class="d-flex flex-column gap-3">
+        <MudTextField Variant="Variant.Outlined" Margin="Margin.Dense" @bind-Value="Model.MyProp" Immediate="true"></MudTextField>
+        <span>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="HandleSubPageClick" Disabled="string.IsNullOrWhiteSpace(Model.MyProp)">Go to subpage</MudButton>
+        </span>
+    </span>
+</HUIPage>
+
+@code {
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Model.MyProp))
+        {
+            Snackbar.Add("State was successfully loaded!", Severity.Success);
+        }
+        base.OnInitialized();
+    }
+    private void HandleSubPageClick()
+    {
+        NavigationManager.NavigateTo(PageRoute.DemoStateManagementSubPage);
+    }
+}

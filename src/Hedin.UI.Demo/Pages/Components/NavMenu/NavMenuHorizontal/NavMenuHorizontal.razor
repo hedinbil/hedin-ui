@@ -1,0 +1,12 @@
+﻿@attribute [Route(PageRoute.NavMenuHorizontal)]
+@attribute [HUIPageSettings("NavMenu Horizontal")]
+
+<div class="mb-3">
+    <DemoPageLayout TItem="NavMenuHorizontal" HUIComponent="typeof(HUINavMenuHorizontal)">
+        <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.NavMenu.NavMenuHorizontal.Examples.Default)">
+        </DemoExample>
+        <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.NavMenu.NavMenuHorizontal.Examples.WithCustomContent)">
+            <MudText>Custom tab content</MudText>
+        </DemoExample>
+    </DemoPageLayout>
+</div>

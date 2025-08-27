@@ -1,0 +1,223 @@
+﻿@using Microsoft.Extensions.Configuration
+@using Microsoft.JSInterop
+@implements IDisposable
+@namespace Hedin.UI
+@inject IJSRuntime JS
+@inject IConfiguration Configuration
+
+@if (string.IsNullOrEmpty(_apiKey))
+{
+    <MudText Color="Color.Error">
+        No API key found; configure <code>HedinUI:GoogleMapsApiKey</code> in appsettings.
+    </MudText>
+}
+
+<div id="@_mapId" style="width:@Width; height:@Height;" class="@Class"></div>
+
+@code {
+    private const string KeyLocation = "HedinUI:GoogleMapsApiKey";
+    private string _apiKey = "";
+    private string _mapId = "";
+    // private bool _rendered = false;
+    private DotNetObjectReference<HUIMaps>? _dotNetRef;
+    private bool _needsInit;    // we’ve got new data and must call createInstance
+    private bool _needsUpdate;  // we’ve got new data and must call updatePoints
+
+    [Parameter] public List<HUIMapPoint> Points { get; set; } = new();
+    private bool _lastAutoFit;
+    [Parameter] public bool AutoFit { get; set; } = true;
+    private bool _darkMode;
+    [Parameter]
+    public bool DarkMode
+    {
+        get => _darkMode;
+        set
+        {
+            if (_darkMode != value)
+            {
+                _darkMode = value;
+                // if the map is already rendered, immediately swap styles
+                if (!_needsInit)
+                    _ = JS.InvokeVoidAsync("googleMaps.setStyle", _mapId, _darkMode);
+            }
+        }
+    }
+    [Parameter]
+    public HUIMapsControlOptions? ControlOptions { get; set; }
+        = new();
+    [Parameter] public EventCallback<HUIMapPoint> OnPointClick { get; set; }
+    [Parameter] public string Width { get; set; } = "100%";
+    [Parameter] public string Height { get; set; } = "500px";
+    [Parameter] public string? Class { get; set; }
+    /// <summary>The latitude to use before any points have loaded.</summary>
+    [Parameter] public double? DefaultLat { get; set; }
+
+    /// <summary>The longitude to use before any points have loaded.</summary>
+    [Parameter] public double? DefaultLng { get; set; }
+
+    /// <summary>The zoom level (0–21) to use before any points have loaded.</summary>
+    [Parameter] public int? DefaultZoom { get; set; }
+    protected override async Task OnInitializedAsync()
+    {
+        _apiKey = Configuration[KeyLocation] ?? "";
+        _mapId = "map-" + Guid.NewGuid().ToString("N");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        // Only run once per render pass:
+        if (_needsInit)
+        {
+            _needsInit = false;
+            _mapInitialized = true;
+            _dotNetRef = DotNetObjectReference.Create(this);
+
+            await JS.InvokeVoidAsync(
+              "googleMaps.createInstance",
+              _mapId, _apiKey, _lastPointDtos,
+              _dotNetRef, AutoFit, DarkMode, ControlOptions,
+              DefaultLat, DefaultLng, DefaultZoom
+            );
+        }
+        else if (_needsUpdate)
+        {
+            _needsUpdate = false;
+            await JS.InvokeVoidAsync(
+              "googleMaps.updatePoints",
+              _mapId, _lastPointDtos, AutoFit
+            );
+        }
+    }
+
+    protected override Task OnParametersSetAsync()
+    {
+        var dtos = BuildPointDtos();
+
+        // first time ever?
+        if (!_mapInitialized)
+        {
+            _lastPointDtos = dtos;
+            _needsInit = true;
+        }
+        // subsequent—but only if data actually changed
+        else if (!_lastPointDtos.SequenceEqual(dtos))
+        {
+            _lastPointDtos = dtos;
+            _needsUpdate = true;
+        }
+        else if (!_lastAutoFit && AutoFit)
+        {
+            // trigger a re-fit
+            _needsUpdate = true;
+        }
+        _lastAutoFit = AutoFit;
+        return Task.CompletedTask;
+    }
+
+    [JSInvokable]
+    public Task PointClicked(HUIMapPoint p)
+    {
+        return OnPointClick.HasDelegate
+            ? OnPointClick.InvokeAsync(p)
+            : Task.CompletedTask;
+    }
+
+    private async Task UpdateMapAsync(bool autoFit)
+    {
+        await JS.InvokeVoidAsync(
+            "googleMaps.updatePoints",
+            _mapId,
+            _lastPointDtos,
+            autoFit);
+    }
+
+    /// <summary>
+    /// Pan/zoom to a given point, optionally with an offset and follow flag.
+    /// </summary>
+    /// <param name="pointId">The Id of one of your HUIMapPoint items.</param>
+    /// <param name="zoom">The zoom level to apply (omit to keep current zoom).</param>
+    /// <param name="follow">If true, keep centering on this point as it moves.</param>
+    /// <param name="offsetX">Horizontal offset in pixels (positive = right).</param>
+    /// <param name="offsetY">Vertical offset in pixels (positive = down).</param>
+    public Task FocusPointAsync(
+        string pointId,
+        int? zoom = null,
+        bool follow = false,
+        int offsetX = 0,
+        int offsetY = 0
+    )
+    {
+        return JS.InvokeVoidAsync(
+            "googleMaps.focusOnPoint",
+            _mapId,
+            pointId,
+            zoom,
+            follow,
+            offsetX,
+            offsetY
+        ).AsTask();
+    }
+
+    public void Dispose()
+    {
+        if (!_needsInit)
+            JS.InvokeVoidAsync("googleMaps.destroyInstance", _mapId);
+        _dotNetRef?.Dispose();
+    }
+
+    public class HUIMapPoint
+    {
+        public string Id { get; set; } = Guid.NewGuid().ToString();
+        public double Lat { get; set; }
+        public double Lng { get; set; }
+        public double Heading { get; set; }
+        public string? Icon { get; set; }    // URL or SVG path
+        public int? IconSize { get; set; }
+        public string? IconColor { get; set; }
+        public string? Badge { get; set; }    // URL or SVG path
+        public int? BadgeSize { get; set; }
+        public string? BadgeColor { get; set; }
+        public object? Data { get; set; }
+    }
+
+    public class HUIMapsControlOptions
+    {
+        public bool DisableDefaultUI { get; set; } = true;
+        public bool? MapTypeControl { get; set; }
+        public bool? FullscreenControl { get; set; }
+        public bool? StreetViewControl { get; set; }
+        public bool? RotateControl { get; set; }
+        public bool? ZoomControl { get; set; }
+        public bool? ClickableIcons { get; set; }
+
+        /// <summary>Minimum allowed zoom level (0 = world, 21 = street).</summary>
+        public int? MinZoom { get; set; }
+        /// <summary>Maximum allowed zoom level.</summary>
+        public int? MaxZoom { get; set; }
+    }
+
+
+
+
+    // cached DTOs of the last time we synced to JS
+    private List<object> _lastPointDtos = new List<object>();
+    // did we already call createInstance?
+    private bool _mapInitialized;
+
+    // helper: build the DTO from your Points
+    private List<object> BuildPointDtos() =>
+      Points.Select(p => (object) new
+      {
+          id = p.Id,
+          lat = p.Lat,
+          lng = p.Lng,
+          heading = p.Heading,
+          icon = p.Icon,
+          iconSize = p.IconSize,
+          iconColor = p.IconColor,
+          badge = p.Badge,
+          badgeSize = p.BadgeSize,
+          badgeColor = p.BadgeColor,
+          data = p.Data
+      }).ToList();
+}

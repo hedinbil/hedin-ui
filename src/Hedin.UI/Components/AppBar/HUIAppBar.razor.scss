@@ -1,0 +1,10 @@
+﻿.hui-app-title {
+    background: var(--mud-palette-primary);
+    color: var(--mud-palette-primary-text);
+    padding: 4px 16px 4px 16px;
+    border-radius: 6px 0px 0px 6px;
+}
+.hui-app-title:not(.disabled):hover {
+    background: var(--mud-palette-primary-darken);
+    cursor: pointer;
+}

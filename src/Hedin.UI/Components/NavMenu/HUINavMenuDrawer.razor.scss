@@ -1,0 +1,105 @@
+.hui-drawer {
+  .menu-item > .submenu {
+    min-width: 160px;
+  }
+
+  .menu-item {
+    position: relative;
+    flex-direction: row;
+  }
+
+  .menu-item:not(:has(.submenu)) {
+    position: relative;
+    flex-direction: row;
+  }
+
+  .menu-item:has(.submenu) {
+    border-radius: 0;
+  }
+
+  .menu-item:hover > .submenu {
+    display: flex;
+    flex-direction: column;
+    width: max-content;
+    border-radius: 8px;
+  }
+
+  .menu-item:hover {
+    display: flex;
+    width: max-content;
+    background-color: var(--mud-palette-gray-default);
+    box-shadow: var(--mud-elevation-12);
+    z-index: 99;
+  }
+
+  .submenu-title {
+    display: flex;
+    font-weight: 600;
+    font-size: 12px;
+    padding: 8px 20px;
+    background-color: var(--mud-palette-gray-default);
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    line-height: normal;
+  }
+
+  .expanded-menu-item {
+    display: none;
+    width: max-content;
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  .expanded-menu-item:hover .submenu {
+    display: flex;
+  }
+
+  .submenu {
+    display: none;
+    position: absolute;
+    flex-direction: column;
+    left: 100%;
+    top: -31px;
+    background-color: var(--mud-palette-surface) !important;
+    box-shadow: var(--mud-elevation-8);
+  }
+
+  .submenu > .menu-item {
+    width: 100%;
+  }
+
+  .submenu > .menu-item > .mud-nav-item > .mud-nav-link {
+    height: 20px !important;
+  }
+
+  .menu-item:hover > .expanded-menu-item {
+    display: flex;
+    padding: 16px 20px 16px 0;
+    white-space: nowrap;
+  }
+
+  .menu-item:hover:has(> .expanded-menu-item) {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+  }
+
+  a.mud-nav-link.mud-ripple {
+    height: 35px;
+  }
+
+  .mud-nav-link.mud-ripple {
+    transition: none !important;
+  }
+
+  .mud-drawer--closed {
+    background: var(--mud-palette-gray-default);
+  }
+
+  .menu-item.has-expanded-child {
+    background: var(--mud-palette-gray-default);
+  }
+
+  .submenu > div:first-child > a {
+    padding: 12px 20px;
+  }
+}

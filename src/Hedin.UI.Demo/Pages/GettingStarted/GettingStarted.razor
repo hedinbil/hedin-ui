@@ -1,0 +1,18 @@
+﻿@using Brism
+@attribute [Route(PageRoute.GettingStarted)]
+@attribute [HUIPageSettings("Getting started", 0)]
+
+@inject MarkdownReader mdReader
+
+<HUIPage Header="Getting started" PageDescription="This page does not represent the design of Hedin.UI.">
+    <MudContainer MaxWidth="MaxWidth.Large">
+        <MudPaper Class="pa-3">
+            <MudMarkdown Value="@mdReader.GettingStartedText" CodeBlockTheme="cbTheme"></MudMarkdown>
+        </MudPaper>
+    </MudContainer>
+</HUIPage>
+
+@code {
+    [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+    private CodeBlockTheme cbTheme => !DarkMode ? CodeBlockTheme.AtomOneLight : CodeBlockTheme.AtomOneDark;
+}

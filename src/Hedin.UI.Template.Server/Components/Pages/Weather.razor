@@ -1,0 +1,52 @@
+﻿@attribute [Route(PageRoute.Weather)]
+@attribute [HUIPageSettings("Weather", 2, Icons.Material.Filled.WbSunny)]
+@attribute [StreamRendering]
+
+<HUIPage Header="Weather" PageDescription="This component demonstrates showing data.">
+    <HUIPageFilter>
+        <MudDatePicker Label="Date" Variant="Variant.Outlined" Margin="Margin.Dense"></MudDatePicker>
+        <MudNumericField Label="Temp. (C)" Value="string.Empty"></MudNumericField>
+        <MudNumericField Label="Temp. (f)" Value="string.Empty"></MudNumericField>
+        <MudTextField Label="Summary" Value="string.Empty"></MudTextField>
+    </HUIPageFilter>
+    <HUIPageTable Header="Next days forecast" T="WeatherForecast">
+        <HUIDataGrid Items="forecasts" Loading="loading">
+            <Columns>
+                <PropertyColumn Title="Date" Property="x => x.Date" />
+                <PropertyColumn Title="Temp. (C)" Property="x => x.TemperatureC" />
+                <PropertyColumn Title="Temp. (F)" Property="x => x.TemperatureF" />
+                <PropertyColumn Title="Summary" Property="x => x.Summary" />
+            </Columns>
+        </HUIDataGrid>
+    </HUIPageTable>
+</HUIPage>
+
+
+@code {
+    private IEnumerable<WeatherForecast> forecasts = [];
+    private bool loading = true;
+
+    protected override async Task OnInitializedAsync()
+    {
+        // Simulate asynchronous loading to demonstrate streaming rendering
+        await Task.Delay(500);
+
+        var startDate = DateOnly.FromDateTime(DateTime.Now);
+        var summaries = new[] { "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching" };
+        forecasts = Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            {
+                Date = startDate.AddDays(index),
+                TemperatureC = Random.Shared.Next(-20, 55),
+                Summary = summaries[Random.Shared.Next(summaries.Length)]
+            }).ToArray();
+        loading = false;
+    }
+
+    private class WeatherForecast
+    {
+        public DateOnly Date { get; set; }
+        public int TemperatureC { get; set; }
+        public string? Summary { get; set; }
+        public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
+    }
+}

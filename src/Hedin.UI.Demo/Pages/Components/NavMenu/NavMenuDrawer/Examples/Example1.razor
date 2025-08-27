@@ -1,0 +1,86 @@
+﻿<MudStack Row Style="transform: translate(0, 0);">
+    <HUINavMenuDrawer Items="menuItems" RequireAuthorization="false" />
+    <div style="margin-left: 64px">
+        <HUIPage Header="NavMenu Drawer">
+            <ChildContent>
+                <HUIModule Header="Page content" Expandable="false">
+                    <MudText Style="height: 300px; width: 600px; ">Some Content</MudText>
+                </HUIModule>
+            </ChildContent>
+        </HUIPage>
+    </div>
+</MudStack>
+
+@code {
+    private List<HUIMenuItem> menuItems = [];
+
+    protected override void OnInitialized()
+    {
+        menuItems =
+                [
+            new HUIMenuItem(
+        "Dashboard",
+        "/",
+        null,
+        icon: @Icons.Material.Filled.ViewList
+    )
+            {
+                SubItems =
+                [
+                    new(
+                        "Guidelines",
+                        "/guidelines",
+                        null,
+                        icon: Icons.Material.Filled.Checklist),
+                    new(
+                        "Translations",
+                        "/translations",
+                        null,
+                        icon: Icons.Material.Filled.Translate)
+                ]
+            },
+            new HUIMenuItem(
+                "Components",
+                "/Components",
+                null,
+                icon: @Icons.Material.Filled.AddToQueue
+            )
+            {
+                SubItems =
+                [
+                    new(
+                        "App bar",
+                        "/Components/app-bar",
+                        null,
+                        icon: Icons.Material.Filled.LineWeight),
+                    new(
+                        "Button",
+                        "/Components/buttons/button",
+                        null,
+                        icon: Icons.Material.Filled.RadioButtonUnchecked),
+                    new(
+                        "Icon Button",
+                        "/Components/buttons/icon-button",
+                        null,
+                        icon: Icons.Material.Filled.RadioButtonChecked),
+                    new(
+                        "Frame",
+                        "/Components/frame",
+                        null,
+                        icon: Icons.Material.Filled.SmartButton),
+                    new(
+                        "Drawer",
+                        "/Components/menus/nav-menu-drawer",
+                        null,
+                        icon: @Icons.Material.Filled.Menu)
+                ]
+            },
+            new HUIMenuItem(
+                "Guidelines",
+                "/guidelines",
+                null,
+                icon: Icons.Material.Filled.ListAlt
+            )
+        ];
+    }
+}

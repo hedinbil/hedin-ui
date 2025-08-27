@@ -1,0 +1,22 @@
+﻿::deep.nav-menu-wrapper {
+    .mud-nav-link {
+        padding: 4px 12px;
+    }
+
+    .mud-nav-group * .mud-navmenu .mud-nav-item .mud-nav-link {
+        padding-left: 24px;
+        padding-inline-start: 24px;
+    }
+
+    .mud-nav-group * .mud-navmenu > .mud-nav-group .mud-nav-link {
+        padding-left: 24px;
+        padding-inline-start: 24px;
+        padding-inline-end: 12px;
+    }
+
+    .mud-nav-group * .mud-navmenu > .mud-nav-group * .mud-navmenu .mud-nav-item .mud-nav-link {
+        padding-left: 36px;
+        padding-inline-start: 36px;
+        padding-inline-end: 12px;
+    }
+}

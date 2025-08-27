@@ -1,0 +1,19 @@
+﻿<HUIDataGrid Dense="true" T="MyRecord" Items="test" ShowPager="false">
+    <Columns>
+        <PropertyColumn Title="Class name" Property="x => x.ClassName"></PropertyColumn>
+        <PropertyColumn Title="Description" Property="x => x.Description"></PropertyColumn>
+    </Columns>
+</HUIDataGrid>
+@code {
+    private List<MyRecord> test = new List<MyRecord>
+    {
+        new("hui-text-s", "Set this class MudText components to get a small text"),
+        new("hui-text-xs", "Set this class MudText components to get an extra small text"),
+        new("hui-text-xxs", "Set this class MudText components to get an extra extra small text"),
+        new("hui-text-semibold", "Set this class MudText components to get an extra extra small text"),
+        new("hui-field-section", "Set this class typically in a div covering input fields in a smaller section of the screen. Each field is then assigned a correct width depending on screen width."),
+        new("hui-field-section-large", "Set this class typically in a div covering input fields such as a page filter. Each field is then assigned a correct width depending on screen width."),
+    };
+
+    public record MyRecord(string ClassName, string Description);
+}

@@ -1,0 +1,107 @@
+﻿@namespace Hedin.UI
+@inject IOptions<TitleService> TitleService
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+
+<PageTitle>@Title</PageTitle>
+<div class="hui-page">
+    <MudPaper Class="pa-3 hui-main-paper" Elevation="12">
+        <div class="d-flex justify-space-between mb-3">
+            <span class="d-flex flex-column">
+                <HUIBreadcrumbs Breadcrumbs="Breadcrumbs"></HUIBreadcrumbs>
+                <span class="d-flex">
+                    <h2>@Header</h2>
+                    @if (!string.IsNullOrEmpty(PageInfo))
+                    {
+                        <span class="align-self-center ml-3">
+                            <HUITooltip Text="@PageInfo">
+                                <MudIconButton Size="Size.Small" Icon="@Icons.Material.Filled.Help"></MudIconButton>
+                            </HUITooltip>
+                        </span>
+                    }
+                    @if (TitleSuffixContent != null)
+                    {
+                        <div class="align-self-center ml-3">@TitleSuffixContent</div>
+                    }
+                </span>
+            </span>
+            <span class=@($"d-flex gap-1 {(AlignButtonsCenter ? "align-self-center" : string.Empty)}")>
+                @Buttons
+                @if (!string.IsNullOrEmpty(AddButtonText))
+                {
+                    <HUIButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Primary" StartIcon="@Icons.Material.Filled.Add" OnClick="HandleAddClick">@AddButtonText</HUIButton>
+                }
+            </span>
+        </div>
+
+        @if (!string.IsNullOrEmpty(PageDescription))
+        {
+            <MudGrid>
+                <MudItem xs="12" md="8" lg="6" xl="4" Class="mb-6">
+                    <p>@PageDescription</p>
+                </MudItem>
+            </MudGrid>
+        }
+
+        <div class="d-flex flex-column gap-3">
+            @ChildContent
+        </div>
+    </MudPaper>
+</div>
+
+
+@code {
+    /// <summary>
+    /// When set, show a button with the AddButtonText.
+    /// </summary>
+    [Parameter] public string? AddButtonText { get; set; }
+    /// <summary>
+    /// On click action for the Add button.
+    /// </summary>
+    [Parameter] public EventCallback OnAddClick { get; set; }
+
+    /// <summary>
+    /// Display string for the page, but also for the browser PageTitle
+    /// </summary>
+    [Parameter, EditorRequired] public string Header { get; set; } = string.Empty;
+    /// <summary>
+    /// Description of the page.
+    /// </summary>
+    [Parameter] public string? PageDescription { get; set; }
+
+    /// <summary>
+    /// When set, show an icon with the PageInfo text shown in tooltip.
+    /// </summary>
+    [Parameter] public string? PageInfo { get; set; }
+
+    /// <summary>
+    /// When this is set. The page includes breadcrumbs at top left of the page.
+    /// BreadCrumbs also includes a backwards button that on click navigates user to the Href of the earler breadcrumb.
+    /// A minimum of two breadcrumbs is required.
+    /// </summary>
+    [Parameter] public List<BreadcrumbItem>? Breadcrumbs { get; set; }
+
+    /// <summary>
+    /// The content of the page.
+    /// </summary>
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Buttons to be shown at the top right of the page.
+    /// </summary>
+    [Parameter] public RenderFragment? Buttons { get; set; } 
+    
+    /// <summary>
+    /// Content shown after the title.
+    /// </summary>
+    [Parameter] public RenderFragment? TitleSuffixContent { get; set; } 
+    
+    /// <summary>
+    /// When set to true, the buttons will be aligned to the center.
+    /// </summary>
+    [Parameter] public bool AlignButtonsCenter { get; set; } = true;
+
+    private string Title => string.IsNullOrEmpty(TitleService.Value.AppTitle) ? Header : $"{Header} – {TitleService.Value.AppTitle}";
+
+    private void HandleAddClick() => OnAddClick.InvokeAsync();
+}

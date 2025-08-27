@@ -1,0 +1,33 @@
+﻿@namespace Hedin.UI
+
+<MudTooltip Class="@Class" Style=@($"pointer-events:{PointerEvents}; {Style}") Arrow="true" Placement="@Placement" Text="@Text" ChildContent="ChildContent" TooltipContent="TooltipContent">
+
+</MudTooltip>
+
+@code {
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public RenderFragment? TooltipContent { get; set; }
+
+    [Parameter]
+    public Placement Placement { get; set; } = Placement.Top;
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Style { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Set the pointer events CSS property. auto is the default value.
+    /// Suitable values are "none", "auto", "visible", "visibleFill", "visiblePainted", and "visibleStroke".
+    /// </summary>
+    [Parameter]
+    public string PointerEvents { get; set; } = "auto";
+    
+    [Parameter]
+    public string Text { get; set; } = string.Empty;
+    
+}

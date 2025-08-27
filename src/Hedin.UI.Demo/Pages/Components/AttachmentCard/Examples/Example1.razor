@@ -1,0 +1,14 @@
+@inject ISnackbar Snackbar
+<div style="max-width: 340px;">
+    <HUIAttachmentCard OnViewClick="HandleOnViewClick" OnRemoveClick="HandleOnRemoveClick">
+        <FileInformation>
+            <MudText Class="hui-text-semibold">VIN-List.csv</MudText>
+            <MudText Class="hui-text-semibold">12 kB</MudText>
+            <MudText Class="hui-text-semibold">94 items</MudText>
+        </FileInformation>
+    </HUIAttachmentCard>
+</div>
+@code {
+    private void HandleOnViewClick() => Snackbar.Add("File should be open...", Severity.Info);
+    private void HandleOnRemoveClick() => Snackbar.Add("File should be deleted...", Severity.Warning);
+}

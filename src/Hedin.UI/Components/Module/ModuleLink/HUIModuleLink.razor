@@ -1,0 +1,32 @@
+﻿@namespace Hedin.UI
+@inject IJSRuntime JSRuntime
+
+<MudExpansionPanels Elevation="0" Class="hui-rounded-s">
+    <MudExpansionPanel Class="@($"hui-module-dense {Class}")" Expanded="false" HideIcon="true" ExpandedChanged="Navigate">
+        <TitleContent>
+            <div class="d-flex justify-space-between">
+                <MudText>@Header</MudText>
+                    <div class="d-flex gap-1 my-n1 align-center">
+                    @if (Buttons != null)
+                    {
+                        @Buttons
+                    }
+                    <MudIconButton Disabled="Disabled" Icon="@Icons.Material.Filled.OpenInNew" Size="Size.Small" OnClick="Navigate"></MudIconButton>
+                </div>
+            </div>
+        </TitleContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+@code {
+    [Parameter, EditorRequired] public string? Url { get; set; }
+    [Parameter, EditorRequired] public string? Header { get; set; }
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool Disabled { get; set; } = false;
+    private async Task Navigate() {
+        if (!Disabled)
+        {
+            await JSRuntime.InvokeVoidAsync("open", Url, "_blank");
+        }
+    }
+}

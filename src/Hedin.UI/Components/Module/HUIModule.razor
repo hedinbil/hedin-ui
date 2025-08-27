@@ -1,0 +1,130 @@
+﻿@namespace Hedin.UI
+
+<div class="hui-module">
+    @if (Expandable && !UseToggleSwitch)
+    {
+        <MudExpansionPanels Elevation="12" Class="@Class">
+            <MudExpansionPanel HideIcon="true" @bind-Expanded="IsExpanded" Disabled="@Disabled">
+                <TitleContent>
+                    <div class="d-flex justify-space-between">
+                        @if (HeaderContent != null)
+                        {
+                            @HeaderContent
+                        }
+                        else
+                        {
+                            <MudText Typo="Typo.h6">@Header</MudText>
+                        }
+                        <div class="d-flex gap-1 align-center">
+                            @if (IsExpanded || ButtonsVisible)
+                            {
+                                @Buttons
+                            }
+                            <HUIIconButton
+                            Icon="@(IsExpanded ? Icons.Material.Filled.KeyboardArrowUp : Icons.Material.Filled.KeyboardArrowDown)"
+                            OnClick="HandleExpansionButtonClick"/>   
+                        </div>
+                    </div>
+                </TitleContent>
+                <ChildContent>
+                    @ChildContent
+                    @if (Footer != null)
+                    {
+                        @Footer
+                    }
+                </ChildContent>
+            </MudExpansionPanel>
+        </MudExpansionPanels>
+    }
+    else
+    {
+        <div class="mud-expansion-panels not-expandable @Class">
+            <div class="mud-expand-panel@(!UseToggleSwitch || IsExpanded ? $" mud-panel-expanded" : null) mud-elevation-12 mud-expand-panel-border@(Disabled ? " mud-disabled" : null)">
+                <div class="mud-expand-panel-header">
+                    <div class="mud-expand-panel-text">
+                        <div class="d-flex justify-space-between">
+                            @if (HeaderContent != null)
+                            {
+                                @HeaderContent
+                            }
+                            else
+                            {
+                                <MudText Typo="Typo.h6">@Header</MudText>
+                            }
+                            <div class="d-flex gap-1 align-center">
+                                @Buttons
+                                @if (UseToggleSwitch)
+                                {
+                                    if (string.IsNullOrEmpty(ToggleSwitchTooltip))
+                                    {
+                                        <MudSwitch T="bool" Value="@IsExpanded" Color="Color.Primary" Size="Size.Small" ValueChanged="OnExpandedChanged" Disabled="@(Disabled||ToggleSwitchDisabled)"/>
+                                    }
+                                    else
+                                    {
+                                        <HUITooltip Text="@ToggleSwitchTooltip">
+                                            <MudSwitch T="bool" Value="@IsExpanded" Color="Color.Primary" Size="Size.Small" ValueChanged="OnExpandedChanged" Disabled="@(Disabled||ToggleSwitchDisabled)"/>
+                                        </HUITooltip>
+                                    }
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                @if (UseToggleSwitch)
+                {
+                    <div class="mud-collapse-container@(IsExpanded ? " mud-collapse-entered" : null)">
+                        <div class="mud-collapse-wrapper">
+                            <div class="mud-collapse-wrapper-inner">
+                                <div class="mud-expand-panel-content mud-expand-panel-gutters">
+                                    @ChildContent
+                                    @if (Footer != null)
+                                    {
+                                        @Footer
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="mud-expand-panel-content mud-expand-panel-gutters">
+                        @ChildContent
+                        @if (Footer != null)
+                        {
+                            @Footer
+                        }
+                    </div> 
+                }
+
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    [Parameter] public string? Header { get; set; }
+    [Parameter] public RenderFragment? HeaderContent { get; set; }
+    [Parameter] public bool IsExpanded { get; set; }
+    [Parameter] public bool Expandable { get; set; } = true;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Footer { get; set; }
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    /// <summary>
+    /// Makes the buttons visible in the header. Default behaviour is to show buttons only when the module is expanded.
+    /// </summary>
+    [Parameter] public bool ButtonsVisible { get; set; }
+    [Parameter] public string? Class { get; set; }
+    [Parameter] public bool UseToggleSwitch { get; set; }
+    [Parameter] public bool ToggleSwitchDisabled { get; set; }
+    [Parameter] public string? ToggleSwitchTooltip { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
+    private void HandleExpansionButtonClick() => IsExpanded = !IsExpanded;
+    private void OnExpandedChanged(bool value)
+    {
+        IsExpanded = value;
+        ExpandedChanged.InvokeAsync(value);
+    }
+
+}

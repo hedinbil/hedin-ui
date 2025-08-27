@@ -1,0 +1,24 @@
+﻿::deep.hui-attachment-card {
+    .card {
+        background-color: var(--mud-surface);
+    }
+
+    .card-actions {
+        padding: 0 12px 12px 12px;
+    }
+
+    .file-info{
+        text-wrap: nowrap;
+    }
+
+    .file-paper {
+        min-width: 196px;
+        max-width: 50%;
+        min-height: 100px;
+    }
+
+    .file-paper:hover {
+        background-color: var(--mud-palette-action-default-hover);
+        cursor: pointer;
+    }
+}

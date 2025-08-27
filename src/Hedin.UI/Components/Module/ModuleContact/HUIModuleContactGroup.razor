@@ -1,0 +1,33 @@
+﻿@namespace Hedin.UI
+
+<MudExpansionPanels Elevation="0" Class="hui-rounded-s">
+    <MudExpansionPanel Class="hui-module-dense mb-1" Style="@(IsExpanded ? "background-color: var(--mud-palette-gray-light) !important" : "")" @bind-Expanded="IsExpanded">
+        <TitleContent>
+            <div class="d-flex justify-space-between">
+                <MudText Class="align-self-center">@Header</MudText>
+                <div class="d-flex gap-1 align-center">
+                    @if (IsExpanded)
+                    {
+                        @Buttons
+                    }
+                </div>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <div class="pb-1">
+                <div class="px-3 py-1">
+                    @ChildContent
+                </div>
+            </div>
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+@code {
+    [Parameter] public string? Header { get; set; }
+    [Parameter] public bool IsExpanded { get; set; } = false;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public RenderFragment? Buttons { get; set; }
+
+
+}

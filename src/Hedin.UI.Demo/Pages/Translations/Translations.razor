@@ -1,0 +1,67 @@
+﻿@using System.Collections;
+@using System.Globalization;
+@using System.Resources;
+@using Microsoft.Extensions.Localization;
+@attribute [Route(PageRoute.Translations)]
+@attribute [HUIPageSettings("Translations")]
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="px-3">
+    <HUIPage Header="Translations" PageDescription="Hedin UI uses internal English strings in components. Your application may override these strings for multi-language support.">
+        <HUIModule Header="Implement your custom resources" IsExpanded="true" Class="mb-6">
+            <HUIModuleSection Header="1. Add a translation resx file to your project"></HUIModuleSection>
+            <HUIModuleSection Header="2. Implement a class that implements HUILocalizer">
+                <Brism.CodeBlock Language="Brism.CodeLanguage.CSharp" Code="@(@"
+                    internal class ResXHUILocalizer : HUILocalizer
+                    {
+                        private IStringLocalizer _localization;
+
+                        public ResXHUILocalizer(IStringLocalizer&lt;Translation&gt; localizer)
+                        {
+                            _localization = localizer;
+                        }
+
+                        public override LocalizedString this[string key] => _localization[key];
+                    }
+                    ")">
+                </Brism.CodeBlock>
+            </HUIModuleSection>
+            <HUIModuleSection Header="3. Add to startup">
+                <Brism.CodeBlock Language="Brism.CodeLanguage.CSharp" Code="services.AddTransient&lt;HUILocalizer, ResXHUILocalizer&gt;();">
+                </Brism.CodeBlock>
+            </HUIModuleSection>
+        </HUIModule>
+
+        <HUIModule Header="Available resources" IsExpanded="true">
+            <HUIDataGrid Items="_myResources" Dense="true" ShowPager="false" T="TranslationGridItem">
+                <Columns>
+                    <PropertyColumn TProperty="string" T="TranslationGridItem" Property="x => x.Key" Title="Key"></PropertyColumn>
+                    <PropertyColumn TProperty="string" T="TranslationGridItem" Property="x => x.Value" Title="Value"></PropertyColumn>
+                </Columns>
+            </HUIDataGrid>
+        </HUIModule>
+    </HUIPage>
+</MudContainer>
+
+@code {
+    private List<TranslationGridItem> _myResources = new();
+    private record TranslationGridItem(string Key, string Value);
+
+    protected override void OnInitialized()
+    {
+        var myResourceClass = new ResourceManager(typeof(Hedin.UI.Localization.Translation));
+        var resourceSet = myResourceClass.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+
+        if (resourceSet != null)
+        {
+            foreach (DictionaryEntry entry in resourceSet)
+            {
+                var resourceKey = entry.Key.ToString()!;
+                var resource = (string)entry.Value!;
+                _myResources.Add(new TranslationGridItem(resourceKey, resource));
+            }
+        }
+        _myResources = _myResources.OrderBy(x => x.Key).ToList();
+        base.OnInitialized();
+    }
+
+}

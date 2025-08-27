@@ -1,0 +1,129 @@
+﻿@attribute [Route(PageRoute.DemoPage)]
+@attribute [HUIPageSettings("Page")]
+@inject ISnackbar Snackbar
+@inject IHUISettingsService HUISettingsService
+
+<HUIPage Header="Demo page" PageDescription="This is an example description" PageInfo="This is another example description">
+    <HUIPageFilter OnClearClick="HandleClearClick">
+        @foreach (var field in searchFields.Where(x => x.Visible))
+        {
+            <MudTextField T="string" @bind-Value="field.Value" AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="() => HandleFieldVisibilityClick(field)" Label="@field.Label"></MudTextField>
+        }
+
+    </HUIPageFilter>
+    <HUIPageTable Header="Order list" T="Car">
+        <HUIDataGrid Items="cars" T="Car" OnRowClick="HandleOnRowClick" EnableSettingsMenu="true" Id="my-demopage" Breakpoint="Breakpoint.None">
+            <Columns>
+                <HUIIconColumn Icon="@Icons.Material.Filled.Edit"/>
+                <PropertyColumn Property="x => x.OrderNo" Title="Order number" />
+                <PropertyColumn Property="x => x.Model" Hideable="false" />
+                <PropertyColumn Property="x => x.RegNo" Title="Reg number" DragAndDropEnabled="false" />
+                <PropertyColumn Property="x => x.VIN" Title="VIN" />
+                <PropertyColumn Property="x => x.Description" Hideable="false" DragAndDropEnabled="false" />
+                <PropertyColumn Property="x => x.EntityCode" Title="" />
+                <PropertyColumn Property="x => x.Color" />
+                <PropertyColumn Property="x => x.ChangeData" Title="Factory change" Format="yyyy-MM-dd" />
+                <PropertyColumn Property="x => x.ETA" Title="" Format="yyyy-MM-dd" />
+                <PropertyColumn Property="x => x.Status" />
+            </Columns>
+        </HUIDataGrid>
+    </HUIPageTable>
+</HUIPage>
+
+@code {
+    public class Car : IHUIGridItem
+    {
+        public string OrderNo { get; set; }
+        public string Model { get; set; }
+        public string RegNo { get; set; }
+        public string VIN { get; set; }
+        public string Description { get; set; }
+        public string EntityCode { get; set; }
+        public string Color { get; set; }
+        public DateTime ChangeData { get; set; }
+        public DateTime ETA { get; set; }
+        public string Status { get; set; }
+        public Severity Severity { get; set; }
+
+        public Car(string orderNo, string model, string regNo, string vin, string description, string entityCode, string color, DateTime changeData, DateTime eta, string status, Severity severity)
+        {
+            OrderNo = orderNo;
+            Model = model;
+            RegNo = regNo;
+            VIN = vin;
+            Description = description;
+            EntityCode = entityCode;
+            Color = color;
+            ChangeData = changeData;
+            ETA = eta;
+            Status = status;
+            Severity = severity;
+        }
+    }
+    public List<Car> cars = new();
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            Severity severity = Severity.Normal;
+            if (i == 1)
+                severity = Severity.Info;
+            if (i == 2)
+                severity = Severity.Warning;
+            if (i == 3)
+                severity = Severity.Success;
+            if (i == 4)
+                severity = Severity.Error;
+            cars.Add(new Car($"00000A{i}", "Demo Model", $"REG00{i}", $"AA1AAA00000000{i}", "Awesome model", $"Code {0}", "ABC123", DateTime.Now, DateTime.Now.AddDays(-6), "Factory order", severity));
+        }
+    }
+
+    private void HandleOnRowClick(Car car) => Snackbar.Add($"Info, You clicked on OrderNo: {car.OrderNo}", Severity.Info);
+
+
+    private void HandleFieldVisibilityClick(SearchField searchField) => searchField.Visible = !searchField.Visible;
+    // Dictionary<string, object> AdditionalAttributes = new Dictionary<string, object>
+    //     {
+    //         ["Variant"] = Variant.Outlined,
+    //         ["Margin"] = Margin.Dense,
+    //     };
+
+    private void HandleClearClick() => searchFields.ForEach(x => x.Clear());
+
+    private List<SearchField> searchFields = new List<SearchField>
+    {
+        new SearchField(1, "Order number"              , true),
+        new SearchField(2, "SN ordernummer"            , true),
+        new SearchField(3, "Model"                     , true),
+        new SearchField(4, "Registration number"       , true),
+        new SearchField(5, "Customer"                  , true),
+        new SearchField(6, "Customer order number"     , true),
+        new SearchField(7, "Sales channel"             , true),
+        new SearchField(8, "Sales person"              , true),
+        new SearchField(9, "Entity description"        , false),
+        new SearchField(10, "Entity code"              , false),
+        new SearchField(11, "Color"                    , false),
+        new SearchField(12, "Last factory change date" , false),
+        new SearchField(13, "Status"                   , false),
+        new SearchField(14, "Gate release date"        , false),
+        new SearchField(15, "Location"                 , false),
+        new SearchField(16, "Harbour status"           , false),
+    };
+
+
+    public class SearchField
+    {
+        public int Id { get; set; }
+        public string Label { get; set; }
+        public bool Visible { get; set; }
+        public string? Value { get; set; }
+        public SearchField(int id, string label, bool visible)
+        {
+            Id = id;
+            Label = label;
+            Visible = visible;
+        }
+        public void Clear() => Value = null;
+    }
+}

@@ -1,0 +1,12 @@
+﻿@attribute [Route(PageRoute.NavMenu)]
+@attribute [HUIPageSettings("NavMenu")]
+
+<DemoPageLayout TItem="NavMenu" HUIComponent="typeof(HUINavMenu)">
+    <MudText>For some reason, rendering multiple menues at the same time with the same data source introduces some duplicate text.</MudText>
+    <MudText Class="mb-6">This error does not occur when only one menu is present. Which is most likely the real life scenario.</MudText>
+   
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.NavMenu.NavMenu.Examples.Example1)">
+        You may use the PageHelper in combination with the HUIPageSettingsAttribute set on routable components. Otherwise, pass your own list of menu items.
+    </DemoExample>
+</DemoPageLayout>
+

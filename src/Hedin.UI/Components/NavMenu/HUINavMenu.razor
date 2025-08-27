@@ -1,0 +1,161 @@
+﻿@namespace Hedin.UI
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Routing
+@inject HUILocalizer Localizer
+@inject NavigationManager NavigationManager
+
+@if (Items.Any())
+{
+    <div class="nav-menu-wrapper pt-2">
+        <MudNavMenu Dense="true" Color="Color.Default">
+            @foreach (var menuItem in Items)
+            {
+                @GetMenuItemsRecursively(menuItem)
+            }
+            @ChildContent
+        </MudNavMenu>
+    </div>
+}
+
+@code {
+    [Parameter] public List<HUIMenuItem> Items { get; set; } = new();
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// Determines if the menu is initially expanded or not.
+    /// </summary>
+    [Parameter] public bool Expanded { get; set; } = true;
+
+    /// <summary>
+    /// When expanding a group
+    /// </summary>
+    [Parameter] public bool NavigateOnGroupClick {get;set; } = false;
+
+    /// <summary>
+    /// AuthorizeView is used to check if the user is authorized to view the menu item. If this is set to false, all menu items will be shown regardless of the user's authorization.
+    /// </summary>
+    [Parameter] public bool RequireAuthorization { get; set; } = true;
+
+    /// <summary>
+    /// If only one subitem exists, merge the subitem with the group name to one item instead.
+    /// </summary>
+    [Parameter] public bool MergeSubItemWithGroup { get; set; } = true;
+
+    [Parameter] public int LevelsToRender { get; set; } = -1;
+
+
+    protected override void OnInitialized()
+    {
+        foreach(var item in Items)
+        {
+            item.IsExpanded = Expanded;
+        }
+        base.OnInitialized();
+    }
+
+    private RenderFragment GetMenuItemsRecursively(HUIMenuItem menuItem, int currentLevel = 0)
+    {
+        if (currentLevel == LevelsToRender || (LevelsToRender < 0 && menuItem.SubItems.Count == 0))
+        {
+            // Reached the specified level or a leaf node, render the menu item
+            return @<AuthorizeView Policy="@menuItem.Policy">
+        <Authorized>
+            @GetLinkFragment(menuItem)
+        </Authorized>
+        <NotAuthorized>
+            @if (!RequireAuthorization)
+        {
+            @GetLinkFragment(menuItem)
+        }
+        </NotAuthorized>
+    </AuthorizeView>;
+        }
+        else if (!MergeSubItemWithGroup && menuItem.SubItems.Count > 0 && currentLevel + 1 == LevelsToRender)
+        {
+            // If merging is disabled and the next level is the specified level, render the group as a normal item
+            return @<AuthorizeView Policy="@menuItem.Policy">
+        <Authorized>
+            @GetLinkFragment(menuItem)
+        </Authorized>
+        <NotAuthorized>
+            @if (!RequireAuthorization)
+        {
+            @GetLinkFragment(menuItem)
+        }
+        </NotAuthorized>
+    </AuthorizeView>;
+        }
+        else
+        {
+            // Continue rendering recursively
+            if (!MergeSubItemWithGroup && menuItem.SubItems.Count > 0)
+            {
+                return GetGroupItem(menuItem, currentLevel);
+            }
+            else
+            {
+                if (menuItem.SubItems.Count == 1)
+                {
+                    menuItem.SubItems.First().DisplayName = $"{Localizer[menuItem.DisplayName]} {Localizer[menuItem.SubItems.First().DisplayName]}";
+                    return GetMenuItemsRecursively(menuItem.SubItems.First(), currentLevel + 1);
+                }
+                if (menuItem.SubItems.Count > 0)
+                {
+                    return GetGroupItem(menuItem, currentLevel);
+                }
+            }
+            return @<AuthorizeView Policy="@menuItem.Policy">
+        <Authorized>
+            @GetLinkFragment(menuItem)
+        </Authorized>
+        <NotAuthorized>
+            @if (!RequireAuthorization)
+        {
+            @GetLinkFragment(menuItem)
+        }
+        </NotAuthorized>
+    </AuthorizeView>;
+        }
+    }
+
+    private RenderFragment GetGroupItem(HUIMenuItem menuItem, int currentLevel)
+    {
+        return
+    @<AuthorizeView Policy="@menuItem.Policy">
+        <Authorized>
+            @GetGroupFragment(menuItem, currentLevel)
+        </Authorized>
+        <NotAuthorized>
+            @if (!RequireAuthorization)
+        {
+            @GetGroupFragment(menuItem, currentLevel)
+        }
+        </NotAuthorized>
+    </AuthorizeView>;
+    }
+
+    private RenderFragment GetGroupFragment(HUIMenuItem menuItem, int currentLevel)
+    {
+        return @<MudNavGroup Title="@Localizer[menuItem.DisplayName]" Expanded="menuItem.IsExpanded" ExpandedChanged="v => HandleGroupExpansionChanged(v, menuItem)">
+        @foreach (var subMenuItem in menuItem.SubItems)
+    {
+        @GetMenuItemsRecursively(subMenuItem, currentLevel + 1)
+    }
+    </MudNavGroup>;
+    }
+
+    private RenderFragment GetLinkFragment(HUIMenuItem menuItem)
+    {
+        return @<MudNavLink Href="@menuItem.Url" Match="GetMatchLink(menuItem)">@Localizer[menuItem.DisplayName]</MudNavLink>;
+    }
+
+    private void HandleGroupExpansionChanged(bool expanded, HUIMenuItem menuItem)
+    {
+        menuItem.IsExpanded = expanded;
+        if(NavigateOnGroupClick)
+            NavigationManager.NavigateTo(menuItem.Url);
+    }
+
+    private NavLinkMatch GetMatchLink(HUIMenuItem menuItem) => (LevelsToRender != -1 && menuItem.SubItems.Any()) ? NavLinkMatch.Prefix : NavLinkMatch.All;
+
+}

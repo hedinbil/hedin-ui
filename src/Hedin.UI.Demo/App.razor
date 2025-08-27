@@ -1,0 +1,62 @@
+﻿@inject IHostEnvironment Env
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <ImportMap />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+
+    <link rel="icon" type="image/png" href="HedinUI-favicon.svg" />
+
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
+
+    <link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet" />
+    <link href="@Assets["_content/MudBlazor.Markdown/MudBlazor.Markdown.min.css"]" rel="stylesheet" />
+    <link href="@Assets["_content/Hedin.UI/css/hedin-ui.css"]" rel="stylesheet" />
+    <link href="@Assets["_content/Hedin.UI/Hedin.UI.bundle.scp.css"]" rel="stylesheet" />
+    <link href="@Assets["./css/site.css"]" rel="stylesheet" />
+    <link href="@Assets["Hedin.UI.Demo.styles.css"]" rel="stylesheet" />
+    <!-- Base PrismJS styles (required) -->
+    <link href="@Assets["_content/Brism/prism.css"]" rel="stylesheet" />
+
+    <!-- Choose ONE theme from below (we're using synthwave84 as an example) -->
+    <link href="@Assets["_content/Brism/prism-one-dark.css"]" rel="stylesheet" />
+    <HeadOutlet @rendermode="InteractiveServer" />
+
+</head>
+<body>
+    <Routes @rendermode="InteractiveServer" />
+    <div id="blazor-error-ui">
+        @if (Env.IsDevelopment())
+        {
+            <text>
+                An unhandled exception has occurred. See browser dev tools for details.
+            </text>
+        }
+        else
+        {
+            <text>
+                An error has occurred. This app may no longer respond until reloaded.
+            </text>
+        }
+        <a href="" class="reload">Reload</a>
+        <a class="dismiss">🗙</a>
+    </div>
+    <HUIReconnectModal />
+    <script src="_framework/blazor.web.js" autostart="false"></script>
+    <script src="@Assets["_content/MudBlazor/MudBlazor.min.js"]"></script>
+    <script src="@Assets["_content/Hedin.UI/js/hedin-ui.js"]"></script>
+    <script src="@Assets["_content/Hedin.UI/js/boot-server.js"]"></script>
+    <script src="@Assets["_content/MudBlazor.Markdown/MudBlazor.Markdown.min.js"]"></script>
+    <script src="@Assets["_content/Brism/prism.js"]"></script>
+    <script type="module" src="@Assets["_content/Brism/prismInterop.js"]"></script>
+    <script type="text/javascript">
+        (function(c,l,a,r,i,t,y){
+            c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+            t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+            y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+        })(window, document, "clarity", "script", "s0wy7m4jgf"); </script>
+</body>
+</html>

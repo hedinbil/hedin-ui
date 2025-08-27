@@ -1,0 +1,12 @@
+﻿@namespace Hedin.UI
+
+<span class="d-flex gap-2 align-center">
+    <MudIcon Class="@("mud-" + Severity.ToDescriptionString() + "-text")" Size="Size.Small" Icon="@Icons.Material.Filled.Circle" Style="width: 0.5rem; height: 0.5rem;" />
+    @ChildContent
+</span>
+
+
+@code {
+    [Parameter] public Severity Severity { get; set; } = Severity.Normal;
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+}

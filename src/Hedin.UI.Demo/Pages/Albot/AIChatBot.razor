@@ -1,0 +1,155 @@
+﻿@attribute [Route(PageRoute.AIChatBot)]
+@attribute [HUIPageSettings("Albot")]
+@inject ExternalResourceStatus Status
+@inherits OwningComponentBase
+
+<MudGrid Class="d-flex flex-column gap-3 align-center" Style="height:calc(100vh - var(--mud-appbar-height));">
+    <MudItem xs="12" md="8" xl="6" Style="flex:1; width:100%;">
+        <MudPaper Outlined="true" Class="pa-4 d-flex flex-column" Style="height:100%;">
+            <!-- Conversation -->
+            <div Style="flex:1; overflow-y:auto;">
+                @foreach (var chat in _conversation)
+                {
+                    var position = chat.IsBot ? ChatBubblePosition.Start : ChatBubblePosition.End;
+                    var name = chat.IsBot ? "Albot" : "You";
+                    var time = chat.Timestamp.ToString("HH:mm:ss");
+
+                    <MudChat ChatPosition="position">
+                        <MudChatHeader Name="@name" Time="@time" />
+                        @if (chat.IsBot)
+                        {
+                            <MudAvatar Square="true" Style="background-color:transparent;">
+                                <MudImage Src="HedinUI.svg" />
+                            </MudAvatar>
+                        }
+                        else
+                        {
+                            <MudAvatar Color="Color.Info" Variant="Variant.Outlined">U</MudAvatar>
+                        }
+                        <MudChatBubble>
+                            <MudMarkdown Value="@chat.Message" CodeBlockTheme="_codeTheme" />
+                        </MudChatBubble>
+                    </MudChat>
+                }
+
+                @* Show skeleton only while loading and before first chunk arrives *@
+                @if (_isLoading && _conversation.Any() && string.IsNullOrEmpty(_conversation.Last().Message))
+                {
+                    <MudChat ChatPosition="ChatBubblePosition.Start">
+                        <MudChatBubble>
+                            <span class="d-flex flex-column gap-2">
+                                <HUISkeletonList Count="1" Width="190px" Height="14px" Class="rounded" />
+                                <HUISkeletonList Count="2" Width="140px" Height="12px" Class="rounded" />
+                            </span>
+                        </MudChatBubble>
+                    </MudChat>
+                }
+            </div>
+
+            <!-- Input -->
+            <div class="d-flex gap-2 align-center mt-3">
+                <MudTextField @bind-Value="_userInput"
+                Placeholder="Type a message…"
+                Lines="1"
+                AutoGrow="true"
+                MaxLines="5"
+                Disabled="_isLoading || Status.Offline"
+                Clearable="true"
+                Immediate="true"
+                OnKeyDown="@(async e => { if (e.Key == "Enter" && !e.ShiftKey) await SendAsync(); })" />
+
+                <HUIButton Variant="Variant.Filled"
+                Color="Color.Primary"
+                StartIcon="@(_isLoading ? Icons.Material.Filled.Stop : Icons.Material.Filled.Send)"
+                Disabled="(Status.Offline || (!_isLoading && string.IsNullOrWhiteSpace(_userInput)))"
+                Loading="_isLoading"
+                OnClick="SendAsync">
+                    @(_isLoading ? "Stop" : "Send")
+                </HUIButton>
+            </div>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+@code {
+    private List<ChatMsg> _conversation = new();
+    private string _userInput = string.Empty;
+    private bool _isLoading;
+    private CancellationTokenSource? _cts;
+    private SemanticChatService? ChatService { get; set; }
+
+    [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+    private CodeBlockTheme _codeTheme => DarkMode
+        ? CodeBlockTheme.Windows10Base16
+        : CodeBlockTheme.Windows10LightBase16;
+
+    protected override void OnInitialized()
+    {
+        if (Status.Offline)
+        {
+            _conversation.Add(new ChatMsg(true, "Unable to talk to Albot. The app is running offline."));
+        }
+        else
+        {
+            ChatService = ScopedServices.GetService<SemanticChatService>()!;
+            _conversation.Add(new ChatMsg(true, "I'm a Hedin UI chat bot based on the gpt-4o-mini model. How can I help you with Hedin.UI?"));
+        }
+    }
+
+    private async Task SendAsync()
+    {
+        if (_isLoading)
+        {
+            // stop streaming
+            _cts?.Cancel();
+            return;
+        }
+
+        var text = string.IsNullOrWhiteSpace(_userInput) ? string.Empty : _userInput.Trim();
+        if (string.IsNullOrWhiteSpace(text) || Status.Offline) return;
+
+        // add user message
+        _conversation.Add(new ChatMsg(false, text));
+        // prepare bot placeholder
+        _conversation.Add(new ChatMsg(true, string.Empty));
+        var idx = _conversation.Count - 1;
+
+        _userInput = string.Empty;
+        _isLoading = true;
+        _cts = new CancellationTokenSource();
+        var token = _cts.Token;
+        await InvokeAsync(StateHasChanged);
+
+        var sb = new StringBuilder();
+        try
+        {
+            await foreach (var chunk in ChatService.StreamAsync(text, token))
+            {
+                sb.Append(chunk);
+                _conversation[idx] = new ChatMsg(true, sb.ToString());
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            sb.Append("**[Stopped by user]**");
+            _conversation[idx] = new ChatMsg(true, sb.ToString());
+        }
+        catch (Exception ex)
+        {
+            _conversation[idx] = new ChatMsg(true, $"Error: {ex.Message}");
+        }
+        finally
+        {
+            _isLoading = false;
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private record ChatMsg(bool IsBot, string Message)
+    {
+        public bool IsBot { get; } = IsBot;
+        public string Message { get; set; } = Message;
+        public DateTime Timestamp { get; } = DateTime.Now;
+    }
+}

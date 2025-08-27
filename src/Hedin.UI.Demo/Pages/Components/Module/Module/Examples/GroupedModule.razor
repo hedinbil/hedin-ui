@@ -1,0 +1,31 @@
+﻿<HUIModule IsExpanded="true" Header="Grouped">
+    <MudStack Spacing="2">
+        <HUIModule UseToggleSwitch="true" IsExpanded="@_expanded"
+                   ExpandedChanged="b => _expanded = b">
+            <HeaderContent>
+                <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.CarRental" Size="Size.Small" Color="Color.Success"></MudIcon>
+                    <MudText Typo="Typo.body1">Car</MudText>
+                </MudStack>
+            </HeaderContent>
+            <ChildContent>
+                Module Content 1
+            </ChildContent>
+        </HUIModule>
+        <HUIModule UseToggleSwitch="true" ToggleSwitchDisabled="true" ToggleSwitchTooltip="This is disabled">
+            <HeaderContent>
+                <MudStack Row Spacing="1" AlignItems="AlignItems.Center">
+                    <MudIcon Icon="@Icons.Material.Filled.Cake" Size="Size.Small" Color="Color.Primary"></MudIcon>
+                    <MudText Typo="Typo.body1">Cake</MudText>
+                </MudStack>
+            </HeaderContent>
+            <ChildContent>
+                Module Content 2
+            </ChildContent>
+        </HUIModule>
+    </MudStack>
+</HUIModule>
+
+@code{
+    bool _expanded = false;
+}

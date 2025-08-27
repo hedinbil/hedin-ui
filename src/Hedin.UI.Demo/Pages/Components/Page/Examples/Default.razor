@@ -1,0 +1,103 @@
+﻿<HUIPage AlignButtonsCenter="false" Header="Page header" PageDescription="@pageDescription" PageInfo="@pageInfo" AddButtonText="@buttonText" OnAddClick="HandleAddClick">
+    <Buttons>
+        <HUIButton Size="Size.Small" Variant="Variant.Filled" Color="Color.Secondary" StartIcon="@Icons.Material.Filled.Search">Search</HUIButton>
+    </Buttons>
+    <TitleSuffixContent>
+        <MudChip Size="Size.Small" T="string">Some content</MudChip>
+    </TitleSuffixContent>
+    <ChildContent>
+        <HUIPageFilter OnClearClick="HandleClearClick">
+            <Buttons>
+                <HUIButton Size="Size.Small" Variant="Variant.Outlined">Demo</HUIButton>
+            </Buttons>
+            <ChildContent>
+                @foreach (var field in searchFields.Where(x => x.Visible))
+                {
+                    <MudTextField Label="@field.Label" T="string" @attributes="AdditionalAttributes" @bind-Value="field.Value" AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="() => HandleFieldVisibilityClick(field)"></MudTextField>
+                }
+            </ChildContent>
+        </HUIPageFilter>
+
+        <HUIPageTable Header="Name of table" OnExportClick="HandleExportClick" OnRefreshClick="HandleRefreshClick" T="Employee">
+            <Buttons>
+                <HUIButton Variant="Variant.Outlined" StartIcon="@Icons.Material.Filled.CrueltyFree" Size="Size.Small">Demo</HUIButton>
+            </Buttons>
+            <ChildContent>
+                <HUIDataGrid Items="employees" EnableSettingsMenu="true" Id="uniqueid" T="Employee" OnRowClick="(v) => Console.WriteLine(v.Name)" Dense="true">
+                    <Columns>
+                        <HUIIconGroupColumn Dense="true">
+                            <HUIIconButton Icon="@Icons.Material.Filled.Edit" Variant="Variant.Text"/>
+                            <MudBadge Icon="@Icons.Material.Filled.OpenInNew" Overlap="true">
+                                <HUIIconButton Icon="@Icons.Material.Filled.DirectionsCar" Variant="Variant.Text" Tooltip="Car info" TooltipPointerEvents="none" />
+                            </MudBadge>
+                        </HUIIconGroupColumn>
+                        <PropertyColumn Property="x => x.Name" Hideable="false"/>
+                        <PropertyColumn Property="x => x.Position"/>
+                        <PropertyColumn Property="x => x.YearsEmployed" Title="Years Employed"/>
+                        <PropertyColumn Property="x => x.Salary" Format="C"/>
+                        <PropertyColumn Property="x => x.Salary * x.YearsEmployed" Title="Total Earned" Format="C"/>
+                    </Columns>
+                </HUIDataGrid>
+            </ChildContent>
+        </HUIPageTable>
+    </ChildContent>
+</HUIPage>
+
+@code {
+    private string pageDescription = "This is an example page helper text";
+    private string pageInfo = "This is only shown if this text is available";
+    private string buttonText = "Create new item";
+
+    private List<SearchField> searchFields = [];
+    public List<Employee> employees = [];
+
+    private void HandleClearClick() => searchFields.ForEach(x => x.Clear());
+    private void HandleFieldVisibilityClick(SearchField searchField) => searchField.Visible = !searchField.Visible;
+    private void HandleAddClick() { }
+
+    public record Employee(string Name, string Position, int YearsEmployed, int Salary);
+
+    protected override void OnInitialized()
+    {
+        employees = new List<Employee>
+        {
+            new Employee("Sam", "CPA", 23, 87_000),
+            new Employee("Alicia", "Product Manager", 11, 143_000),
+            new Employee("Ira", "Developer", 4, 92_000),
+            new Employee("John", "IT Director", 17, 229_000),
+        };
+
+        searchFields = new List<SearchField>
+        {
+            new SearchField("Order number", true),
+            new SearchField("SN ordernummer", true),
+            new SearchField("Model", true),
+            new SearchField("Registration number", true),
+            new SearchField("Status", false),
+            new SearchField("Gate release date", false),
+            new SearchField("Location", false),
+            new SearchField("Harbour status", false),
+        };
+    }
+
+    Dictionary<string, object> AdditionalAttributes = new Dictionary<string, object>
+        {
+            ["Variant"] = Variant.Outlined,
+            ["Margin"] = Margin.Dense,
+        };
+
+    public class SearchField
+    {
+        public string Label { get; set; }
+        public bool Visible { get; set; }
+        public string? Value { get; set; }
+        public SearchField(string label, bool visible)
+        {
+            Label = label;
+            Visible = visible;
+        }
+        public void Clear() => Value = null;
+    }
+    private void HandleExportClick() { }
+    private void HandleRefreshClick() { }
+}

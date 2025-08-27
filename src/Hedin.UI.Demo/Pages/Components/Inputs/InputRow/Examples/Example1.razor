@@ -1,0 +1,46 @@
+﻿@inject ISnackbar Snackbar
+
+<div>
+    @foreach (var item in items)
+    {
+        <HUIInputRow TItem="MyRecord" Item="item" OnAddClick="HandleOnAddClick" OnDeleteClick="HandleOnDeleteClick">
+            <MudTextField Label="Id (auto generated)" Value="@item.Id" Variant="Variant.Outlined" Margin="Margin.Dense" Disabled="true"></MudTextField>
+            <MudTextField Label="@item.Prop1.Name" @bind-Value="@item.Prop1.Value" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+            <MudTextField Label="@item.Prop2.Name" @bind-Value="@item.Prop2.Value" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+            <MudTextField Label="@item.Prop3.Name" @bind-Value="@item.Prop3.Value" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+        </HUIInputRow>
+    }
+</div>
+@code {
+    private List<MyRecord> items = new() { new(1, new MyProp("Label 1", ""), new MyProp("Label 2", ""), new MyProp("Label 3", "")) };
+
+    private void HandleOnAddClick(MyRecord myRecord)
+    {
+        int index = items.IndexOf(myRecord) + 1;
+        int newId = items.Max(x => x.Id) + 1;
+        items.Insert(
+            index,
+            new MyRecord(newId, new MyProp("Label 1", ""), new MyProp("Label 2", ""), new MyProp("Label 3", ""))
+        );
+        StateHasChanged();
+    }
+    private void HandleOnDeleteClick(MyRecord myRecord)
+    {
+        items = items.Where(x => x.Id != myRecord.Id).ToList();
+    }
+
+    private record MyRecord(int Id, MyProp Prop1, MyProp Prop2, MyProp Prop3);
+
+
+    public class MyProp
+    {
+        public string Name { get; }
+        public string Value { get; set; }
+
+        public MyProp(string name, string value)
+        {
+            Name = name;
+            Value = value;
+        }
+    }
+}

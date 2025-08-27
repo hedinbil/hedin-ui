@@ -1,0 +1,39 @@
+﻿@namespace Hedin.UI
+@inject InternaHUIlLocalizer Localizer
+
+<HUIDialogOverlay IsVisible="IsVisible">
+    <div class="d-flex flex-column align-center" style="width:100%;">
+        <MudText Typo="Typo.h1">@($"{Localizer["HUIDialogUnsavedChanges.TitleText"]}?")</MudText>
+        <MudText Typo="Typo.body1" Class="my-3">@($"{Localizer["HUIDialogUnsavedChanges.Text"]}.")</MudText>
+
+        <div class="d-flex gap-4">
+                <HUIButton Variant="Variant.Outlined" OnClick="HandleCancelClick" Style="width:150px;">@Localizer["HUIDialogUnsavedChanges.ButtonTextCancel"]</HUIButton>
+                <HUIButton Variant="Variant.Filled" Color="Color.Error" OnClick="HandleCloseWindowClick" Style="width:150px;">@Localizer["HUIDialogUnsavedChanges.ButtonTextClose"]</HUIButton>
+        </div>
+    </div>
+</HUIDialogOverlay>
+
+@code {
+    [Parameter] public bool IsVisible { get; set; }
+
+    /// <summary>
+    /// Toggles the unchanged visible state
+    /// </summary>
+    [Parameter] public EventCallback<bool> IsVisibleChanged { get; set; }
+
+    /// <summary>
+    /// Event for closing the whole dialog
+    /// </summary>
+    [Parameter] public EventCallback OnCloseWindow { get; set; }
+
+    private void HandleCancelClick()
+    {
+        IsVisible = false;
+        IsVisibleChanged.InvokeAsync(IsVisible);
+    }
+
+    private void HandleCloseWindowClick()
+    {
+        OnCloseWindow.InvokeAsync();
+    }
+}

@@ -1,0 +1,78 @@
+﻿@namespace Hedin.UI
+@if (CanBeEdited)
+{
+    <div class="@($"d-flex flex-column hui-frame-item hui-input-table-grid {primaryClass}")" style="@($"{width}")">
+        <div class="@($"hui-input-table-grid {primaryClassEditMode} {(Locked || Warning ? "hui-input-table-grid-icons" : null)}")" @onfocusout="CloseEditComponent">
+            @ChildContent
+            @if (Locked || Warning)
+            {
+                <div class="hui-frame-item-icons">
+                    @if (Warning)
+                    {
+                        if(!string.IsNullOrEmpty(WarningText)){
+                            <HUITooltip Text="@WarningText" >
+                                <MudIcon Icon="@Icons.Material.Filled.Warning" Size="Size.Small" Color="Color.Warning" />
+                            </HUITooltip>
+                        }
+                        else
+                        {
+                            <MudIcon Icon="@Icons.Material.Filled.Warning" Size="Size.Small" Color="Color.Warning" />
+                        }
+                    }
+                    @if (Locked)
+                    {
+                        <MudIcon Icon="@Icons.Material.Filled.Lock" Size="Size.Small" Color="Color.Default" />
+                    }
+
+                </div>
+            }
+        </div>
+        
+    </div>
+}
+else
+{
+    <div class="@($"pa-3 d-flex flex-column hui-frame-item {primaryClass}")" style="@($"{width}")">
+        <span class="d-flex justify-space-between">
+            <MudText Class="@($"hui-text-xs mb-1 {primaryClassText}")">@Label</MudText>
+        </span>
+
+        @if (ValueContent is null)
+        {
+            <MudText Class="hui-text-semibold">@(!string.IsNullOrEmpty(Value) ? Value : "–")</MudText>
+        }
+        else
+        {
+            @ValueContent
+        }
+    </div>
+}
+
+@code {
+    [Parameter] public bool CanBeEdited { get; set; }
+    [Parameter] public string Label { get; set; }
+    [Parameter] public string Value { get; set; }
+    [Parameter] public bool Primary { get; set; }
+    [Parameter] public bool Warning { get; set; }
+    [Parameter] public string? WarningText { get; set; }
+    [Parameter] public bool Locked { get; set; }
+    [Parameter] public string Width { get; set; }
+    [Parameter] public RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Use this to override the default value content.
+    /// </summary>
+    [Parameter] public RenderFragment ValueContent { get; set; } 
+
+    private string primaryClass => Primary ? "mud-theme-primary mud-primary-text" : "mud-background";
+    private string primaryClassText => Primary ? "" : "mud-text-secondary";
+    private string width => !string.IsNullOrEmpty(Width) ? $"flex: 0 1 calc({Width}% - var(--gap) / var(--cols) * (var(--cols) - 1));{(Width == "100" ? "flex-grow: 1;": null)}" : "";
+    private string primaryClassEditMode => Primary ? "primary-edit-mode" : "";
+
+    private bool _isEditing;
+
+    private void CloseEditComponent()
+    {
+        _isEditing = false;
+    }
+}

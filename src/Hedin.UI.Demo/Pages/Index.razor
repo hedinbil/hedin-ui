@@ -1,0 +1,166 @@
+﻿@layout StartLayout
+@attribute [Route("/")]
+
+<div>
+
+    <div class="my-container">
+        <div class="hero-section image">
+            <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+                <MudGrid Class="justify-space-between align-center">
+                    <!-- Text -->
+                    <MudItem xs="12" md="4">
+                        <MudText Typo="Typo.h1" Class="mb-2 hero-font">
+                            Build Blazor Apps in
+                            <span class="hero-text">Minutes</span>
+                        </MudText>
+                        <MudText Typo="Typo.subtitle1" Class="mb-4">
+                            Hedin Admin UI gives you a polished suite of
+                            MudBlazor-based components, themes, and patterns
+                            so you can ship UIs faster.
+                        </MudText>
+                        <div class="d-flex flex-wrap gap-3">
+                            <MudButton Href="@PageRoute.GettingStarted"
+                                       Variant="Variant.Filled"
+                                       Size="Size.Large">
+                                🚀 Get Started
+                            </MudButton>
+                            <MudButton Href="@PageRoute.Components"
+                                       Variant="Variant.Outlined"
+                                       Size="Size.Large">
+                                📦 Components
+                            </MudButton>
+                            <MudButton Href="https://hedinit.com/"
+                                       Target="_blank"
+                                       Variant="Variant.Outlined"
+                                       Size="Size.Large"
+                                       Style="min-height:37.75px">
+                                <MudImage Src="hedin-it_light.svg"
+                                          Height="13"
+                                          Style="color:white; fill:white;" />
+                            </MudButton>
+                        </div>
+                    </MudItem>
+                    <!-- Illustration -->
+                    <MudItem xs="12" md="8" Class="text-center">
+                        <Hedin.UI.Demo.Pages.UsageExamples.DemoPage />
+                    </MudItem>
+                </MudGrid>
+            </MudContainer>
+        </div>
+
+        <!-- ABOUT (this is the slanted one) -->
+        <div class="about-section text">
+            <MudContainer MaxWidth="MaxWidth.Medium">
+                <MudText Typo="Typo.h4" Class="mb-2">About Hedin Admin UI</MudText>
+                <MudText Typo="Typo.body1" Class="mb-4">
+                    Hedin Admin UI is an in-house extension of MudBlazor, created and
+                    maintained by Hedin IT to power all of our internal Blazor applications.
+                    It provides enterprise-grade components, flexible theming, and
+                    established UI patterns tailored specifically to Hedin’s workflows.
+                    Contributions and feedback from within Hedin are welcome as we continue
+                    to enhance and expand this toolkit.
+                </MudText>
+                <MudPaper Elevation="1" Class="pa-3" Style="max-width: 400px;">
+                    <MudText Typo="Typo.subtitle2" Class="mb-2">Current version: <strong>@MyLibVersion</strong></MudText>
+                    dotnet add package Hedin.UI --version @MyLibVersion
+                    <MudLink Typo="Typo.caption" Href="@PageRoute.GettingStarted" Class="mt-2">Installation guide</MudLink>
+                </MudPaper>
+            </MudContainer>
+        </div>
+    </div>
+
+    <!-- Maps -->
+    <div>
+        <MudContainer MaxWidth="MaxWidth.False" Gutters="false">
+            <HUIMaps Height="600px" Width="100%" AutoFit="true" DarkMode="true" Points="@([
+                new HUIMaps.HUIMapPoint
+                {
+                    Lat=57.64720189259557,
+                    Lng=11.986384664991496,
+                    Id="123",
+                    Icon = "_content/Hedin.UI/img/maps/arrow.svg",
+                    IconSize = 32,
+                    Badge = "_content/Hedin.UI/img/maps/badge_error.svg",
+                    BadgeSize = 20,
+                }]
+)">
+            </HUIMaps>
+        </MudContainer>
+    </div>
+
+    <div class="features-section">
+        <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+            <MudText Typo="Typo.h2" Class="mb-6 text-center">Key Features</MudText>
+            <MudGrid Spacing="4">
+                @foreach (var f in features)
+                {
+                    <MudItem xs="12" sm="6" md="3">
+                        <MudCard Hover="true" Elevation="1">
+                            <MudCardContent Class="text-center">
+                                <MudIcon Icon="@f.Icon" Size="Size.Large" Color="Color.Primary" Class="mb-2" />
+                                <MudText Typo="Typo.h6">@f.Title</MudText>
+                                <MudText Typo="Typo.body2" Color="Color.Secondary">@f.Description</MudText>
+                            </MudCardContent>
+                            <MudCardActions>
+                                <MudButton Href="@f.Link" Variant="Variant.Text" Size="Size.Small">View Demo</MudButton>
+                            </MudCardActions>
+                        </MudCard>
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    </div>
+
+    <div class="stats-section">
+        <MudContainer MaxWidth="MaxWidth.Large">
+            <MudText Typo="Typo.h2">Community</MudText>
+            <MudGrid Justify="Justify.Center" Spacing="3">
+                @foreach (var stat in externalSources)
+                {
+                    <MudItem xs="4" sm="3" md="2" Class="text-center">
+                        <MudIcon Icon="@stat.Icon"
+                                 Size="Size.Large"
+                                 Color="Color.Primary" />
+                        <MudText Typo="Typo.h5" Class="mt-1">@stat.Title</MudText>
+                   @*      <MudText Typo="Typo.caption" Color="Color.Secondary">
+                            @stat.Body
+                        </MudText> *@
+                        <MudLink Typo="Typo.caption" Href="@stat.Url" Target="_blank">@stat.UrlName</MudLink>
+
+                    </MudItem>
+                }
+            </MudGrid>
+        </MudContainer>
+    </div>
+</div>
+
+
+@code {
+    // public record Stat(string Label, string Value, string Icon);
+    public record ExternalSource(string Title, string Icon, string Body, string UrlName, string Url);
+    private string MyLibVersion = typeof(Hedin.UI.HUIAppBar).Assembly.GetName().Version?.ToString() ?? "1.0.0";
+  //   private Stat[] stats = new[]
+  //   {
+  //   new Stat("Downloads",    "15.9 M",     Icons.Material.Filled.CloudDownload),
+  //   new Stat("Stars",        "9.1 k",      Icons.Material.Filled.StarBorder),
+  //   new Stat("Contributors", "446",        Icons.Material.Filled.Group),
+  //   new Stat("Discord",      "5.1 k",      Icons.Custom.Brands.Discord)
+  // };
+
+    private ExternalSource[] externalSources = new[]
+    {
+        new ExternalSource("MudBlazor", Icons.Custom.Brands.MudBlazor, "Hedin.UI is an extionson of MudBlazor", "MudBlazor", "https://mudblazor.com/"),
+        new ExternalSource("LinkedIn", Icons.Custom.Brands.LinkedIn, "Hedin IT", "LinkedIn", "https://www.linkedin.com/company/hedin-it"),
+        new ExternalSource("Hedin IT", "Our main site", "", "Hedin IT", "https://hedinit.com/"),
+    };
+
+
+    record Feature(string Title, string Description, string Icon, string Link);
+    private Feature[] features = new[]
+    {
+    new Feature("Data Grid",                        "Fast, virtualized tables with sorting & filtering",    Icons.Material.Filled.TableChart,   PageRoute.DataGrid),
+    new Feature("Page guidelines",                  "A clear pattern to follow when developing new pages",  Icons.Material.Filled.FormatPaint,          PageRoute.Page),
+    new Feature("Albot",                            "AI bot helping you with Hedin UI",                     Icons.Material.Filled.SmartToy,     PageRoute.AIChatBot),
+    new Feature("Theming and guidelines",           "Global light/dark theming, custom palettes",           Icons.Material.Filled.Palette,      PageRoute.Guidelines)
+  };
+}

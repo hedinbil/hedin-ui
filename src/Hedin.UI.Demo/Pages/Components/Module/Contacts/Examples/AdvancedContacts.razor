@@ -1,0 +1,102 @@
+﻿<MudGrid>
+    <MudItem xs="12" md="8" lg="6">
+        <HUIModule Header="Contact information" IsExpanded="true">
+            <HUIModuleSection Header="External contacts">
+                <Buttons>
+                    <HUIIconButton Variant="Variant.Text" Icon="@Icons.Material.Filled.MoreVert"></HUIIconButton>
+                </Buttons>
+                <ChildContent>
+                    <MudDropContainer T="HUIContactGroupModel" Context="contactGroup" Items="@contactGroups" ItemsSelector="@((item,dropzone) => true)" ItemDropped="ItemUpdated" CanDropClass="mud-border-success">
+                        <ChildContent>
+                            <MudDropZone T="HUIContactGroupModel" Identifier="2" AllowReorder="true" />
+                        </ChildContent>
+                        <ItemRenderer>
+                            <HUIModuleContactGroup Header="@contactGroup.Header">
+                                <Buttons>
+                                    <HUIIconButton Variant="Variant.Text" Icon="@Icons.Material.Filled.MoreVert"></HUIIconButton>
+                                </Buttons>
+                                <ChildContent>
+                                    <MudDropContainer T="HUIContactSectionModel" Items="@contactGroup.Sections" @ref="_container" ItemsSelector="@((item,dropzone) => true)" ItemDropped="ItemUpdated" CanDropClass="mud-border-success">
+                                        <ChildContent>
+                                            <MudDropZone T="HUIContactSectionModel" Identifier="1" AllowReorder="true" />
+                                        </ChildContent>
+                                        <ItemRenderer>
+                                            <HUIModuleSection Header="@context.SectionName">
+                                                <Buttons>
+                                                    <HUIIconButton Variant="Variant.Text" Icon="@Icons.Material.Filled.MoreVert"></HUIIconButton>
+                                                </Buttons>
+                                                <ChildContent>
+                                                    <HUIModuleContactGroupItem Icon="@Icons.Material.Outlined.PersonOutline">
+                                                        @if (string.IsNullOrWhiteSpace(context.Contact.Title))
+                                                        {
+                                                            @context.Contact.Name
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>@context.Contact.Name, @context.Contact.Title</span>
+                                                        }
+                                                    </HUIModuleContactGroupItem>
+
+                                                    <HUIModuleContactGroupItem Icon="@Icons.Material.Outlined.Email" Class="mt-2">
+                                                        @context.Contact.Email
+                                                    </HUIModuleContactGroupItem>
+
+                                                    <HUIModuleContactGroupItem Icon="@Icons.Material.Outlined.Phone" Class="mt-2">
+                                                        @context.Contact.Phone
+                                                    </HUIModuleContactGroupItem>
+
+                                                    <HUIModuleContactGroupItem Icon="@Icons.Material.Outlined.LocationOn" Class="mt-2">
+                                                        <section>
+                                                            <p>@context.Contact.Adress?.Street, @context.Contact.Adress±.Box</p>
+                                                            <p>@context.Contact.Adress?.PostalNo</p>
+                                                            <p>@context.Contact.Adress?.Country</p>
+                                                        </section>
+                                                    </HUIModuleContactGroupItem>
+                                                </ChildContent>
+
+                                            </HUIModuleSection>
+
+                                        </ItemRenderer>
+                                    </MudDropContainer>
+
+                                </ChildContent>
+                            </HUIModuleContactGroup>
+                        </ItemRenderer>
+
+                    </MudDropContainer>
+                </ChildContent>
+            </HUIModuleSection>
+        </HUIModule>
+    </MudItem>
+</MudGrid>
+@code {
+    private MudDropContainer<HUIContactSectionModel>? _container;
+    private void ItemUpdated(MudItemDropInfo<HUIContactSectionModel> dropItem)
+    {
+        // _moveChanged = true;
+        // _dropzoneItems.UpdateOrder(dropItem, item => item.Order, 0);
+    }
+    private void ItemUpdated(MudItemDropInfo<HUIContactGroupModel> dropItem)
+    {
+        // _moveChanged = true;
+        // _dropzoneItems.UpdateOrder(dropItem, item => item.Order, 0);
+    }
+    private static HUIContactModel testContact = new HUIContactModel(0, "info@hedinit.com", "+46 31-790 00 00", "Oscar Ternström", "Superman", new Adress("Betagatan 2", "Box 2114", "431 02 Mölndal", "Sweden"));
+
+    public List<HUIContactGroupModel> contactGroups = new List<HUIContactGroupModel>()
+    {
+        new HUIContactGroupModel("Hedin Mobility Group", 0, contactSections),
+            new HUIContactGroupModel("RN Nordic AB", 1, contactSections)
+    };
+    public static List<HUIContactSectionModel> contactSections = new List<HUIContactSectionModel>()
+    {
+        new HUIContactSectionModel("Administration", 0, testContact),
+            new HUIContactSectionModel("Marketing", 1, testContact),
+    };
+
+    public record HUIContactMainModel(string Header, int Id, List<HUIContactGroupModel> Groups);
+    public record HUIContactGroupModel(string Header, int Id, List<HUIContactSectionModel> Sections);
+    public record HUIContactSectionModel(string SectionName, int Order, HUIContactModel Contact);
+    public record HUIContactModel(int Id, string Email, string Phone, string Name, string Title, Adress? Adress = null);
+    public record Adress(string Street, string Box, string PostalNo, string Country);
+}

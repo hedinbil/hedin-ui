@@ -1,0 +1,28 @@
+﻿<HUINavMenuHorizontal Items="menuItems2" RequireAuthorization="false" @ref="menuRef" />
+<HUIPage Header="Demo page 2" PageDescription="Here we use the horizontal menu with badges and icons">
+    Some content.
+    <span>
+        <HUIButton Variant="Variant.Outlined" OnClick="AddBadgeAndIconsToMenu">Refresh menu</HUIButton>
+    </span>
+</HUIPage>
+@code {
+    private List<HUIMenuItem> menuItems2 = new List<HUIMenuItem>
+    {
+        new HUIMenuItem("Settings", "url1", "", tooltip:"Settings for all pages"),
+        new HUIMenuItem("Menu option 2", "url2", "", icon: @Icons.Material.Filled.Dangerous, dot:Severity.Error),
+        new HUIMenuItem("Menu option 3", "url3", "", badgeData:"3", badgeColor:Color.Primary),
+    };
+    protected override void OnInitialized()
+    {
+        StateHasChanged();
+    }
+
+    private HUINavMenuHorizontal menuRef;
+    private void AddBadgeAndIconsToMenu(MouseEventArgs obj)
+    {
+        menuItems2[0].BadgeData = "!";
+        menuItems2[0].Dot = Severity.Warning;
+        menuItems2[0].Icon = @Icons.Material.Filled.Settings;
+        menuRef.ForceStateHasChanged();
+    }
+}

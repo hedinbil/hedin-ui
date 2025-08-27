@@ -1,0 +1,45 @@
+﻿@namespace Hedin.UI
+@using static Hedin.UI.HUIDocument;
+
+
+<MudExpansionPanels Elevation="0" Class="@("hui-rounded-s " + (IsRoot ? "mb-1" : ""))">
+    <MudExpansionPanel Class="hui-module-dense" Style="@(IsExpanded && IsRoot ? "background-color: var(--mud-palette-gray-light)" : "")" @bind-Expanded="IsExpanded">
+        <TitleContent>
+            <div class="d-flex justify-space-between">
+                <span class="d-flex">
+                    <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Folder" Class="align-self-center mr-3"></MudIcon>
+                    <MudText Class="align-self-center">@Name</MudText>
+                </span>
+                <div class="d-flex gap-1">
+                    @if (IsExpanded || ShowButtons)
+                    {
+                        @Buttons
+                    }
+                </div>
+            </div>
+        </TitleContent>
+        <ChildContent>
+            <div class="@($"pl-3 {(IsRoot ? "border-l mud-border-primary" : "")}")">
+                @ChildContent
+            </div>
+        </ChildContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    /// <summary>
+    /// Buttons are per default shown only when folder is expanded
+    /// </summary>
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public bool IsExpanded { get; set; } = false;
+    [Parameter] public bool IsRoot { get; set; } = true;
+    [Parameter] public string? Name { get; set; }
+    [Parameter] public bool IsSearching { get; set; } = false;
+    [Parameter] public bool HasSubfolders { get; set; }
+    [Parameter] public bool HasDocuments { get; set; }
+    /// <summary>
+    /// Overridable, to show buttons even if the section is collapsed
+    /// </summary>
+    [Parameter] public bool ShowButtons { get; set; }
+}

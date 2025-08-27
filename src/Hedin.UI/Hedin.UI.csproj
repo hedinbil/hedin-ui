@@ -1,0 +1,245 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <PackageId>$(AssemblyName)</PackageId>
+    <Company>Hedin IT</Company>
+    <Authors>Hedin IT</Authors>
+    <Product>Hedin.UI</Product>
+    <Description>A custom razor (Blazor) component library built by and to be used by Hedin IT.</Description>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <Version>$(VersionPrefix)1.27.2</Version>
+    <NeutralLanguage>en-001</NeutralLanguage>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <RepositoryUrl>https://github.com/hedinbil/hedin-ui-admin</RepositoryUrl>
+    <PackageIcon>nuget.png</PackageIcon>
+    <PackageProjectUrl>https://hedin-ui.hedinit.io/</PackageProjectUrl>
+    <PackAsTool>False</PackAsTool>
+    <IncludeSymbols>False</IncludeSymbols>
+    <AnalysisLevel>latest</AnalysisLevel>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Styles\apex-charts-overrides.scss" />
+    <None Remove="Styles\mud-overrides.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Styles\apex-charts-overrides.scss" />
+    <Content Include="Styles\mud-overrides.scss" />
+    <Content Include="Styles\hedin-ui.scss" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AspNetCore.SassCompiler" Version="1.86.2" />
+    <PackageReference Include="Blazor-ApexCharts" Version="5.1.0" />
+    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="FluentValidation" Version="11.11.0" />
+    <PackageReference Include="MudBlazor" Version="8.11.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.4" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Include="..\..\docs\README.md" Pack="true" PackagePath="" />
+    <None Include="..\..\LICENSE" Pack="true" PackagePath="" />
+    <None Include="..\..\.editorconfig" Link=".editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Models\" />
+    <Folder Include="wwwroot\css\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Styles\hedin-ui.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Button\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Styles\mud-overrides.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\InformationMessage\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Module\ModuleSection\HUIModuleSection.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Module\ModuleLink\HUIModuleContact.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Dialog\Overlay\HUIDialogOverlay.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Module\ModuleDocument\HUIModuleContact.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Dialog\HUIDialog2.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="components\dialog\section\HUIDialogSection.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\IconButton\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Dialog\ValueSection\HUIDialogValueSection.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Page\PageFilter\HUIPageFilter.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Page\HUIPage.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\DataGrid\HUIDataGrid.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Page\PageTable\HUIPageTable.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Frame\HUIFrame.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Frame\HUIFrameItem.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Module\HUIModule.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\MainContainer\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Localization\Translation.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Translation.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Update="Localization\Translation.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Translation.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\Tooltip\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\InputButton\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Styles\apex-charts-overrides.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\NavMenuHorizontal\HUIMenuTabs.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\NavMenu\HUIMenuTabs.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\SkeletonList\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\AppBar\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Internal\HUIAppBar.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\InputRow\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\AttachmentCard\HUIButton.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Internal\TableContextMenu.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\BreadCrumbs\HUIBreadcrumbs.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <UpToDateCheckInput Remove="Components\MultiSelect\HUIAttachmentCard.razor.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Components\BlogPost\HUIBlogPost.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+    <Content Update="Components\MultiSelect\HUIMultiSelectBeta.razor">
+      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="nuget.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="wwwroot\img\flags\**" />
+    <Content Remove="wwwroot\img\flags\**" />
+    <EmbeddedResource Remove="wwwroot\img\flags\**" />
+    <None Remove="wwwroot\img\flags\**" />
+  </ItemGroup>
+
+  <Target Name="GenerateFlags" BeforeTargets="CoreCompile">
+    <Exec Command="dotnet run --project &quot;$(ProjectDir)..\Hedin.UI.FlagGenerator\Hedin.UI.FlagGenerator.csproj&quot; -- &quot;$(ProjectDir)..\Hedin.UI.FlagGenerator\assets&quot; &quot;$(ProjectDir)Generated&quot; &quot;Hedin.UI&quot;" />
+    <ItemGroup>
+      <Compile Include="$(ProjectDir)Generated\Flags.g.cs" />
+    </ItemGroup>
+  </Target>
+  <ItemGroup>
+    <UpToDateCheckInput Remove="wwwroot\img\flags\**" />
+  </ItemGroup>
+  
+</Project>

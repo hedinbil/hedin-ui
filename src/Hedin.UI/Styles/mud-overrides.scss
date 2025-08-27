@@ -1,0 +1,345 @@
+﻿/*Global overrides for mud-blazor*/
+
+.mud-dialog {
+    /*$bg: var(--mud-palette-gray-light);*/
+    $bg: var(--mud-palette-gray-light);
+    $shadow: rgba(0,0,0,0.15);
+    background-color: $bg;
+
+    .mud-dialog-content {
+        overflow-y: auto;
+        max-height: calc(100vh - 211px);
+        background: linear-gradient($bg 33%, $bg), linear-gradient($bg, $bg 66%) 0 100%, radial-gradient(farthest-side at 50% 0, $shadow, rgba(0,0,0,0)), radial-gradient(farthest-side at 50% 100%, $shadow, rgba(0,0,0,0)) 0 100%;
+        background-color: $bg;
+        background-repeat: no-repeat;
+        background-attachment: local, local, scroll, scroll;
+        background-size: 100% 38px, 100% 38px, 100% 12px, 100% 12px;
+        padding: 8px 20px;
+        margin: 0;
+    }
+
+    .mud-dialog-content.mud-dialog-no-side-padding {
+        margin: 8px 0;
+    }
+
+    .mud-dialog-actions {
+        padding: 20px;
+    }
+
+    .mud-dialog-title {
+        padding: 20px;
+    }
+}
+
+$dp-border-radius-secondary: 8px;
+
+.mud-paper {
+    border-radius: $dp-border-radius-secondary;
+}
+
+.mud-expansion-panels {
+    border-radius: $dp-border-radius-secondary;
+}
+
+.mud-dialog {
+    border-radius: $dp-border-radius-secondary;
+}
+
+.mud-button-outlined {
+    border: 1px solid var(--mud-palette-lines-inputs) !important;
+    color: var(--mud-palette-action-default);
+}
+
+.mud-button-filled.mud-button-filled-primary {
+    min-width: 224px;
+}
+
+$mud-button-small-size-height: 32px;
+
+.mud-button-outlined-size-small {
+    min-height: $mud-button-small-size-height;
+    min-width: initial !important;
+}
+
+.mud-button-filled-size-small {
+    height: $mud-button-small-size-height;
+    min-width: initial !important;
+}
+
+.mud-button-text-size-small {
+    height: $mud-button-small-size-height;
+}
+
+.mud-input-control {
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    $border-width: 1px;
+    $disabled-opacity: 0.6;
+    $disabled-color: var(--mud-palette-text-primary);
+
+    .mud-input-outlined {
+        background-color: var(--mud-palette-gray-dark);
+        border-radius: var(--mud-default-borderradius);
+    }
+
+    .mud-input-outlined:hover {
+        background-color: var(--mud-palette-gray-default);
+    }
+
+    .mud-input-outlined-border {
+        border-width: $border-width;
+    }
+    /*Border default*/
+    .mud-input-outlined:not(:focus-within):not(:hover) .mud-input-outlined-border {
+        border: $border-width solid var(--mud-palette-lines-inputs);
+    }
+    /*Border active*/
+    .mud-input-outlined:focus-within .mud-input-outlined-border {
+        border: $border-width solid var(--mud-palette-primary);
+    }
+    /*Border hover*/
+    .mud-input-outlined:not(.mud-disabled):not(:focus-within):hover .mud-input-outlined-border {
+        border-width: $border-width;
+    }
+
+    .mud-input-label-outlined {
+        color: var(--mud-palette-text-primary) !important;
+        padding: 0 4px !important;
+    }
+
+    .mud-input-label-outlined.mud-input-label-margin-dense {
+        transform: translate(8px, 10px) scale(1);
+        display: flex;
+        align-items: center;
+        background: transparent;
+    }
+
+    .mud-shrink ~ label.mud-input-label.mud-input-label-inputcontrol.mud-input-label-outlined, .mud-input:focus-within ~ label.mud-input-label.mud-input-label-inputcontrol.mud-input-label-outlined {
+        transform: translate(11px, -6px) scale(.8);
+        background: var(--mud-palette-surface);
+        border-radius: $dp-border-radius-secondary;
+    }
+
+    .mud-input > input.mud-input-root-outlined.mud-input-root-adorned-end, div.mud-input-slot.mud-input-root-outlined.mud-input-root-adorned-end {
+        padding-inline-start: 12px;
+    }
+
+    .mud-input-outlined.mud-disabled {
+        color: $disabled-color;
+        opacity: $disabled-opacity;
+    }
+
+    .mud-input-label-outlined.mud-disabled {
+        color: $disabled-color !important;
+        opacity: $disabled-opacity;
+    }
+}
+
+.mud-input-control.mud-input-control-margin-dense {
+    margin: 0;
+}
+.mud-input-control.mud-input-required>.mud-input-control-input-container>.mud-input-label::after {
+    content: "*";
+    color: var(--mud-palette-info);
+    margin-left: 4px;
+}
+
+/*Snackbar*/
+.mud-snackbar {
+    background: var(--mud-palette-gray-light) !important;
+    color: var(--mud-palette-text-primary) !important;
+}
+
+.mud-alert-outlined-error {
+    .mud-snackbar-icon {
+        color: var(--mud-palette-error);
+    }
+}
+
+.mud-alert-outlined-warning {
+    .mud-snackbar-icon {
+        color: var(--mud-palette-warning);
+    }
+}
+
+.mud-alert-outlined-info {
+    .mud-snackbar-icon {
+        color: var(--mud-palette-info);
+    }
+}
+
+.mud-alert-outlined-success {
+    .mud-snackbar-icon {
+        color: var(--mud-palette-success);
+    }
+}
+
+.mud-button-outlined-size-small.mud-icon-button {
+    height: $mud-button-small-size-height;
+    width: $mud-button-small-size-height;
+}
+
+.mud-button-filled-size-small.mud-icon-button {
+    height: $mud-button-small-size-height;
+    width: $mud-button-small-size-height;
+}
+
+.mud-icon-size-small {
+    font-size: 1rem !important;
+}
+
+.mud-drawer:not(.hui-drawer){
+    .mud-navmenu.mud-navmenu-default {
+        .mud-nav-link:hover {
+            background-color: var(--mud-palette-gray-default);
+        }
+    }
+}
+.mud-navmenu.mud-navmenu-default {
+    .mud-nav-link-expand-icon.mud-transform {
+        fill: var(--mud-palette-text-primary)
+    }
+
+    .mud-nav-link.active:not(.mud-nav-link-disabled) {
+        color: var(--mud-palette-text-primary);
+        background-color: var(--mud-palette-gray-lighter);
+    }
+}
+
+
+.mud-overlay {
+    .mud-overlay-scrim {
+        backdrop-filter: blur(3px);
+    }
+}
+
+.mud-checkbox {
+    max-height: 40px;
+}
+
+.mud-progress-circular.mud-progress-small {
+    $size: 16px;
+    height: $size;
+    width: $size;
+}
+
+.mud-list-item-icon {
+    min-width: 0;
+    padding-right: 12px;
+}
+
+
+/*Inverted background and text color on tooltips*/
+$tooltip-bg-color: var(--mud-palette-text-primary);
+
+.mud-tooltip.mud-tooltip-default {
+    background: $tooltip-bg-color;
+    color: var(--mud-palette-background);
+}
+
+.mud-tooltip.mud-tooltip-default.mud-tooltip-arrow::after {
+    border-color: $tooltip-bg-color transparent transparent transparent;
+}
+
+.mud-button-group-filled.mud-button-group-override-styles .mud-button-root {
+    padding: 5px 15px;
+}
+
+.mud-dropitem-placeholder {
+    background-color: var(--mud-palette-gray-light) !important;
+    color: var(--mud-palette-text-secondary) !important;
+    border-color: var(--mud-text-primary) !important;
+    border-radius: 0px;
+    margin: 12px 0 12px 0;
+}
+
+.mud-drop-item-preview-start {
+    height: 1px !important;
+}
+
+
+.mud-input-number-control {
+    .mud-input-outlined.mud-input-margin-dense {
+
+        .mud-input-numeric-spin {
+            button:first-of-type {
+                padding: 8px 10px 0 !important;
+            }
+
+            button:last-of-type {
+                padding: 0 10px 8px !important;
+            }
+        }
+    }
+    &.mud-input-showspin {
+        .mud-input-adornment-end {
+            margin-inline-end: 16px;
+        }
+    }
+}
+
+/*Switch*/
+.mud-switch-span-medium.mud-switch-span {
+    padding: 6px;
+    width: 54px;
+    height: 34px;
+}
+.mud-switch-base-medium.mud-switch-base {
+    padding: 9px;
+}
+.mud-switch-base.mud-checked + .mud-switch-track {
+    opacity: 1;
+}
+.mud-switch-button .mud-switch-thumb-medium {
+    width: 16px;
+    height: 16px;
+    background-color: var(--mud-palette-white);
+}
+.mud-switch-span .mud-switch-track {
+    border-radius: 11px;
+    border: 1px solid var(--mud-palette-dark);
+}
+.mud-input-control.no-label label.mud-switch {
+    margin-right: 0;
+    margin-inline-end: 0;
+}
+.mud-switch-base-small.mud-switch-base {
+    padding: 4px;
+}
+.mud-switch-span-small.mud-switch-span {
+    padding: 0;
+    width: 44px;
+    height: 24px;
+}
+.mud-switch-button .mud-switch-thumb-small {
+    width: 16px;
+    height: 16px;
+    background-color: var(--mud-palette-white);
+}
+.mud-collapse-container .mud-collapse-wrapper {
+    padding-top: 1px;
+}
+
+/*Parent component for filter, media width through container size*/
+.mud-expand-panel-content {
+    container-type: inline-size;
+    container-name: panel-container;
+}
+
+
+
+.mud-menu-list:has(.mud-menu-item-icon) .mud-menu-item.mud-menu-item-dense .mud-menu-item-icon {
+    font-size: 1rem !important;
+}
+
+.mud-menu-list:has(.mud-menu-item-icon) {
+    .mud-menu-item.mud-menu-item-dense {
+        .mud-menu-item-icon {
+            font-size: 1rem !important;
+        }
+
+        &:not(:has(.mud-menu-item-icon)) .mud-menu-item-text {
+            margin-inline-start: 28px;
+        }
+    }
+}

@@ -1,0 +1,32 @@
+﻿@namespace Hedin.UI
+@inherits MudButton
+
+<MudButton Disabled="Loading || Disabled"
+           OnClick="base.OnClick"
+           Variant="base.Variant"
+           Color="base.Color"
+           StartIcon="@base.StartIcon"
+           EndIcon="@base.EndIcon"
+           ButtonType="base.ButtonType"
+           Class="@base.Class"
+           DropShadow="false"
+           Style="@base.Style"
+           Size="@base.Size"
+           HtmlTag="@base.HtmlTag"
+           Href="@base.Href"
+           UserAttributes="@base.UserAttributes">
+    @if (Loading)
+    {
+        <MudProgressCircular Class="mr-3" Color="Color.Info" Size="Size.Small" Indeterminate="true" />
+    }
+    @ChildContent
+</MudButton>
+
+@code {
+
+    /// <summary>
+    /// Shows a progress icon when Loading is true
+    /// </summary>
+    [Parameter]
+    public bool Loading { get; set; }
+}

@@ -1,0 +1,29 @@
+name: Hedin UI Nuget
+
+permissions:
+  contents: read
+  packages: write
+  
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+          source-url: https://nuget.pkg.github.com/hedinbil/index.json
+        env:
+          NUGET_AUTH_TOKEN: ${{secrets.REPO_PAT}}
+      - name: Build
+        run: dotnet build --configuration Release src/Hedin.UI/
+      - name: Pack
+        run: dotnet pack --configuration Release --no-build  src/Hedin.UI/
+      - name: Publish
+        run: dotnet nuget push src/Hedin.UI/bin/Release/*.nupkg --source https://nuget.pkg.github.com/hedinbil/index.json --api-key ${{secrets.REPO_PAT}} --skip-duplicate --timeout 600

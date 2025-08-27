@@ -1,0 +1,253 @@
+﻿@namespace Hedin.UI
+@typeparam T
+
+<div class="@Class" style="@Style">
+    <MudAutocomplete @ref="_autoComplete" T="T" @bind-Value="_value" SearchFunc="FilteredSearchFunc" MaxHeight="MaxHeight"
+                     ShowProgressIndicator="true" DebounceInterval="250"
+                     Label="@Label" Clearable="true"
+                     Variant="Variant.Outlined" CoerceValue="true" Dense="Dense"
+                     ToStringFunc="ToStringFunc" Margin="Margin.Dense"
+                     ItemDisabledTemplate="ItemDisabledTemplate" ItemDisabledFunc="ItemDisabledFunc" Required="_required" MaxItems="null"
+                     Disabled="Disabled" OpenIcon="@Icons.Material.Filled.Search" CloseIcon="@Icons.Material.Filled.Search">
+        <BeforeItemsTemplate>
+            @BeforeItemsTemplate
+            @if (SelectAll)
+            {
+                <MudCheckBox T="bool" Label="@SelectAllText" Value="SelectAllValue" ValueChanged="HandleSelectAllClick"></MudCheckBox>
+            }
+        </BeforeItemsTemplate>
+        <NoItemsTemplate>
+            @NoItemsTemplate
+            @if (SelectAll)
+            {
+                <MudCheckBox T="bool" Label="@SelectAllText" Value="SelectAllValue" ValueChanged="HandleSelectAllClick"></MudCheckBox>
+            }
+        </NoItemsTemplate>
+        <ItemTemplate>
+            <span class="d-flex align-center @ItemTemplateClass">
+                <MudCheckBox Class="my-n3" T="bool" Value="selectedValues.Contains(context)" ValueChanged="(v) => HandleItemSelected(context)"></MudCheckBox>
+                <span @onclick:stopPropagation="true" @onclick:preventDefault="true" @onclick="()=>HandleItemSelected(context)">
+                    @ItemTemplate.Invoke(context)
+                </span>
+            </span>
+        </ItemTemplate>
+
+    </MudAutocomplete>
+
+    <MudChipSet AllClosable=true OnClose="RemoveValue" T="T" Color="Color" Variant="Variant.Outlined" CloseIcon="@Icons.Material.Filled.Close">
+        @if (SelectAllValue)
+        {
+            <MudChip Size="Size.Small" Text="@AllItemsSelectedText" OnClick="() => HandleSelectAllClick(false)"></MudChip>
+        }
+        else
+        {
+            @foreach (var val in selectedValues)
+            {
+                string value = ChipToStringFunc(val);
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    <HUITooltip Text="@(ChipTooltipStringFunc != null ? ChipTooltipStringFunc(val) : "")" Style="max-width:250px;">
+                        <MudChip Size=Size.Small Text="@value" Disabled="Disabled" />
+                    </HUITooltip>
+                }
+            }
+        }
+    </MudChipSet>
+</div>
+
+@code {
+    [Parameter]
+    public IEnumerable<T>? Values { get; set; }
+
+    [Parameter]
+    public EventCallback<IEnumerable<T>> ValuesChanged { get; set; }
+
+    [Parameter]
+    public string Label { get; set; }
+
+    [Parameter, EditorRequired]
+    public Func<string?, Task<IEnumerable<T>>> SearchFunc { get; set; }
+
+    [Parameter, EditorRequired]
+    public Func<T, string> ToStringFunc { get; set; }
+
+    [Parameter, EditorRequired]
+    public Func<T, string> ChipToStringFunc { get; set; }
+
+    [Parameter]
+    public Func<T, string> ChipTooltipStringFunc { get; set; }
+
+    [Parameter]
+    public Func<T, bool> ItemDisabledFunc { get; set; }
+
+    [Parameter]
+    public string Class { get; set; }
+
+    [Parameter]
+    public string Style { get; set; }
+
+    [Parameter]
+    public string ItemTemplateClass { get; set; }
+
+    [Parameter]
+    public Color Color { get; set; }
+
+    [Parameter]
+    public bool Required { get; set; }
+
+    [Parameter]
+    public RenderFragment<T> ItemTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment<T> ItemDisabledTemplate { get; set; }
+
+    [Parameter]
+    public bool Clearable { get; set; }
+
+    [Parameter]
+    public bool Disabled { get; set; }
+
+    [Parameter]
+    public bool SelectAll { get; set; }
+
+    [Parameter]
+    public bool SelectAllValue { get; set; }
+
+    [Parameter]
+    public string AllItemsSelectedText { get; set; } = "All items selected";
+
+    [Parameter]
+    public EventCallback<bool> SelectAllValueChanged { get; set; }
+
+    [Parameter]
+    public String SelectAllText { get; set; }
+
+    [Parameter]
+    public RenderFragment BeforeItemsTemplate { get; set; }
+
+    [Parameter]
+    public RenderFragment NoItemsTemplate { get; set; }
+
+    [Parameter]
+    public bool Dense { get; set; } = true;
+
+    [Parameter]
+    public int MaxHeight { get; set; } = 300;
+
+    private HashSet<T> selectedValues = new HashSet<T>();
+
+    private MudAutocomplete<T>? _autoComplete;
+
+    private bool _required => Required && (!selectedValues?.Any() ?? true);
+
+    private async Task<IEnumerable<T>> FilteredSearchFunc(string searchText, CancellationToken token = default)
+    {
+        return await SearchFunc(searchText);
+        // return results.Except(selectedValues);
+    }
+
+    // private IEnumerable<T> _allItems = [];
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     if((_allItems?.Count() ?? 0) > 1)
+    //     {
+    //         _allItems = await SearchFunc(null);
+    //     }
+    // }
+
+    private void HandleItemSelected(T item)
+    {
+        if (selectedValues.Contains(item))
+            selectedValues.Remove(item);
+        else
+            selectedValues.Add(item);
+        RefreshBinding();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (Values == null)
+        {
+            selectedValues.Clear();
+        }
+        else if (!Values.SequenceEqual(selectedValues))
+        {
+            selectedValues = Values.ToHashSet();
+            ValuesChanged.InvokeAsync(Values);
+        }
+    }
+
+    private void RefreshBinding()
+    {
+        Values = selectedValues.ToList();
+        ValuesChanged.InvokeAsync(Values);
+        StateHasChanged();
+    }
+
+    private void RemoveValue(MudChip<T> chip)
+    {
+        if (selectedValues.RemoveWhere(x => ChipToStringFunc(x) == chip.Text) > 0)
+            RefreshBinding();
+        if (SelectAllValue)
+            HandleSelectAllClick(false);
+    }
+
+    private async Task AddValue(T newValue)
+    {
+        if (newValue != null)
+        {
+            if (selectedValues.Add(newValue))
+                RefreshBinding();
+        }
+
+        var allItems = await SearchFunc(null);
+        if (selectedValues.Count == allItems.Count())
+        {
+            await HandleSelectAllClick(true);
+        }
+    }
+
+    // /// <summary>
+    // /// Note that this is required to a) clear the control after you add
+    // /// an item to the list, and b) to trigger the addvalue method.
+    // /// If MudAutoComplete's bind-Value:after worked, we could get rid
+    // /// of this and just clear the value after it was added.
+    // /// </summary>
+    private T _value
+    {
+        get => default(T);
+        set { AddValue(value); }
+    }
+
+    public async Task Validate()
+    {
+        await _autoComplete!.Validate();
+    }
+
+    private async Task HandleSelectAllClick(bool value)
+    {
+        SelectAllValue = value;
+        await SelectAllValueChanged.InvokeAsync(value);
+        selectedValues.Clear();
+
+        if (value)
+        {
+            var allItems = await SearchFunc(null);
+            foreach (var item in allItems)
+            {
+                selectedValues.Add(item);
+            }
+        }
+        SelectAll = value;
+        RefreshBinding();
+        await _autoComplete!.CloseMenuAsync();
+        await _autoComplete!.Validate();
+    }
+
+    public async Task CloseMenuAsync()
+    {
+        await _autoComplete!.CloseMenuAsync();
+    }
+}

@@ -1,0 +1,17 @@
+@inject ISnackbar Snackbar
+<div style="max-width: 340px;">
+    <HUIAttachmentCard OnViewClick="HandleOnViewClick" OnRemoveClick="HandleOnRemoveClick" ImgSrc="blog.png">
+        <Buttons>
+            <HUIIconButton Variant="Variant.Text" Icon="@Icons.Material.Filled.MoreVert"></HUIIconButton>
+        </Buttons>
+        <FileInformation>
+            <MudText Class="hui-text-semibold">MyImage.png</MudText>
+            <MudText Class="hui-text-semibold">1.2mb</MudText>
+            <MudText Class="hui-text-semibold">196x100</MudText>
+        </FileInformation>
+    </HUIAttachmentCard>
+</div>
+@code {
+    private void HandleOnViewClick() => Snackbar.Add("File should be open...", Severity.Info);
+    private void HandleOnRemoveClick() => Snackbar.Add("File should be deleted...", Severity.Warning);
+}

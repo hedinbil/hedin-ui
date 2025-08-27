@@ -1,0 +1,40 @@
+﻿<HUIMultiSelect T="MyType" Class="d-flex flex-column gap-1"
+                Label="Nice places to visit" @bind-Values="selectedValues" SearchFunc="MySearchFunc"
+                ToStringFunc="c => c?.Name" ChipToStringFunc="c => c?.Name"
+                ChipTooltipStringFunc="c => c?.Id.ToString()"
+                SelectAll="true" @bind-SelectAllValue="_allSelected" SelectAllText="Select everything!" AllItemsSelectedText="You selected everything">
+    <ItemTemplate>
+        <span class="d-flex gap-1">
+            <MudText Class="mud-text-secondary">(@context.Id)</MudText>
+            <MudText>@context.Name</MudText>
+        </span>
+    </ItemTemplate>
+</HUIMultiSelect>
+
+@code {
+    private bool _allSelected = false;
+    private IEnumerable<MyType> selectedValues = [];
+    private List<MyType> avaliableValues = new()
+        {
+            new("Värmland", 1),
+            new("Karlstad", 2),
+            new("Vålberg", 3),
+            new("Grums", 4),
+            new("Kil", 5),
+        };
+
+    private record MyType(string Name, int Id);
+
+    private Task<IEnumerable<MyType>> MySearchFunc(string? value)
+    {
+        value = value?.Trim();
+        return Task.FromResult(
+            string.IsNullOrWhiteSpace(value)
+            ? avaliableValues
+            : avaliableValues
+                .Where(x => x
+                .Name
+                .Contains(value, StringComparison.InvariantCultureIgnoreCase))
+        );
+    }
+}

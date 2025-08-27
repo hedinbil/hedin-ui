@@ -1,0 +1,66 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hedin.UI", "Hedin.UI\Hedin.UI.csproj", "{2A8E6CF5-05A8-4783-936B-966DEBF626A1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Hedin.UI.Demo", "Hedin.UI.Demo\Hedin.UI.Demo.csproj", "{444D6329-2BBD-44B3-8150-2F30E2FBF0BA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{48DE3655-1666-4C72-933C-ED49AE13FA6A}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+		.gitignore = .gitignore
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Templates", "Templates", "{02EA681E-C7D8-13C7-8484-4AC65E1B71E8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hedin.UI.Template.Server", "Hedin.UI.Template.Server\Hedin.UI.Template.Server.csproj", "{388F5F4D-329F-4B21-8E6C-EE297123AA42}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{0D826CBD-3C67-4E22-A8E1-8013B9C8BDC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hedin.UI.FlagGenerator", "Hedin.UI.FlagGenerator\Hedin.UI.FlagGenerator.csproj", "{07065861-A512-43FD-94B7-BDDF52B44DB3}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{5C42666C-0212-4879-9CA7-7C9A386C66CC}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Hedin.UI.Tests", "Hedin.UI.Tests\Hedin.UI.Tests.csproj", "{E1D39401-B4FF-4BC8-948A-2F30110425CA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2A8E6CF5-05A8-4783-936B-966DEBF626A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A8E6CF5-05A8-4783-936B-966DEBF626A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A8E6CF5-05A8-4783-936B-966DEBF626A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A8E6CF5-05A8-4783-936B-966DEBF626A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{444D6329-2BBD-44B3-8150-2F30E2FBF0BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{444D6329-2BBD-44B3-8150-2F30E2FBF0BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{444D6329-2BBD-44B3-8150-2F30E2FBF0BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{444D6329-2BBD-44B3-8150-2F30E2FBF0BA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{388F5F4D-329F-4B21-8E6C-EE297123AA42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{388F5F4D-329F-4B21-8E6C-EE297123AA42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{388F5F4D-329F-4B21-8E6C-EE297123AA42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{388F5F4D-329F-4B21-8E6C-EE297123AA42}.Release|Any CPU.Build.0 = Release|Any CPU
+		{07065861-A512-43FD-94B7-BDDF52B44DB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{07065861-A512-43FD-94B7-BDDF52B44DB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{07065861-A512-43FD-94B7-BDDF52B44DB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{07065861-A512-43FD-94B7-BDDF52B44DB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E1D39401-B4FF-4BC8-948A-2F30110425CA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E1D39401-B4FF-4BC8-948A-2F30110425CA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E1D39401-B4FF-4BC8-948A-2F30110425CA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E1D39401-B4FF-4BC8-948A-2F30110425CA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{388F5F4D-329F-4B21-8E6C-EE297123AA42} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
+		{07065861-A512-43FD-94B7-BDDF52B44DB3} = {0D826CBD-3C67-4E22-A8E1-8013B9C8BDC0}
+		{E1D39401-B4FF-4BC8-948A-2F30110425CA} = {5C42666C-0212-4879-9CA7-7C9A386C66CC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F44AC079-9D38-4359-AE7F-0B96275AA057}
+	EndGlobalSection
+EndGlobal

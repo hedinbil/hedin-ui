@@ -1,0 +1,24 @@
+﻿@namespace Hedin.UI
+@if (IsVisible)
+{
+    <div class="@($"hui-dialog-overlay {Class}" + (Gutters ? " pa-6" : ""))" style="@Style">
+        @if (Center)
+        {
+            <div class="d-flex flex-column align-center justify-center mb-3" style="min-height:100%;">
+                @ChildContent
+            </div>
+        }
+        else
+        {
+            @ChildContent
+        }
+    </div>
+}
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    [Parameter] public bool IsVisible { get; set; }
+    [Parameter] public bool Center { get; set; } = true;
+    [Parameter] public bool Gutters { get; set; } = true;
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+}

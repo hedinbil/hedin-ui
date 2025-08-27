@@ -1,0 +1,43 @@
+﻿@namespace Hedin.UI
+
+<div class="d-flex hui-module-section cursor-pointer my-3" @onclick="HandleToggleClick">
+    @if (!string.IsNullOrEmpty(Header))
+    {
+        <MudText Typo="Typo.caption" Style="white-space:nowrap" Class="mud-text-secondary">@Header</MudText>
+        <span class="hui-module-section-caption-line"></span>
+        @if (IsExpanded || ShowButtons)
+        {
+            @Buttons
+        }
+        <MudIconButton Class="my-n1" Icon="@(IsExpanded ? Icons.Material.Filled.KeyboardArrowUp : Icons.Material.Filled.KeyboardArrowDown)" Size="Size.Small" OnClick="HandleToggleClick"></MudIconButton>
+    }
+</div>
+
+@if (IsExpanded)
+{
+    <section>
+        @ChildContent
+    </section>
+}
+
+@code {
+    [Parameter] public string? Header { get; set; }
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    /// <summary>
+    /// Buttons are per default shown only when section is expanded
+    /// </summary>
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public bool IsExpanded { get; set; } = true;
+    [Parameter] public EventCallback<bool> IsExpandedChanged { get; set; }
+    /// <summary>
+    /// Overridable, to show buttons even if the section is collapsed
+    /// </summary>
+    [Parameter] public bool ShowButtons { get; set; }
+
+
+
+    private void HandleToggleClick(){
+        IsExpanded = !IsExpanded;
+        IsExpandedChanged.InvokeAsync(IsExpanded);
+    }
+}

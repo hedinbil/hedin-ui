@@ -1,0 +1,16 @@
+﻿@inject IHUIPageHelper HUIPageHelper
+
+<MudGrid>
+    <MudItem sm="12" lg="4">
+        <HUINavMenu Items="menuItems" RequireAuthorization="false" MergeSubItemWithGroup="false" />
+    </MudItem>
+</MudGrid>
+@code {
+    private List<HUIMenuItem> menuItems = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        menuItems = await HUIPageHelper.GetMenuItems([typeof(App).Assembly]);
+        StateHasChanged();
+    }
+    }

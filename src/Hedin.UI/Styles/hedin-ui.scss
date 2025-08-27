@@ -1,0 +1,139 @@
+﻿@use 'mud-overrides.scss';
+@use 'apex-charts-overrides.scss';
+
+/*
+    Custom Hedin UI CSS
+    Please note that all custom css classes has to be prefixed with "hui-"
+    Only place global css here. Use component css-isolation for component css
+*/
+
+/*Scrollbar*/
+html, body * {
+    scrollbar-color: auto !important;
+    scrollbar-width: auto !important;
+    ::-webkit-scrollbar {
+        width: 8px !important;
+        height: 8px !important;
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: var(--mud-palette-primary) !important;
+        border-radius: 0px !important;
+        border: 3px solid transparent !important;
+        background-clip: padding-box !important; // <== make the border work
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        border: 0 !important;
+        background: var(--mud-palette-primary-lighten) !important;
+    }
+
+    ::-webkit-scrollbar-track {
+        background: transparent !important;
+    }
+}
+
+
+.hui-text-button-small {
+    font-weight: 400;
+    font-size: .875rem;
+    line-height: initial;
+    letter-spacing: .02em;
+    text-transform: initial
+}
+.hui-text-s {
+    font-size: .875rem;
+}
+.hui-text-xs {
+    font-size: .75rem;
+}
+
+.hui-text-xxs {
+    font-size: .625rem;
+}
+
+.hui-text-semibold {
+    font-weight: 600;
+}
+
+.hui-rounded-s {
+    border-radius: 4px;
+}
+
+
+.hui-app-drawer {
+    background: var(--mud-palette-background);
+
+    .dp-app-icons > * {
+        width: 120px;
+
+        .hui-app-icon-container {
+                /*background: var(--mud-palette-gray-light);*/
+                border-radius: 12px;
+                padding: 6px 6px 0px 6px;
+            .hui-app-icon {
+                width: 64px;
+                height: 64px;
+            }
+        }
+
+        .hui-app-icon-container:hover {
+            background: var(--mud-palette-gray-lighter);
+        }
+
+        p {
+            text-align: center;
+        }
+    }
+
+    .dp-app-icons > * :hover {
+        cursor: pointer;
+    }
+
+    .dp-app-icons {
+        display: flex;
+        gap: 30px;
+    }
+
+    .mud-dialog-content {
+        background: none;
+        display: flex;
+        height: 100vh
+    }
+}
+
+$field-gap: 12px;
+
+.hui-field-section {    
+    display: grid;
+    grid-template-columns: repeat(1, 1fr);
+    gap: $field-gap;
+    justify-content:start;
+
+    @container panel-container (min-width: 700px) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @container panel-container (min-width: 900px) {  grid-template-columns: repeat(3, 1fr);  }
+    @container panel-container (min-width: 1100px) {  grid-template-columns: repeat(5, 1fr);  }
+    @container panel-container (min-width: 1400px) {  grid-template-columns: repeat(7, 1fr);  }
+    @container panel-container (min-width: 1800px) {  grid-template-columns: repeat(9, 1fr);  }
+
+}
+.hui-field-section > * {
+    width: 100%;
+}
+
+.mud-panel-expanded .mud-collapse-wrapper:has(.hui-page-filter) {
+    overflow: visible;
+}
+
+/* Hiding g-maps labels */
+.gm-style .gm-style-cc {
+    display: none !important;
+}
+
+/* Fix for badge background on datagrids staying light when hover on row */
+.hui-datagrid .mud-table-row:hover .mud-badge {
+    background-color: var(--mud-palette-divider) !important;
+}

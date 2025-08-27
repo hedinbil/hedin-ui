@@ -1,0 +1,150 @@
+﻿@using static Hedin.UI.HUIMaps
+
+<HUIMaps @ref="_maps" Points="mapPoints"
+         Height="600px"
+         Width="100%"
+         AutoFit="@autoFit"
+         DarkMode="_darkMode"
+         ControlOptions="mapControlOptions"
+         Class="rounded"
+         OnPointClick="HandlePointClick" />
+
+<HUIModule Expandable="false" Header="Map Options" Class="mt-3">
+    <div class="d-flex flex-column gap-6">
+        <span>
+            <MudText Typo="Typo.subtitle1">Last Point Clicked</MudText>
+            @if (lastClicked != null)
+            {
+                <MudText>
+                    Id: @lastClicked.Id |
+                    Lat: @lastClicked.Lat:F5 |
+                    Lng: @lastClicked.Lng:F5 |
+                    Heading: @lastClicked.Heading |
+                    Data: @lastClicked.Data
+                </MudText>
+            }
+            else
+            {
+                <MudText>No point clicked yet.</MudText>
+            }
+        </span>
+
+        <span>
+            <MudText Typo="Typo.subtitle1">AutoFit</MudText>
+            <MudSwitch @bind-Value="autoFit" />
+        </span>
+
+        <span>
+            <MudText Typo="Typo.subtitle1">Dark Mode</MudText>
+            <MudSwitch @bind-Value="_darkMode" />
+        </span>
+        <span>
+            <HUIButton Variant="Variant.Outlined" OnClick="HandleFocusClick">Pan to P1</HUIButton>
+        </span>
+
+        <span class="mt-4">
+            <MudButton Variant="Variant.Filled"
+                       Color="Color.Primary"
+                       OnClick="ToggleLive">
+                @(liveUpdating ? "Stop Live Update" : "Start Live Update")
+            </MudButton>
+        </span>
+    </div>
+</HUIModule>
+
+@code {
+    private HUIMaps _maps;
+    private bool _darkMode = true;
+    private bool autoFit = false;
+    private HUIMapsControlOptions mapControlOptions = new()
+        {
+            MinZoom = 3
+        };
+    private HUIMapPoint? lastClicked;
+
+    private List<HUIMaps.HUIMapPoint> mapPoints = new()
+    {
+        new HUIMaps.HUIMapPoint
+        {
+            Id        = "P1",
+            Lat       = 57.64665,
+            Lng       = 11.98478,
+            Heading   = 30,
+            Icon  = "_content/Hedin.UI/img/maps/arrow.svg",
+            IconColor = HUITheme.Dark.PaletteDark.Error.Value,
+            Badge  = "_content/Hedin.UI/img/maps/badge_warning.svg",
+            IconSize = 44,
+            BadgeSize = 22,
+            Data      = "Some data"
+        },
+        new HUIMaps.HUIMapPoint
+        {
+            Id       = "P2",
+            Lat      = 57.7089,
+            Lng      = 11.9746,
+            Heading  = 0,
+            Icon  = "_content/Hedin.UI/img/maps/arrow.svg",
+            IconColor = HUITheme.Dark.PaletteDark.Error.Value,
+            Badge  = "_content/Hedin.UI/img/maps/badge_error.svg",
+            IconSize = 44,
+            BadgeSize = 22,
+            Data     = "Some data2"
+        }
+    };
+    private async Task HandleFocusClick()
+    {
+        await _maps.FocusPointAsync("P1", 15, true, 0, 0);
+    }
+
+    // Live‐update state
+    private bool liveUpdating = false;
+    private CancellationTokenSource? liveCts;
+
+    private void HandlePointClick(HUIMaps.HUIMapPoint p)
+    {
+        lastClicked = p;
+    }
+
+    private void ToggleLive()
+    {
+        liveUpdating = !liveUpdating;
+
+        if (liveUpdating)
+        {
+            liveCts = new CancellationTokenSource();
+            _ = Task.Run(async () =>
+            {
+                var rnd = new Random();
+                var counter = 0;
+                const double baseStep = 0.00005;  // smaller step per tick
+                while (!liveCts.Token.IsCancellationRequested)
+                {
+                    counter++;
+                    foreach (var pt in mapPoints)
+                    {
+                        // 1) move forward
+                        var rad = pt.Heading * Math.PI / 180.0;
+                        pt.Lat += Math.Cos(rad) * baseStep;
+                        pt.Lng += Math.Sin(rad) * baseStep;
+
+                        // 2) small jitter ±10°
+                        pt.Heading = (pt.Heading + (rnd.NextDouble() * 20 - 10) + 360) % 360;
+
+                        // 3) every 50 ticks (~5s), bigger turn ±60°
+                        if (counter % 50 == 0)
+                        {
+                            pt.Heading = (pt.Heading + (rnd.NextDouble() * 120 - 60) + 360) % 360;
+                        }
+                    }
+
+                    await InvokeAsync(StateHasChanged);
+                    await Task.Delay(100, liveCts.Token); // 100 ms per update
+                }
+            });
+        }
+        else
+        {
+            liveCts?.Cancel();
+        }
+    }
+}

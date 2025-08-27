@@ -1,0 +1,44 @@
+﻿@inherits LayoutComponentBase
+
+<HUIThemeProvider Theme="_currentTheme" />
+<MudPopoverProvider />
+<MudDialogProvider CloseOnEscapeKey="false" BackdropClick="true" FullWidth="true" CloseButton="false" />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <HUIAppBar LogoSrc="_content/Hedin.UI/img/app-icons/HedinUI.svg" LogoBrandSrc="">
+        <ChildContent>
+            <MudSpacer />
+            <HUIIconButton Icon="@(_darkMode ? @Icons.Material.Rounded.DarkMode : Icons.Material.Rounded.WbSunny)" OnClick="HandleThemeButtonClick"></HUIIconButton>
+        </ChildContent>
+    </HUIAppBar>
+</MudLayout>
+
+<NavMenu />
+<HUIMainContainer Class="px-3" Style="padding-left: 65px !important;">
+    <CascadingValue Name="DarkMode" Value="_darkMode">
+        @Body
+    </CascadingValue>
+</HUIMainContainer>
+
+@code {
+
+    private MudTheme _currentTheme => _darkMode
+        ? HUITheme.Dark.Override(customizePalette)
+        : HUITheme.Light.Override(customizePalette);
+
+    Action<Palette> customizePalette = palette =>
+    {
+        palette.Primary = "#1E7194";
+        palette.PrimaryLighten = palette.Primary.ColorLighten(0.125).Value;
+        palette.PrimaryDarken = palette.Primary.ColorDarken(0.125).Value;
+        palette.TableHover = palette.Primary;
+        //All theme colors can be customized here
+    };
+
+    private bool _darkMode = true;
+    private void HandleThemeButtonClick()
+    {
+        _darkMode = !_darkMode;
+    }
+}

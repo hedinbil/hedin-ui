@@ -1,0 +1,9 @@
+﻿<HUIBreadcrumbs Breadcrumbs="items" />
+
+@code {
+    private List<BreadcrumbItem> items { get; set; } = new List<BreadcrumbItem>
+    {
+        new BreadcrumbItem("Components", PageRoute.Components),
+        new BreadcrumbItem("Breadcrumbs", PageRoute.Breadcrumbs, disabled: true)
+    };
+}

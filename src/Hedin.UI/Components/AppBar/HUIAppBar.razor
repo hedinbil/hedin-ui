@@ -1,0 +1,145 @@
+﻿@namespace Hedin.UI
+@using Hedin.UI.Components
+@using static Hedin.UI.Internal.InternalAppDialogSelector
+@inject IOptions<TitleService> TitleService
+@inject IDialogService DialogService
+@inject InternaHUIlLocalizer Localizer
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsRuntime
+
+<MudAppBar Gutters="false" Elevation="0" Fixed="Fixed">
+    <div class="d-flex flex-column flex-grow-1" id="appbarContainer">
+        @if (_showDevBar)
+        {
+            <MudAlert Dense="true" ShowCloseIcon="true" Severity="Severity.Info" Variant="Variant.Filled" Class="rounded-0 align-center" NoIcon="true" ContentAlignment="HorizontalAlignment.Center" Style="@($"height:{_appbarHeight}px;")" CloseIconClicked="HandleCloseIconClicked">
+                @Localizer["HUIAppBar.DevMode"]
+            </MudAlert>
+        }
+        @TopContent
+        <MudToolBar Class="flex-grow-1 d-flex align-center flex-grow-1" Gutters="false">
+            <MudHidden Breakpoint="Breakpoint.MdAndUp" HiddenChanged="MenuButtonVisibilityChanged">
+                <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="HandleMenuButtonClicked" Class="ml-4" />
+            </MudHidden>
+            <MudElement Class="d-flex gap-2 pa-4 align-center cursor-pointer hui-logo" Style="width: var(--mud-drawer-width, var(--mud-drawer-width-left))" @onclick="HandleLogoClick">
+                <MudImage Src="@LogoSrc" Height="40" Width="40" />
+                <MudImage Src="@LogoBrandSrc" Style="max-width: 121px" Class="brand-logo" />
+            </MudElement>
+            @ChildContent
+            @if (!AppDrawerItems?.Any() ?? true)
+            {
+                <span class="hui-app-title disabled d-flex gap-2 align-center ml-3 hui-text-xs">
+                    @TitleService.Value.AppTitle
+                </span>
+            }
+            else
+            {
+                <HUITooltip Text="@Localizer["HUIAppDrawer.Tooltip"]">
+                    <span class="hui-app-title d-flex gap-2 align-center ml-3 hui-text-xs" @onclick="HandleOnAppClick">
+                        @TitleService.Value.AppTitle
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Apps"></MudIcon>
+                    </span>
+                </HUITooltip>
+            }
+        </MudToolBar>
+    </div>
+</MudAppBar>
+
+@code {
+    /// <summary>
+    /// The content of the app bar.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    /// <summary>
+    /// The menu button automatically changes visibility based on the screen size.
+    /// </summary>
+    [Parameter]
+    public EventCallback<bool> MenuButtonVisibilityChanged { get; set; }
+
+    /// <summary>
+    /// This event is triggered when the menu button is clicked.
+    /// </summary>
+    [Parameter]
+    public EventCallback MenuButtonClicked { get; set; }
+
+    /// <summary>
+    /// This should always be set to true but can be false for demo purposes.
+    /// </summary>
+    [Parameter]
+    public bool Fixed { get; set; } = true;
+
+    /// <summary>
+    /// The application logotype source
+    /// </summary>
+    [Parameter]
+    public string LogoSrc { get; set; } = "";
+
+    /// <summary>
+    /// The application name logotype source
+    /// </summary>
+    [Parameter]
+    public string LogoBrandSrc { get; set; } = "";
+
+    /// <summary>
+    /// Content area above the AppBar.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? TopContent { get; set; }
+
+    /// <summary>
+    /// Disables the app drawer
+    /// </summary>
+    [Obsolete("This will be removed in future versions as this should be controlled by the AppDrawerItems param")]
+    [Parameter]
+    public bool DisableAppDrawer { get; set; } = false;
+
+    /// <summary>
+    /// List of applications to be shown in the app-drawer
+    /// </summary>
+    [Parameter]
+    public List<HUIAppDrawerItem> AppDrawerItems { get; set; } = new();
+
+    private bool _showDevBar = false;
+    private int _appbarHeight = 28;
+
+    protected override void OnInitialized()
+    {
+        _showDevBar = TitleService.Value.ShowDevEnvWarning;
+        base.OnInitialized();
+    }
+
+    /// <inheritdoc />
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Start observing the container element
+            await JsRuntime.InvokeVoidAsync("observeAppbarHeight", "appbarContainer");
+        }
+    }
+
+    private void HandleMenuButtonClicked()
+    {
+        MenuButtonClicked.InvokeAsync();
+    }
+
+    private Task HandleOnAppClick()
+    {
+        var parameters = new DialogParameters<InternalAppDialogSelector>
+        {
+            {x => x.Apps, AppDrawerItems}
+        };
+
+        var options = new DialogOptions {  MaxWidth = MaxWidth.ExtraSmall, FullScreen = true, FullWidth = true };
+
+        return DialogService.ShowAsync<InternalAppDialogSelector>("", parameters, options);
+    }
+
+    private void HandleLogoClick() => NavigationManager.NavigateTo("/");
+
+    private void HandleCloseIconClicked()
+    {
+        _showDevBar = false;
+    }
+}

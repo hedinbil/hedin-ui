@@ -1,0 +1,11 @@
+﻿<HUIFrame>
+    <HUIFrameItem CanBeEdited Locked>
+        <MudSelect T="string" Label="Readonly Dropdown" Variant="Variant.Outlined" Margin="Margin.Dense"
+                   AnchorOrigin="Origin.BottomCenter" ReadOnly="true">
+            @foreach (var value in new List<string> { "One", "Two", "Three" })
+            {
+                <MudSelectItem Value="@value">@value</MudSelectItem>
+            }
+        </MudSelect>
+    </HUIFrameItem>
+</HUIFrame>

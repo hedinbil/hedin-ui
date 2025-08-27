@@ -1,0 +1,68 @@
+﻿.hui-datagrid {
+
+    ::deep .hui-datagrid-row-error {
+        td:first-child {
+            border-left: 2px solid var(--mud-palette-error) !important;
+        }
+    }
+
+    ::deep .hui-datagrid-row-warning {
+        td:first-child {
+            border-left: 2px solid var(--mud-palette-warning) !important;
+        }
+    }
+
+    ::deep .hui-datagrid-row-success {
+        td:first-child {
+            border-left: 2px solid var(--mud-palette-success) !important;
+        }
+    }
+
+    ::deep .hui-datagrid-row-info {
+        td:first-child {
+            border-left: 2px solid var(--mud-palette-info) !important;
+        }
+    }
+
+    ::deep .hui-datagrid-header {
+        white-space: nowrap;
+
+        .mud-table-row {
+            .mud-table-cell {
+                background-color: var(--mud-palette-background) !important;
+                padding: 8px 16px 8px 16px !important;
+            }
+        }
+
+        .mud-table-hover .mud-table-row:hover {
+            .mud-table-cell {
+                color: var(--mud-palette-text-primary);
+            }
+        }
+    }
+
+    ::deep .hui-datagrid-pager {
+        background-color: var(--mud-palette-background);
+        min-height: 40px;
+        height: 40px;
+        $border: var(--mud-default-borderradius);
+        border-radius: 0 0 $border $border;
+    }
+
+    ::deep .mud-table-hover .mud-table-body .mud-table-row:hover {
+        .mud-table-cell {
+            color: var(--mud-palette-primary-text);
+
+            .mud-svg-icon {
+                fill: var(--mud-palette-primary-text);
+            }
+            .mud-link{
+                color: var(--mud-palette-primary-text) !important;
+            }
+        }
+    }
+
+    ::deep .mud-table-hover .mud-table-root .mud-table-head .mud-table-cell:hover {
+        color: var(--mud-palette-info);
+    }
+}

@@ -1,0 +1,57 @@
+﻿@using static Hedin.UI.HUIChatPanel
+@inject SemanticChatService ChatService
+
+<HUIChatPanel Title="Albot"
+    Conversation="@_conversation"
+    OnSendMessage="SendMessage"
+    EmptyStateText="Albot knows anything you need to know about Hedin.UI"
+    AssistantTemplate="RenderAssistant">
+</HUIChatPanel>
+
+@code {
+    private List<HUIChatLine> _conversation = new();
+    private RenderFragment<HUIChatLine> RenderAssistant => line => @<MudMarkdown Value="@line.Text" CodeBlockTheme="_codeTheme" />;
+
+        [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+    private CodeBlockTheme _codeTheme => DarkMode
+        ? CodeBlockTheme.Windows10Base16
+        : CodeBlockTheme.Windows10LightBase16;
+
+    private async Task SendMessage(string message, CancellationToken ct)
+    {
+        _conversation.Add(new HUIChatLine(HUIChatRole.User, message));
+        _conversation.Add(new HUIChatLine(HUIChatRole.Assistant, "")); // For streaming placeholder
+        var idx = _conversation.Count - 1;
+        var sb = new StringBuilder();
+
+        try
+        {
+            await foreach (var chunk in ChatService.StreamAsync(message, ct))
+            {
+                sb.Append(chunk);
+                _conversation[idx] = _conversation[idx] with { Text = sb.ToString() };
+                await InvokeAsync(StateHasChanged);
+            }
+            _conversation[idx] = _conversation[idx] with { Text = sb.ToString() };
+        }
+        catch (OperationCanceledException)
+        {
+            _conversation.Add(new HUIChatLine(HUIChatRole.Assistant, "**[Stopped by user]**"));
+            StateHasChanged();
+        }
+        catch (Exception ex)
+        {
+            _conversation[idx] = _conversation[idx] with { Text = $"Error: {ex.Message}" };
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public async Task Message(string message)
+    {
+        CancellationTokenSource cts = new();
+        await SendMessage(message, cts.Token);
+    }
+}

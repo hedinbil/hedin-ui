@@ -1,0 +1,73 @@
+﻿@namespace Hedin.UI
+@inject InternaHUIlLocalizer Localizer
+@inherits MudComponentBase
+
+@if(Model != null)
+{
+    <div class="hui-information-message @GetSeverityClass(Model.Severity) pl-3 pr-1 py-1 @Class" style="@GetRequireReadStyle(Model) @Style">
+        <div class="d-flex gap-1 mb-1">
+            @if (Model.Pinned)
+            {
+                <MudIcon Icon="@Icons.Material.Outlined.PushPin" Size="Size.Small"></MudIcon>
+            }
+            <MudText Typo="Typo.body1" Class="hui-text-xs mud-text-secondary">@Model.Date.ToShortDateString()</MudText>
+            @if (ShowEdit)
+            {
+                <MudLink Typo="Typo.body1" Class="cursor-pointer hui-text-xs" Underline="Underline.Always" OnClick="HandleOnEditClick" Color="Color.Secondary">@Localizer["HUIInfoMessage.EditLink"]</MudLink>
+            }
+        </div>
+
+
+        <MudText Typo="Typo.h2" Class="hui-text-semibold hui-text-s">@Model.Header</MudText>
+        <MudText Typo="Typo.body1" Class="mb-1 hui-text-s"Style="white-space: pre-line">@Model.Message </MudText>
+
+        <div class="d-flex gap-1">
+            @if (!Disabled)
+            {
+                @if (Model.RequireReadVerification)
+                {
+                    @if (Model.Read)
+                    {
+                        <MudText Color="Color.Surface" Class="hui-text-xs mud-text-secondary">@Localizer["HUIInfoMessage.MarkedAsRead"]</MudText>
+                        @if (!Model.Archived)
+                        {
+                            <MudLink Underline="Underline.Always" Class="cursor-pointer hui-text-xs" OnClick="HandleArchiveClick" Color="Color.Secondary">@Localizer["HUIInfoMessage.MoveToArchive"]</MudLink>
+                        }
+                    }
+                    else
+                    {
+                        <MudLink Underline="Underline.Always" Class="cursor-pointer hui-text-xs" OnClick="HandleMarkReadClick" Color="Color.Secondary">@Localizer["HUIInfoMessage.IHaveReadThisNotification"]</MudLink>
+                    }
+                }
+                else if (!Model.Archived)
+                {
+                    <MudLink Underline="Underline.Always" Class="cursor-pointer hui-text-xs" OnClick="HandleArchiveClick" Color="Color.Secondary">@Localizer["HUIInfoMessage.MoveToArchive"]</MudLink>
+                }
+            }
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter] public HUIInformationMessageModel? Model { get; set; }
+    [Parameter] public EventCallback<HUIInformationMessageModel> OnReadClick { get; set; }
+    [Parameter] public EventCallback<HUIInformationMessageModel> OnArchiveClick { get; set; }
+    [Parameter] public EventCallback<HUIInformationMessageModel> OnEditClick { get; set; }
+    [Parameter] public bool Disabled { get; set; }
+    [Parameter] public bool ShowEdit { get; set; }
+
+    private void HandleArchiveClick() => OnArchiveClick.InvokeAsync(Model);
+    private void HandleMarkReadClick() => OnReadClick.InvokeAsync(Model);
+    private void HandleOnEditClick() => OnEditClick.InvokeAsync(Model);
+
+    private static string GetSeverityClass(Severity severity) => severity switch
+    {
+        Severity.Warning => "hui-border-severity-warning",
+        Severity.Error => "hui-border-severity-error",
+        Severity.Info => "hui-border-severity-info",
+        Severity.Success => "hui-border-severity-success",
+        _ => "",
+    };
+
+    private static string GetRequireReadStyle(HUIInformationMessageModel model) => (model.RequireReadVerification && !model.Read) ? "background-color: var(--mud-palette-gray-default);" : "";
+}

@@ -1,0 +1,15 @@
+﻿<HUIFrame>
+    <HUIFrameItem CanBeEdited Locked Warning WarningText="This is the warning text">
+        <MudTextField Label="Some input" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable @bind-Value="_value"></MudTextField>
+    </HUIFrameItem>
+    <HUIFrameItem CanBeEdited Locked Warning WarningText="This is the warning text">
+        <MudTextField Label="Some input" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable @bind-Value="_value"></MudTextField>
+    </HUIFrameItem>
+    <HUIFrameItem CanBeEdited Locked Warning>
+        <MudTextField Label="Some input" Variant="Variant.Outlined" Margin="Margin.Dense" Clearable @bind-Value="_value"></MudTextField>
+    </HUIFrameItem>
+</HUIFrame>
+
+@code {
+    string _value = "Value 5";
+}

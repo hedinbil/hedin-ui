@@ -1,0 +1,12 @@
+@attribute [Route(PageRoute.Charts)]
+@attribute [HUIPageSettings("Charts (Beta)")]
+
+<DemoPageLayout TItem="Charts" OriginalDocsUrl="https://apexcharts.github.io/Blazor-ApexCharts">
+    <MudText>Hedin UI supports ApexCharts, wrapped in Blazor.</MudText>
+    <MudText>This is in very early stages of development and is not ready for production.</MudText>
+    <MudText>It is not recommended to add @@using ApexCharts to your _imports.razor because there will be interference to MudBlazor namespaces.</MudText>
+    <MudText>Instead, add @@using ApexCharts to your isolated chart component.</MudText>
+
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Charts.Examples.BarChart)" />
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Charts.Examples.LineChart)" />
+</DemoPageLayout>

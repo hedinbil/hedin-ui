@@ -1,0 +1,145 @@
+﻿@inject InternaHUIlLocalizer Localizer
+@typeparam T
+
+@if (DataGrid != null)
+{
+    <div>
+        <HUIIconButton OnClick="ToggleOpenAsync" Icon="@Icons.Material.Filled.Build" Tooltip="@Localizer["HUIDataGrid.ManageTableSettings"]"></HUIIconButton>
+        <MudPopover Open="@_isOpen" Fixed="true" Class="pa-3" AnchorOrigin="Origin.BottomCenter">
+            <div class="d-flex flex-column gap-3">
+
+                <div>
+                    <MudText Class="hui-text-semibold">@Localizer["HUIDataGrid.TableSettings"]</MudText>
+                </div>
+                <div class="d-flex flex-column hui-context-container">
+                    @{
+                        foreach (var column in DataGrid.InnerGridRef.RenderedColumns)
+                        {
+                            var hideDisabled = IsHideDisabled(column);
+                            var moveDisabled = IsMoveDisabled(column);
+                            <span class="d-flex align-center gap-12 justify-space-between">
+                                <MudCheckBox T="bool" Value="!column.Hidden" ValueChanged="(v) => ToggleVisibility(column, v)" Size="Size.Small" Disabled="hideDisabled">@column.Title</MudCheckBox>
+                                @if (!moveDisabled)
+                                {
+                                    <span class="d-flex">
+                                        <HUIIconButton Variant="Variant.Text" Icon="@Icons.Material.Filled.ArrowUpward" OnClick="() => HandleUpClick(column)" Disabled="moveDisabled"></HUIIconButton>
+                                        <HUIIconButton Variant="Variant.Text" Icon="@Icons.Material.Filled.ArrowDownward" OnClick="() => HandleDownClick(column)" Disabled="moveDisabled"></HUIIconButton>
+                                    </span>
+                                }
+                                else
+                                {
+                                    <MudIcon Class="mud-text-secondary mr-3" Icon="@Icons.Material.Filled.Lock" Size="Size.Small"></MudIcon>
+                                }
+                            </span>
+                        }
+                    }
+                </div>
+                <span class="d-flex gap-1">
+                    <MudSpacer />
+                    <HUIIconButton Loading="_resetLoading" Tooltip="@Localizer["HUIDataGrid.ResetTableSettings"]" Icon="@Icons.Material.Filled.RestartAlt" OnClick="HandleClearSettingsClick"></HUIIconButton>
+                    <HUIButton Variant="Variant.Outlined" Size="Size.Small" OnClick="ToggleOpenAsync">Close</HUIButton>
+                </span>
+            </div>
+        </MudPopover>
+        <MudOverlay Visible="_isOpen" OnClick="ToggleOpenAsync"></MudOverlay>
+    </div>
+}
+@code {
+    [Parameter] public HUIDataGrid<T> DataGrid { get; set; }
+
+    private bool _isOpen = false;
+
+    private bool IsHideDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || (!column.Hideable ?? !DataGrid.InnerGridRef.Hideable);
+
+    private bool IsMoveDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || (!column.DragAndDropEnabled ?? !DataGrid.InnerGridRef.DragDropColumnReordering);
+
+    public async Task ToggleOpenAsync()
+    {
+        if (_isOpen)
+        {
+            _isOpen = false;
+            await DataGrid.UpdateState();
+        }
+        else
+            _isOpen = true;
+    }
+    private async Task ToggleVisibility(Column<T> c, bool v)
+    {
+        if (v)
+        {
+            await c.ShowAsync();
+            c.Hidden = false;
+            await c.HiddenChanged.InvokeAsync(false);
+        }
+        else
+        {
+            await c.HideAsync();
+            c.Hidden = true;
+            await c.HiddenChanged.InvokeAsync(true);
+        }
+        DataGrid.ForceStateChange();
+    }
+
+    private void HandleUpClick(Column<T> column)
+    {
+        HandleClick(column, -1);
+    }
+
+    private void HandleDownClick(Column<T> column)
+    {
+        HandleClick(column, 1);
+    }
+
+    private void HandleClick(Column<T> targetColumn, int direction)
+    {
+        var currentOrder = GetColumnOrder();
+        var targetIndex = DataGrid.InnerGridRef.RenderedColumns.IndexOf(targetColumn);
+
+        if (targetIndex < 0)
+        {
+            return; // Column not found
+        }
+
+        // Find the next movable column index
+        var swapIndex = targetIndex;
+        do
+        {
+            swapIndex += direction;
+        } while (swapIndex >= 0 && swapIndex < DataGrid.InnerGridRef.RenderedColumns.Count && IsMoveDisabled(DataGrid.InnerGridRef.RenderedColumns[swapIndex]));
+
+        // Boundary check after finding the next movable column
+        if (swapIndex < 0 || swapIndex >= DataGrid.InnerGridRef.RenderedColumns.Count)
+        {
+            return;
+        }
+
+        // Get column titles to swap
+        var targetColumnTitle = DataGrid.InnerGridRef.RenderedColumns[targetIndex].Title ?? $"TempId_{targetIndex}";
+        var swapColumnTitle = DataGrid.InnerGridRef.RenderedColumns[swapIndex].Title ?? $"TempId_{swapIndex}";
+
+        // Swap positions in the dictionary
+        var temp = currentOrder[targetColumnTitle];
+        currentOrder[targetColumnTitle] = currentOrder[swapColumnTitle];
+        currentOrder[swapColumnTitle] = temp;
+
+        DataGrid.ApplyColumnOrder(currentOrder);
+    }
+
+    public Dictionary<string, int> GetColumnOrder()
+    {
+        int tempIdCounter = 0;
+        return DataGrid.InnerGridRef.RenderedColumns
+            .Select((col, index) => new { col, index })
+            .ToDictionary(
+                x => !string.IsNullOrWhiteSpace(x.col.Title) ? x.col.Title : $"TempId_{tempIdCounter++}",
+                x => x.index);
+    }
+
+    private bool _resetLoading = false;
+    private async Task HandleClearSettingsClick()
+    {
+        _resetLoading = true;
+        await DataGrid.ResetToDefault();
+        _resetLoading = false;
+    }
+}

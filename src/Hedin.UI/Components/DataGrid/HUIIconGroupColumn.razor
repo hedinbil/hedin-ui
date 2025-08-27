@@ -1,0 +1,33 @@
+﻿@namespace Hedin.UI
+@typeparam T
+@attribute [CascadingTypeParameter(nameof(T))]
+@inherits TemplateColumn<T>
+
+@code {
+    [Parameter] public RenderFragment<T>? ChildContent { get; set; }
+    [Parameter] public bool Dense { get; set; } = false;
+
+    private const string DenseStyles = "margin: -15px -12px -12px -16px; padding: 8px 12px; border-radius: 0;";
+    private const string NormalStyles = "margin: -27px -12px -25px -16px; padding: 18px; border-radius: 0;";
+    private string _style = "";
+
+    protected override void OnInitialized()
+    {
+        _style = Dense ? DenseStyles : NormalStyles;
+        CellTemplate = CustomCellTemplate;
+        base.OnInitialized();
+    }
+
+    private RenderFragment<CellContext<T>> CustomCellTemplate => context => @<MudRender>
+        <CascadingValue Name="GroupedMode" Value="true" IsFixed="true">
+            <CascadingValue Value="_style" IsFixed="true">
+                <div class="d-flex align-center" style="gap: 4px;">
+                    @if (ChildContent is not null)
+                {
+                    @ChildContent(context.Item)
+                }
+                </div>
+            </CascadingValue>
+        </CascadingValue>
+    </MudRender>;
+}

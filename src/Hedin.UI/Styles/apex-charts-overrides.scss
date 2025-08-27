@@ -1,0 +1,36 @@
+﻿/*Global overrides for apex-charts*/
+
+
+.apexcharts-canvas {
+    svg {
+        background: none !important;
+    }
+
+    line {
+        stroke: var(--mud-palette-divider) !important;
+    }
+
+    text {
+        fill: var(--mud-palette-text-primary);
+    }
+
+    .apexcharts-legend-text {
+        color: var(--mud-palette-text-primary) !important;
+    }
+
+    .apexcharts-toolbar {
+        .apexcharts-menu-icon {
+        }
+    }
+
+    .apexcharts-tooltip {
+        background: var(--mud-palette-text-primary) !important;
+        color: var(--mud-palette-background) !important;
+
+        .apexcharts-tooltip-title {
+            background: none !important;
+            border-bottom: none !important;
+            margin-bottom: 0 !important;
+        }
+    }
+}

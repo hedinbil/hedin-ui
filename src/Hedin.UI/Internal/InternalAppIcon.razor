@@ -1,0 +1,19 @@
+﻿@inject NavigationManager NavigationManager
+
+<div class="d-flex flex-column gap-3 align-center" @onclick="HandleNavigationClick">
+    <div class="hui-app-icon-container">
+        <MudImage Src="@Icon" Width="64" Height="64" Class="hui-app-icon"></MudImage>
+    </div>
+    <MudText>@AppName</MudText>
+</div>
+
+@code {
+    [Parameter] public string? Icon { get; set; }
+    [Parameter] public string? AppName { get; set; }
+    [Parameter] public string AppUrl { get; set; }
+
+    private void HandleNavigationClick()
+    {
+        NavigationManager.NavigateTo(AppUrl);
+    }
+}

@@ -1,0 +1,47 @@
+﻿@namespace Hedin.UI
+@inject InternaHUIlLocalizer Localizer
+<MudContainer Class="pa-0 ma-0">
+    <MudText Typo="Typo.h1" Class="mb-3">@Header</MudText>
+    @HeaderContent
+    @if (!string.IsNullOrEmpty(ImgSrc))
+    {
+        <MudImage Class="mb-6" Src="@ImgSrc" Fluid="true" Alt="@ImgAlt" Style="min-width: 100%; max-height:350px;" ObjectFit="ObjectFit.Cover"></MudImage>
+    }
+    else if (ImgLazyLoad)
+    {
+        <MudSkeleton Class="mb-6" Style="transform: none" Height="350px"/>
+    }
+    @if(!string.IsNullOrEmpty(SubHeader)){
+        <MudText Typo="Typo.h2" Class="mb-3 hui-text-semibold">@SubHeader</MudText>
+    }
+    <MudText Class="mb-3" Typo="Typo.body1" Style="white-space: pre-line">
+            @GetBodyText()
+    </MudText>
+    @if (isBodyTooLong)
+    {
+        <MudLink Class="mb-3" Underline="Underline.Always" OnClick="HandleShowMoreClick" Color="Color.Secondary">@Localizer["HUIBlogPost.Show"] @(showMore ? Localizer["HUIBlogPost.Less"] : Localizer["HUIBlogPost.More"])</MudLink>
+    }
+    <MudDivider Class="my-6"></MudDivider>
+</MudContainer>
+
+@code {
+    [Parameter, EditorRequired] public string? Header { get; set; }
+    [Parameter, EditorRequired] public string? SubHeader { get; set; }
+    [Parameter, EditorRequired] public string BodyText { get; set; } = "";
+    [Parameter] public RenderFragment HeaderContent { get; set; }
+    [Parameter] public string? ImgSrc { get; set; }
+    [Parameter] public string? ImgAlt { get; set; }
+    /// <summary>
+    /// Displays skeleton if true and ImgSrc is empty.
+    [Parameter] public bool ImgLazyLoad { get; set; }
+    /// <summary>
+    /// When the body text reaches this limit the text will be truncated "..." and a "show more" button will be visible.
+    /// </summary>
+    [Parameter] public int MaxBodyLength { get; set; } = 300;
+    private bool showMore = false;
+    private bool isBodyTooLong => BodyText.Length > MaxBodyLength;
+
+    private void HandleShowMoreClick() => showMore = !showMore;
+    private string GetBodyText() => showMore ? BodyText : GetTruncatedBody();
+    private string GetTruncatedBody() => isBodyTooLong ? BodyText.Substring(0, MaxBodyLength) + "..." : BodyText;
+}

@@ -1,0 +1,28 @@
+﻿@namespace Hedin.UI
+
+<MudExpansionPanels Elevation="0">
+    <MudExpansionPanel Class="hui-module-dense" Expanded="false" HideIcon="true" @onclick="(v) => OnClick.InvokeAsync()">
+        <TitleContent>
+            <div class="d-flex justify-space-between">
+                <HUITooltip Text="@Tooltip">
+                    <span class="d-flex">
+                        <MudIcon Size="Size.Small" Icon="@Icons.Material.Filled.Description" Class="align-self-center mr-3"></MudIcon>
+                        <MudText Class="mr-2">@Name</MudText>
+                        <MudText Typo="Typo.caption" Class="align-self-center" Style="color:var(--mud-palette-text-secondary); padding-top: 2px;">@Extension</MudText>
+                    </span>
+                </HUITooltip>
+                <div class="d-flex align-center">
+                    @Buttons
+                </div>
+            </div>
+        </TitleContent>
+    </MudExpansionPanel>
+</MudExpansionPanels>
+
+@code {
+    [Parameter] public RenderFragment? Buttons { get; set; }
+    [Parameter] public string Tooltip { get; set; }
+    [Parameter] public string Name { get; set; }
+    [Parameter] public string Extension { get; set; }
+    [Parameter] public EventCallback OnClick { get; set; }
+}

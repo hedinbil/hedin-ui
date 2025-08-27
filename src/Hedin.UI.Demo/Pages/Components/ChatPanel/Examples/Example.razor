@@ -1,0 +1,63 @@
+﻿@using static Hedin.UI.HUIChatPanel
+@using System.Threading
+@using System.Runtime.CompilerServices
+
+<HUIChatPanel Title="Support Assistant"
+              Conversation="@_conversation"
+              OnSendMessage="HandleSend"
+              EmptyStateText="Example AI chat window"
+              AssistantTemplate="RenderAssistant">
+    <Buttons>
+        <HUIIconButton Icon="@Icons.Material.Filled.MoreVert" />
+    </Buttons>
+</HUIChatPanel>
+
+@code {
+    private List<HUIChatLine> _conversation = new();
+    private bool _isLoading = false;
+
+    private RenderFragment<HUIChatLine> RenderAssistant =>
+          line => @<MudMarkdown Value="@line.Text" />;
+
+    private async Task HandleSend(string message, CancellationToken ct)
+    {
+        _conversation.Add(new HUIChatLine(HUIChatRole.User, message));
+        _conversation.Add(new HUIChatLine(HUIChatRole.Assistant, "")); // placeholder
+        StateHasChanged();
+
+        _isLoading = true;
+        try
+        {
+            await Task.Delay(500, ct);
+
+            var idx = _conversation.Count - 1;
+            await foreach (var chunk in MyStreamingBot(message, ct))
+            {
+                var current = _conversation[idx].Text;
+                _conversation[idx] = _conversation[idx] with { Text = current + chunk };
+                await InvokeAsync(StateHasChanged);
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            _conversation.Add(new HUIChatLine(HUIChatRole.Assistant, "**[Stopped by user]**"));
+            StateHasChanged();
+        }
+        finally
+        {
+            _isLoading = false;
+        }
+    }
+
+    private async IAsyncEnumerable<string> MyStreamingBot(
+        string message,
+        [EnumeratorCancellation] CancellationToken ct)
+    {
+        var response = "Thank you for asking me! This is a response example text.";
+        foreach (var word in response.Split(' '))
+        {
+            await Task.Delay(150, ct);
+            yield return word + " ";
+        }
+    }
+}

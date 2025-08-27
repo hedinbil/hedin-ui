@@ -1,0 +1,35 @@
+﻿@namespace Hedin.UI
+
+<div class="hui-dialog-section">
+    <MudDivider />
+    <MudExpansionPanels Elevation="0">
+        <MudExpansionPanel Expanded="IsExpanded" ExpandedChanged="HandleIsExpandedChanged" ChildContent="ChildContent" TitleContent="TitleContent" />
+    </MudExpansionPanels>
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public RenderFragment TitleContent { get; set; }
+    [Parameter] public bool IsExpanded { get; set; }
+    [Parameter] public EventCallback<bool> IsExpandedChanged { get; set; }
+    [Parameter] public bool IsInitiallyExpanded { get; set; } = true;
+
+    protected override void OnInitialized()
+    {
+        //If initially expanded is used and expanded is false, then initially expanded will override IsExpanded
+        if(IsInitiallyExpanded && IsInitiallyExpanded != IsExpanded)
+        {
+            IsExpanded = IsInitiallyExpanded;
+            IsExpandedChanged.InvokeAsync(IsExpanded);
+        }
+
+        base.OnInitialized();
+    }
+
+
+    private async void HandleIsExpandedChanged(bool expanded)
+    {
+        IsExpanded = expanded;
+        await IsExpandedChanged.InvokeAsync(IsExpanded);
+    }
+}

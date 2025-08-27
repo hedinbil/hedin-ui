@@ -1,0 +1,34 @@
+﻿@namespace Hedin.UI
+@typeparam TItem
+
+
+
+<div class="hui-input-table">
+    <div class="hui-input-table-grid">
+        @ChildContent
+    </div>
+    <div class="hui-input-table-buttons">
+        <MudIconButton Variant="Variant.Outlined" Size="Size.Small" Icon="@Icons.Material.Filled.Add" OnClick="HandleOnAddClick" />
+        <MudIconButton Variant="Variant.Outlined" Size="Size.Small" Icon="@Icons.Material.Filled.Delete" OnClick="HandleOnDeleteClick" />
+    </div>
+</div>
+
+
+@code {
+    [Parameter]
+    public TItem Item { get; set; }
+
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+
+    [Parameter]
+    public EventCallback<TItem> OnAddClick { get; set; }
+
+    [Parameter]
+    public EventCallback<TItem> OnDeleteClick { get; set; }
+
+    private void HandleOnAddClick() => OnAddClick.InvokeAsync(Item);
+
+    private void HandleOnDeleteClick() => OnDeleteClick.InvokeAsync(Item);
+
+}

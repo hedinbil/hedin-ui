@@ -1,0 +1,124 @@
+﻿@using MudBlazor.Utilities
+
+<MudGrid>
+    <MudItem xs="12" md="8" lg="6">
+        <HUIModule Header="Links" IsExpanded="true">
+            <Buttons>
+                @if (_move)
+                {
+                    <HUIIconButton Tooltip="Save arrangement" Color="Color.Primary" Disabled="!_moveChanged" OnClick="SaveData" Icon="@Icons.Material.Filled.Save"></HUIIconButton>
+                }
+                <MudMenu FullWidth="false" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Dense="true">
+                    <ActivatorContent>
+                        <HUIIconButton Icon="@Icons.Material.Filled.MoreVert"></HUIIconButton>
+                    </ActivatorContent>
+                    <ChildContent>
+                        <MudMenuItem OnClick="LoadServerData" Icon="@Icons.Material.Filled.Refresh">Refresh</MudMenuItem>
+                        <MudMenuItem OnClick="() => { _move = !_move; RefreshContainer(); }" Icon="@Icons.Material.Filled.MoveDown">Rearrange</MudMenuItem>
+                    </ChildContent>
+                </MudMenu>
+            </Buttons>
+            <ChildContent>
+                <MudDropContainer T="DropItem" Items="@_dropzoneItems" @ref="_container" ItemDisabled="(v) => !_move" ItemsSelector="@((item,dropzone) => item.Selector == dropzone)" ItemDropped="ItemUpdated" CanDropClass="mud-border-success">
+                    <ChildContent>
+                        <MudDropZone T="DropItem" Identifier="1" AllowReorder="_move" />
+                    </ChildContent>
+                    <ItemRenderer>
+                        <HUIModuleLink Header="@context.Name" Url="@context.Url" Class="@("mb-1")" Disabled="_move">
+                            <Buttons>
+                                @if (_move)
+                                {
+                                    <MudIcon Icon="@Icons.Material.Filled.DragIndicator" Class="cursor-grabbing" Size="Size.Small" />
+                                }
+                                <MudMenu Disabled="_move" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter" Dense="true">
+                                    <ActivatorContent>
+                                        <HUIIconButton Icon="@Icons.Material.Filled.MoreVert" Variant="Variant.Text" />
+                                    </ActivatorContent>
+                                    <ChildContent>
+                                        <MudMenuItem OnClick="LoadServerData" Icon="@Icons.Material.Filled.Edit">Edit</MudMenuItem>
+                                        <MudMenuItem OnClick="LoadServerData" Icon="@Icons.Material.Filled.MoveDown">Move</MudMenuItem>
+                                    </ChildContent>
+                                </MudMenu>
+                            </Buttons>
+                        </HUIModuleLink>
+                    </ItemRenderer>
+                </MudDropContainer>
+            </ChildContent>
+        </HUIModule>
+    </MudItem>
+</MudGrid>
+@code
+{
+    private bool _move = false;
+    private bool _moveChanged = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadServerData();
+    }
+
+    private MudDropContainer<DropItem>? _container;
+
+    private void ItemUpdated(MudItemDropInfo<DropItem> dropItem)
+    {
+        _moveChanged = true;
+        _dropzoneItems.UpdateOrder(dropItem, item => item.Order, 0);
+    }
+
+    private List<DropItem> _dropzoneItems = new();
+
+    private List<DropItem> _serverData = new()
+        {
+            new DropItem() { Order = 0, Name = "Item 1", Selector = "1" },
+            new DropItem() { Order = 1, Name = "Item 2", Selector = "1" },
+            new DropItem() { Order = 2, Name = "Item 3", Selector = "1" },
+        };
+
+    private void RefreshContainer()
+    {
+        //update the binding to the container
+        StateHasChanged();
+
+        //the container refreshes the internal state
+        _container?.Refresh();
+    }
+
+    private async Task LoadServerData()
+    {
+        _dropzoneItems = await Task.FromResult(_serverData
+            .OrderBy(x => x.Order)
+            .Select(item => new DropItem
+                {
+                    Order = item.Order,
+                    Name = item.Name,
+                    Url = item.Url,
+                    Selector = item.Selector
+                })
+            .ToList());
+        RefreshContainer();
+    }
+
+    private Task SaveData()
+    {
+        _serverData = _dropzoneItems
+        .OrderBy(x => x.Order)
+        .Select(item => new DropItem
+            {
+                Order = item.Order,
+                Name = item.Name,
+                Url = item.Url,
+                Selector = item.Selector
+            })
+        .ToList();
+        _move = false;
+        return Task.CompletedTask;
+    }
+
+    public class DropItem
+    {
+        public required string Name { get; init; }
+        public string? Url { get; init; }
+        public required string Selector { get; set; }
+        public required int Order { get; set; }
+    }
+}

@@ -1,0 +1,8 @@
+﻿@attribute [Route(PageRoute.Contacts)]
+@attribute [HUIPageSettings("Contacts")]
+
+<DemoPageLayout TItem="Contacts" HUIComponent="typeof(HUIModuleContactGroup)" ChildHUIComponent="new List<Type>{ typeof(HUIModuleContactGroupItem) }">
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Module.Contacts.Examples.AdvancedContacts)">
+        <MudText>This is an advanced example with drag n drop functionality. This can be simplified.</MudText>
+    </DemoExample>
+</DemoPageLayout>

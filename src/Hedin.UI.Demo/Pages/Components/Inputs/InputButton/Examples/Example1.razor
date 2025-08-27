@@ -1,0 +1,9 @@
+﻿@inject ISnackbar Snackbar
+
+<HUIInputButton Icon="@Icons.Material.Filled.CrueltyFree" Tooltip="My tooltip" @bind-Value="value" Label="My label" OnEnterKey="HandleEnterClick"></HUIInputButton>
+Current value: @value
+
+@code {
+    string value = "Test";
+    private void HandleEnterClick(string v) => Snackbar.Add(v, Severity.Info);
+}

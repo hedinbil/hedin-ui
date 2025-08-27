@@ -1,0 +1,26 @@
+@attribute [Route(PageRoute.Frame)]
+@attribute [HUIPageSettings("Frame")]
+
+<DemoPageLayout TItem="Frame" HUIComponent="typeof(HUIFrame)" ChildHUIComponent="new List<Type>{typeof(HUIFrameItem)}">
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.Default)">
+        <MudText>Default readonly. Used when you want to visualize information</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.Primary)">
+        <MudText>Primary color</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.CustomWidth)">
+        <MudText>Custom widths</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.CustomContent)">
+        <MudText>Custom contents</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.WithInput)">
+        <MudText>HUI Frames supports all input types. This can be used in a form.</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.Warning)">
+        <MudText>Warning information.</MudText>
+    </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Frame.Examples.Locked)">
+        <MudText>Locked. Used in a form to visually indicate read-only</MudText>
+    </DemoExample>
+</DemoPageLayout>

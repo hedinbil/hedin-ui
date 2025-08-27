@@ -1,0 +1,8 @@
+@attribute [Route(PageRoute.Page)]
+@attribute [HUIPageSettings("Page")]
+
+<DemoPageLayout TItem="Page" HUIComponent="typeof(HUIPage)" ChildHUIComponent="new List<Type>{typeof(HUIPageFilter), typeof(HUIPageTable<object>)}" MaxWidth="MaxWidth.ExtraExtraLarge">
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Page.Examples.Default)" MaxWidth="MaxWidth.ExtraExtraLarge">
+    </DemoExample>
+</DemoPageLayout>
+

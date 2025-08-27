@@ -1,0 +1,244 @@
+﻿@using Brism
+@using System.Globalization
+@attribute [Route(PageRoute.Guidelines)]
+@attribute [HUIPageSettings("Guidelines & Tools", 3)]
+@inject NavigationManager NavigationManager
+
+
+<HUIPage Header="Guidelines" PageDescription="These are rules and guidelines to follow when using Hedin.UI and MudBlazor">
+    <div class="d-flex flex-column gap-3">
+        <HUIModule Header="Theming" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">Changing theme color</MudText>
+
+
+            <MudText>If you followed the startup guide then you have already applied a base Hedin.UI theme.</MudText>
+            <MudAlert Severity="Severity.Info" class="flex-grow-1">
+                <pre>
+                @(@"
+<HUIThemeProvider Theme=""HUITheme.Dark"" />
+                ")
+                </pre>
+            </MudAlert>
+            <MudText>
+                Each application however has its own custom theme. The main thing separating each app is the primary color. All parameters can be overridden, but as a baseline you should only change the primary color
+            </MudText>
+
+
+            <MudAlert Severity="Severity.Info" Class="flex-grow-1">
+                <pre>
+                    @(@"
+ <HUIThemeProvider Theme=""_currentTheme"" />
+
+
+ code:
+ private bool _darkMode = true;
+
+ private MudTheme _currentTheme => _darkMode
+ ? HUITheme.Dark.Override(customizePalette)
+ : HUITheme.Light.Override(customizePalette);
+
+ Action<Palette> customizePalette = palette =>
+ {
+     palette.Primary = ""#1E7194"";
+     palette.PrimaryLighten = palette.Primary.ColorLighten(0.125).Value;
+     palette.PrimaryDarken = palette.Primary.ColorDarken(0.125).Value;
+     palette.TableHover = palette.Primary;
+     //All theme colors can be customized here
+ };
+                ")
+                </pre>
+            </MudAlert>
+            <MudText>
+                If you are creating your own MudTheme, then use the PalletDark colors. (even if the theme is light based.)
+            </MudText>
+        </HUIModule>
+
+
+
+
+        <HUIModule Header="Routing and menu" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">Page routing</MudText>
+
+
+            <MudText>Prefferably use the HUIPageSettings attribute on each page to set and automatically build the menu</MudText>
+            <MudText>
+                At a routable component: provide these attributes (example)
+            </MudText>
+            <MudAlert Severity="Severity.Success" Class="flex-grow-1">
+                <pre>
+                    @(@"
+ @attribute[Route(PageRoute.Guidelines)]
+ @attribute[HUIPageSettings(""Guidelines"", """", 3)]
+                ")
+                </pre>
+            </MudAlert>
+
+            <MudText Typo="Typo.h2" Class="mt-6 mb-3">Menu</MudText>
+            <MudText>Check the <MudLink Href="@PageRoute.NavMenu" Underline="Underline.Always">HUINavMenu component doc</MudLink> and see how the IHUIPageHelper service may be utilized to automatically build the menu for you</MudText>
+
+
+        </HUIModule>
+
+
+
+        <HUIModule Header="Inputs" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">General</MudText>
+            <MudText>All inputs, wether its text fields, selects, autocomplets, datepickers and so on shold in general be tagged with the attributes:</MudText>
+            <MudText><strong>Margin="Margin.Dense" Variant="Variant.Outlined"</strong></MudText>
+            <section class="d-flex gap-3 mt-3">
+                <MudAlert Severity="Severity.Success" Class="flex-grow-1">
+                    This is a good field:
+                    <MudField FullWidth="true" Label="Good field" Margin="Margin.Dense" Variant="Variant.Outlined"></MudField>
+                </MudAlert>
+                <MudAlert Severity="Severity.Error" Class="flex-grow-1">
+                    This is a bad field:
+                    <MudField FullWidth="true" Label="Bad field"></MudField>
+                </MudAlert>
+            </section>
+            <MudText Typo="Typo.h2" Class="mt-6 mb-3">Selects</MudText>
+            <MudText>All selects should set the attribte <strong>AnchorOrigin="Origin.BottomCenter"</strong></MudText>
+            <section Class="d-flex gap-3 mt-3">
+
+                <MudAlert Severity="Severity.Success" Class="flex-grow-1">
+                    This is a good select:
+                    <MudSelect T="string" Label="Coffee" AnchorOrigin="Origin.BottomCenter" Margin="Margin.Dense" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("This shows up below select")" />
+                    </MudSelect>
+                </MudAlert>
+                <MudAlert Severity="Severity.Error" Class="flex-grow-1">
+                    This is a bad select:
+                    <MudSelect T="string" Label="Coffee" Margin="Margin.Dense" Variant="Variant.Outlined">
+                        <MudSelectItem Value="@("This shows up on top of the select")" />
+                    </MudSelect>
+                </MudAlert>
+            </section>
+        </HUIModule>
+
+
+
+
+        <HUIModule Header="Data grid" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">Data grid settings</MudText>
+            <MudText>The HUIDataGrid grid is built over MudDataGrid. It is very flexible but also comes with some limitations.</MudText>
+            <MudText Typo="Typo.h2" Class="my-3">Adding dynamic context menu</MudText>
+            <MudText>It is possible to set the EnableSettingsMenu and Id parameter in order to show the context menu. The datagrid needs to exist within a HUIPageTable</MudText>
+            <MudAlert Class="flex-grow-1" Severity="Severity.Success">
+                <pre>
+                    @(@"
+<HUIDataGrid Id=""unique-id"" EnableSettingsMenu=""true"" ...>
+                ")
+                </pre>
+            </MudAlert>
+            <MudText Class="my-3">Hardcoded parameters such as Hidden on column properties does not work in conjunction with the context menu.</MudText>
+            <section class="d-flex gap-3 mt-3">
+                <MudAlert Severity="Severity.Success" Class="flex-grow-1">
+                    Good:
+                    <pre>
+                        @(@"
+<Column @bind-Hidden=""_myProp"" ...>
+                ")
+                </pre>
+                </MudAlert>
+                <MudAlert Severity="Severity.Error" Class="flex-grow-1">
+                    Will not work with the column settings panel:
+                    <pre>
+                        @(@"
+<Column Hidden=""true"" ...>
+                ")
+                </pre>
+                    <MudText>This is because the context menu updates the Hidden parameter. However, if it is hardcoded, the next StateChange will override the context menus value with the harcoded value.</MudText>
+                </MudAlert>
+                <MudAlert Severity="Severity.Success" Class="flex-grow-1">
+                    The normal case however is to simply skip this parameter:
+                    <pre>
+                        @(@"
+<Column ...>
+                ")
+                </pre>
+                </MudAlert>
+            </section>
+
+        </HUIModule>
+
+
+
+
+
+        <HUIModule Header="Settings service" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">Clear settings</MudText>
+            <MudText>To clear any user-settings stored by Hedin.UI, inject the HUISettingsService</MudText>
+            <MudAlert Class="flex-grow-1" Severity="Severity.Success">
+                <pre>
+                    @(@"
+@inject IHUISettingsService HUISettingsService
+<HUIButton Color=""Color.Primary"" Variant=""Variant.Filled"" OnClick=""() => HUISettingsService.ResetAsync()"">Reset</HUIButton>
+                ")
+                </pre>
+            </MudAlert>
+            <MudText>This includes settings such as localstorage, which is where table settings are stored and loaded from.</MudText>
+        </HUIModule>
+
+        <HUIModule Header="State management (Beta)" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">Enable state service</MudText>
+            <MudText>Hedin.UI comes with a generic state service that can be injected to store a pages state in memory.</MudText>
+            <MudText Class="mb-3">Currently the the state is only stored between subpages when navigating backwards.</MudText>
+            <MudText>It is important to utilize a ViewModel for your component.</MudText>
+            <MudAlert Class="flex-grow-1 mb-3" Severity="Severity.Success">
+                <pre>
+                    @(@"
+public class PageModel
+{
+    public string MyProp { get; set; }
+}
+                ")
+                </pre>
+            </MudAlert>
+
+            <MudText>Now inherit from <strong>StatefulComponentBase</strong> and type it with your ViewModel.</MudText>
+            <MudText>You may access your view model on the "Model" object.</MudText>
+
+            <MudAlert Class="flex-grow-1 mb-3" Severity="Severity.Success">
+                <pre>
+                    @(@"
+@inherits StatefulComponentBase<PageModel>
+
+<MudTextField Variant=""Variant.Outlined"" Margin=""Margin.Dense"" @bind-Value=""Model.MyProp""></MudTextField>
+                ")
+                </pre>
+            </MudAlert>
+
+            <MudText Typo="Typo.h2" Class="mb-3">Demo</MudText>
+            <HUIButton Color="Color.Primary" Variant="Variant.Filled" OnClick="HandleOnStateTestClick">Try it out!</HUIButton>
+
+
+        </HUIModule>
+
+
+        <HUIModule Header="CSS utilities" IsExpanded="false">
+            <MudText Typo="Typo.h2" Class="mb-3">CSS helper classes</MudText>
+            <CssUtilization></CssUtilization>
+        </HUIModule>
+
+        <HUIModule Header="Icons" IsExpanded="false">
+            <HUIButton Variant="Variant.Outlined" StartIcon="@HUIIcons.Flags.NO">Norway</HUIButton>
+            <HUIButton Variant="Variant.Outlined" StartIcon="@HUIIcons.Flags.Get("DK")">Denmark</HUIButton>
+            <HUIButton Variant="Variant.Outlined" StartIcon="@HUIIcons.Flags.GetFromCulture(CultureInfo.CurrentCulture.Name)">From culture</HUIButton>
+            <CodeBlock Code="@_flagsExample" Language="CodeLanguage.Razor" EnableLineNumbers="true" />
+
+        </HUIModule>
+    </div>
+</HUIPage>
+
+@code {
+    private void HandleOnStateTestClick()
+    {
+        NavigationManager.NavigateTo(PageRoute.DemoStateManagement);
+    }
+
+    private string _flagsExample = 
+        @"
+            <HUIButton Variant=""Variant.Outlined"" StartIcon=""@HUIIcons.Flags.NO"">Norway</HUIButton>
+            <HUIButton Variant=""Variant.Outlined"" StartIcon=""@HUIIcons.Flags.Get(""DK"")"">Denmark</HUIButton>
+            <HUIButton Variant=""Variant.Outlined"" StartIcon=""@HUIIcons.Flags.GetFromCulture(CultureInfo.CurrentCulture.Name)"">From culture</HUIButton>
+        ";
+}

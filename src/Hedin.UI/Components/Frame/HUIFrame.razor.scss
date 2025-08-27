@@ -1,0 +1,60 @@
+﻿.panel-container {
+    container-type: inline-size;
+    container-name: panel-container;
+}
+$hui-frame-border: 1px solid var(--mud-palette-lines-inputs);
+
+.hui-frame {
+    display: grid;
+    grid-template-columns: repeat(1, minmax(0, 1fr));
+    gap: 1px; /* matches your --gap default */
+    border: $hui-frame-border;
+    border-radius: 4px; /* matches --border-radius default */
+    background-color: var(--mud-palette-gray-dark);
+    overflow: hidden;
+}
+
+/* Same container breakpoints you used for .hui-field-section */
+@container panel-container (min-width: 700px) {
+    .hui-frame {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@container panel-container (min-width: 900px) {
+    .hui-frame {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+}
+
+@container panel-container (min-width: 1100px) {
+    .hui-frame {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+    }
+}
+
+@container panel-container (min-width: 1400px) {
+    .hui-frame {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+    }
+}
+
+@container panel-container (min-width: 1800px) {
+    .hui-frame {
+        grid-template-columns: repeat(9, minmax(0, 1fr));
+    }
+}
+
+/* Items */
+.hui-frame > * {
+    min-height: 70px;
+    min-width: 0; /* prevent overflow in grid */
+    box-shadow: 0 0 0 1px var(--mud-palette-lines-inputs);
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+/* If a single child should stretch full width */
+.hui-frame > .hui-frame-item:only-child {
+    grid-column: 1 / -1;
+}

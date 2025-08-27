@@ -1,0 +1,37 @@
+﻿.hui-module {
+    ::deep .hui-module-dense {
+        background-color: var(--mud-palette-gray-lighter);
+
+        .mud-expand-panel-header {
+            padding: 0 12px 0 12px !important;
+            min-height: 32px;
+        }
+
+        .mud-expand-panel-header:hover {
+            background-color: var(--mud-palette-gray-light);
+        }
+
+        .mud-expand-panel-content {
+            background-color: var(--mud-palette-gray-lighter);
+            padding: 0 !important;
+        }
+    }
+
+    ::deep .mud-expand-panel {
+        .mud-expand-panel-header {
+            padding: 12px;
+        }
+
+        .mud-expand-panel-content{
+            padding: 0 12px 12px;
+        }
+    }
+    
+    ::deep .mud-expansion-panels.not-expandable > .mud-expand-panel > .mud-expand-panel-header {
+        user-select: inherit;
+        &:hover {
+            cursor: default;
+        }
+    }
+    
+}

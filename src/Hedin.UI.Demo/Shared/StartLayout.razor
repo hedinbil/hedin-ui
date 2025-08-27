@@ -1,0 +1,52 @@
+﻿@inherits LayoutComponentBase
+@using Hedin.UI.Demo
+@inject IOptions<TitleService> TitleService
+
+<!-- Set your page title -->
+<PageTitle>Welcome – @TitleService.Value.AppTitle</PageTitle>
+
+<HUIThemeProvider Theme="_currentTheme" />
+<MudPopoverProvider />
+<MudDialogProvider CloseOnEscapeKey="false" BackdropClick="true" FullWidth="true" CloseButton="false" />
+<MudSnackbarProvider />
+
+<MudLayout Class="px-0">
+    <HUIAppBar Fixed="false" LogoSrc="HedinUI.svg" LogoBrandSrc="@(_darkMode ? "./hedin-ui_light.svg" : "./hedin-ui_dark.svg")" AppDrawerItems="_appDrawerItems">
+        <MudButton Href="@PageRoute.GettingStarted">Get started</MudButton>
+        <MudButton Href="@PageRoute.Components">Components</MudButton>
+        <MudSpacer />
+        <section class="d-flex gap-1">
+            <HUIIconButton Tooltip="MudBlazor" Icon="@Icons.Custom.Brands.MudBlazor" Href="https://mudblazor.com/" Target="_blank"></HUIIconButton>
+            <HUIIconButton Tooltip="Github" Icon="@Icons.Custom.Brands.GitHub" Href="https://github.com/hedinbil/hedin-ui-admin" Target="_blank"></HUIIconButton>
+        </section>
+    </HUIAppBar>
+
+    <MudContainer Gutters="false" MaxWidth="MaxWidth.ExtraExtraLarge">
+        @Body
+    </MudContainer>
+</MudLayout>
+
+@code {
+    private bool _darkMode = true;
+    private MudTheme _currentTheme => _darkMode
+        ? HUITheme.Dark.Override(p =>
+        {
+            p.Primary = "#1E7194";
+            p.TableHover = p.Primary;
+            p.Background = "#27272F";
+            p.AppbarBackground = p.Background;
+        })
+        : HUITheme.Light.Override(p =>
+        {
+            p.Primary = "#1E7194";
+            p.TableHover = p.Primary;
+        });
+
+    private readonly List<HUIAppDrawerItem> _appDrawerItems =
+            [
+            new HUIAppDrawerItem("HedinUI.svg", "Hedin Admin UI", "https://hedin-ui.hedinit.io/"),
+            new HUIAppDrawerItem("LinkedIn.svg", "LinkedIn", "https://www.linkedin.com/company/hedin-it"),
+            new HUIAppDrawerItem("github-mark.svg", "GitHub", "https://github.com/hedinbil/hedin-ui-admin"),
+            new HUIAppDrawerItem("MudBlazor.png", "MudBlazor", "https://mudblazor.com/")
+       ];
+}

@@ -1,0 +1,36 @@
+﻿@attribute [Route(PageRoute.Components)]
+@attribute [HUIPageSettings("Components", 2)]
+
+@inject ComponentCatalogService Catalog
+
+<MudContainer MaxWidth="MaxWidth.False">
+    <MudGrid Spacing="3">
+        @foreach (var sum in _items)
+        {
+            <MudItem xs="12" sm="12" md="12" lg="6">
+                <MudCard Elevation="1" Style="height:100%;">
+                    <MudCardHeader Class="pa-3">
+                        <MudText Typo="Typo.h6">@sum.ParentComponentName</MudText>
+                    </MudCardHeader>
+
+                    <MudCardContent Style="background:var(--mud-palette-background);">
+                        <DynamicComponent Type="@sum.ExampleType" />
+                    </MudCardContent>
+
+                    <MudCardActions Class="pa-3">
+                        <MudLink Typo="Typo.subtitle1" Href="@($"{sum.Url.ToLower()}")">Go to docs ></MudLink>
+                    </MudCardActions>
+                </MudCard>
+            </MudItem>
+        }
+    </MudGrid>
+</MudContainer>
+
+@code {
+    IReadOnlyList<ComponentSummary> _items = [];
+
+    override protected async Task OnInitializedAsync()
+    {
+        _items = Catalog.GetSummaries().OrderBy(x => x.ParentComponentName).ToList();
+    }
+}

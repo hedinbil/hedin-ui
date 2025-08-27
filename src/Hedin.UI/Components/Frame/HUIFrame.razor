@@ -1,0 +1,12 @@
+﻿@namespace Hedin.UI
+<div class="panel-container">
+    <div class="@($"hui-frame {Class}")" style="@Style">
+        @ChildContent
+    </div>
+</div>
+
+@code {
+    [Parameter] public RenderFragment ChildContent { get; set; }
+    [Parameter] public string Class { get; set; } = "";
+    [Parameter] public string Style { get; set; } = "";
+}
