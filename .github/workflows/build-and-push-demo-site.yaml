@@ -25,7 +25,6 @@ jobs:
     steps:        
       - uses: AutoModality/action-clean@v1
       
-      ## Checkout the repo
       - name: Checkout
         uses: actions/checkout@v4
         with:
@@ -39,9 +38,9 @@ jobs:
       - name: Az CLI login
         uses: azure/login@v1
         with:
-          client-id: ${{ vars.AZURE_CLIENT_ID }}
-          tenant-id: ${{ vars.AZURE_TENANT_ID }}
-          subscription-id: ${{ vars.OPERATIONS_HUB_CORE_PROD_AZURE_SUBSCRIPTION_ID }}
+          client-id: ${{ secrets.AZURE_CLIENT_ID }}
+          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+          subscription-id: ${{ secrets.OPERATIONS_HUB_CORE_PROD_AZURE_SUBSCRIPTION_ID }}
       
       - uses: benjlevesque/short-sha@v2.2
         id: short-sha
@@ -60,7 +59,7 @@ jobs:
           
   deploy_to_dev:
     name: 'Deploy to dev'
-    runs-on: [self-hosted, linux, on-prem]
+    runs-on: [linux-runner]
     defaults:
       run:
         shell: bash
