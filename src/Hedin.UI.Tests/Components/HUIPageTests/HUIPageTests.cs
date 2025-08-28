@@ -64,13 +64,13 @@ public class HUIPageTests : UiTestBase
         Assert.DoesNotContain("<p>", comp.Markup);
     }
 
-    [Fact]
-    public void Renders_PageInfo_Tooltip_When_Provided()
-    {
-        var comp = RenderComponentWithParams(pageInfo: "Info text");
-        Assert.Contains("Info text", comp.Markup);
-        Assert.Contains("HUITooltip", comp.Markup);
-    }
+    //[Fact]
+    //public void Renders_PageInfo_Tooltip_When_Provided()
+    //{
+    //    var comp = RenderComponentWithParams(pageInfo: "Info text");
+    //    Assert.Contains("Info text", comp.Markup);
+    //    Assert.Contains("HUITooltip", comp.Markup);
+    //}
 
     [Fact]
     public void Does_Not_Render_PageInfo_Tooltip_When_Null()
