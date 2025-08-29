@@ -14,17 +14,10 @@ https://hedin-ui.hedinit.io/
 ### Light theme
 ![Light](https://raw.githubusercontent.com/hedinbil/hedin-ui/main/docs/example_light.png)
 
-# Hall of fame
-- The IMS Dealer Portal application used by a large number of brands is fully utilizing Hedin UI and has been well received by end users and developers.
-- The IMS Management Portal is an ongoing project that is going to fully utilize Hedin.UI library.
-- CRM Leads.
-- Polaris.
-- Fleet Connect.
-
 
 # Additional docs
-[Installation guide & Getting started](./getting-started.md)
+[Installation guide & Getting started](https://raw.githubusercontent.com/hedinbil/hedin-ui/main/docs/getting-started.md)
 
-[Contributing](../CONTRIBUTING.md)
+[Contributing](https://raw.githubusercontent.com/hedinbil/hedin-ui/main/CONTRIBUTING.md)
 
-[Security Policy](../SECURITY.md)
+[Security Policy](https://raw.githubusercontent.com/hedinbil/hedin-ui/main/LICENSE)
