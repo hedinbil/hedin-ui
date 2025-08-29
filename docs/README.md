@@ -6,7 +6,9 @@ Hedin UI includes a growing number of custom components and exposes MudBlazor wh
 It includes two default themes but additional custom themes can easily be added.
 
 ## Documentation and Demo
-https://hedin-ui.hedinit.io/
+[hedin-ui.hedinit.io](https://hedin-ui.hedinit.io/)
+
+[github.com/hedinbil/hedin-ui](https://github.com/hedinbil/hedin-ui)
 
 ### Dark theme (Default)
 ![Dark](https://raw.githubusercontent.com/hedinbil/hedin-ui/main/docs/example_dark.png)
