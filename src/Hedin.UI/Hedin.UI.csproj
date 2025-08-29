@@ -15,7 +15,7 @@
     <Version>$(VersionPrefix)1.0.0-beta1</Version>
     <NeutralLanguage>en-001</NeutralLanguage>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
-    <RepositoryUrl>https://github.com/hedinbil/hedin-ui-admin</RepositoryUrl>
+    <RepositoryUrl>https://github.com/hedinbil/hedin-ui</RepositoryUrl>
     <PackageIcon>nuget.png</PackageIcon>
     <PackageProjectUrl>https://hedin-ui.hedinit.io/</PackageProjectUrl>
     <PackAsTool>False</PackAsTool>
