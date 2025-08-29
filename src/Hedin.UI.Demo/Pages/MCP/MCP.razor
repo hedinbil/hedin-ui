@@ -1,0 +1,66 @@
+@attribute [Route(PageRoute.MCP)]
+@attribute [HUIPageSettings("MCP", 6)]
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="px-3">
+    <HUIPage Header="MCP" PageDescription="Model Context Protocol - Connect Hedin UI to Cursor">
+        <MudPaper Class="pa-6">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h2" Class="mb-4">What is MCP?</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">
+                        The Model Context Protocol (MCP) is a standard that allows AI assistants like Cursor to interact with external tools and data sources.
+                        By integrating Hedin UI with MCP, you can enhance your development workflow with powerful UI components and design patterns.
+                    </MudText>
+
+                    <MudText Typo="Typo.h3" Class="mb-3">Benefits of using Hedin UI MCP:</MudText>
+                    <ul class="mud-list">
+                        <li>Access to a comprehensive library of Blazor components</li>
+                        <li>Consistent design patterns and theming</li>
+                        <li>Faster development with pre-built, tested components</li>
+                        <li>Seamless integration with your existing Blazor applications</li>
+                    </ul>
+                </MudItem>
+
+                <MudItem xs="12" Class="mt-6">
+                    <MudText Typo="Typo.h3" Class="mb-3">Get Started with Hedin UI MCP</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">
+                        Leverage albot in your dev environment. Click the button below to add the Hedin UI MCP server to Cursor. This will enable you to use Hedin UI components
+                        directly within your Cursor AI assistant, essentially bringing albot's capabilities into your own development environment.
+                    </MudText>
+                    <a href="https://cursor.com/en/install-mcp?name=hedin-ui-mcp&config=eyJ1cmwiOiJodHRwczovL2hlZGluLXVpLmhlZGluaXQuaW8vbWNwL3NzZSJ9">
+                        @if (DarkMode)
+                        {
+                            <img src="https://cursor.com/deeplink/mcp-install-dark.svg"
+                                 alt="Add hedin-ui-mcp MCP server to Cursor"
+                                 height="32" />
+                        }
+                        else
+                        {
+                            <img src="https://cursor.com/deeplink/mcp-install-light.svg"
+                                 alt="Add hedin-ui-mcp MCP server to Cursor"
+                                 height="32" />
+                        }
+                    </a>
+                </MudItem>
+
+                <MudItem xs="12" Class="mt-6">
+                    <MudText Typo="Typo.h3" Class="mb-3">How it works</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-3">
+                        Once installed, you can ask Cursor to help you with:
+                    </MudText>
+                    <ul class="mud-list">
+                        <li>Creating new Blazor components using Hedin UI patterns</li>
+                        <li>Implementing specific UI layouts and designs</li>
+                        <li>Troubleshooting component issues</li>
+                        <li>Best practices for using Hedin UI components</li>
+                    </ul>
+                </MudItem>
+            </MudGrid>
+        </MudPaper>
+    </HUIPage>
+
+</MudContainer>
+
+@code {
+    [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+}

@@ -1,0 +1,63 @@
+@attribute [Route(PageRoute.WhyOpenSource)]
+@attribute [HUIPageSettings("Why Open Source", 7)]
+
+<MudContainer MaxWidth="MaxWidth.Large" Class="px-3">
+    <HUIPage Header="Why open source?" PageDescription="Understanding Hedin IT's decision to open source Hedin.UI">
+        <MudPaper Class="pa-6">
+            <MudGrid>
+                <MudItem xs="12">
+                    <MudText Typo="Typo.h2" Class="mb-4">Our open source journey</MudText>
+                    <MudText Typo="Typo.body1">
+                        At Hedin IT, we believe in the power of collaboration and community-driven development.
+                        We've made the decision to open source Hedin.UI, aligning with our values and vision
+                        for the future of software development.
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" Class="mt-6">
+                    <MudText Typo="Typo.h3" Class="mb-3">Why we chose to go open source</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">
+                        Great tools should be accessible to everyone who can benefit from them. Our component
+                        library has proven its value within our organization, and we see no reason to keep
+                        it locked away when it could help developers worldwide build better applications.
+                    </MudText>
+
+                    <ul class="mud-list">
+                        <li><strong>Community Benefit:</strong> By opening our library, we're contributing to the broader Blazor and .NET ecosystem, helping developers build better applications faster.</li>
+                        <li><strong>Reciprocal Learning:</strong> We believe that by opening our code to the community, we'll receive valuable feedback, contributions, and insights that will make Hedin.UI even better.</li>
+                    </ul>
+                </MudItem>
+
+                <MudItem xs="12" Class="mt-6">
+                    <MudText Typo="Typo.h3" Class="mb-3">The value of transparency</MudText>
+                    <MudText Typo="Typo.body1" Class="mb-4">
+                        Open sourcing Hedin.UI represents more than just making code available - it's about
+                        building trust and fostering collaboration. This transparency serves as a testament
+                        to our development practices and standards.
+                    </MudText>
+
+                    <MudText Typo="Typo.body1">
+                        Anyone can examine our code and understand our architectural decisions. We believe
+                        this level of openness builds confidence in our work and encourages others to adopt
+                        and contribute to our solutions.
+                    </MudText>
+                </MudItem>
+
+                <MudItem xs="12" Class="mt-6">
+                    <MudText Typo="Typo.h3" Class="mb-3">Looking forward</MudText>
+                    <MudText Typo="Typo.body1">
+                        We envision Hedin.UI becoming a valuable resource for the Blazor community and as
+                        an extension of MudBlazor. We're committed to maintaining high standards while
+                        embracing the collaborative spirit that makes open source so powerful.
+                    </MudText>
+                </MudItem>
+
+
+            </MudGrid>
+        </MudPaper>
+    </HUIPage>
+</MudContainer>
+
+@code {
+    [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+}

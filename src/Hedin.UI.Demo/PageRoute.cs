@@ -61,6 +61,8 @@
         public const string Breadcrumbs = $"{Components}/breadcrumbs";
         public const string SuggestionBox = $"{Components}/suggestionbox";
         public const string GettingStarted = $"getting-started";
+        public const string MCP = $"mcp-connection";
+        public const string WhyOpenSource = $"why-open-source";
 
 
     }

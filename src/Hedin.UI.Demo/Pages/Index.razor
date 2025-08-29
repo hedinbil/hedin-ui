@@ -14,7 +14,7 @@
                             <span class="hero-text">Minutes</span>
                         </MudText>
                         <MudText Typo="Typo.subtitle1" Class="mb-4">
-                            Hedin Admin UI gives you a polished suite of
+                            Hedin UI gives you a polished suite of
                             MudBlazor-based components, themes, and patterns
                             so you can ship UIs faster.
                         </MudText>
@@ -51,14 +51,14 @@
         <!-- ABOUT (this is the slanted one) -->
         <div class="about-section text">
             <MudContainer MaxWidth="MaxWidth.Medium">
-                <MudText Typo="Typo.h4" Class="mb-2">About Hedin Admin UI</MudText>
+                <MudText Typo="Typo.h4" Class="mb-2">About Hedin UI</MudText>
                 <MudText Typo="Typo.body1" Class="mb-4">
-                    Hedin Admin UI is an in-house extension of MudBlazor, created and
-                    maintained by Hedin IT to power all of our internal Blazor applications.
-                    It provides enterprise-grade components, flexible theming, and
-                    established UI patterns tailored specifically to Hedin’s workflows.
-                    Contributions and feedback from within Hedin are welcome as we continue
-                    to enhance and expand this toolkit.
+                    Hedin UI is an open source extension of MudBlazor, originally developed
+                    by Hedin IT to power our internal Blazor applications. Now available to
+                    the broader community, it provides enterprise-grade components, flexible
+                    theming, and established UI patterns that help developers build better
+                    applications faster. We welcome contributions and feedback from developers 
+                    worldwide as we continue to enhance and expand this toolkit.
                 </MudText>
                 <MudPaper Elevation="1" Class="pa-3" Style="max-width: 400px;">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">Current version: <strong>@MyLibVersion</strong></MudText>
@@ -102,7 +102,7 @@
                                 <MudText Typo="Typo.body2" Color="Color.Secondary">@f.Description</MudText>
                             </MudCardContent>
                             <MudCardActions>
-                                <MudButton Href="@f.Link" Variant="Variant.Text" Size="Size.Small">View Demo</MudButton>
+                                <MudButton Href="@f.Link" Variant="Variant.Text" Size="Size.Small">@(f.readMore ? "Read more" : "View demo")</MudButton>
                             </MudCardActions>
                         </MudCard>
                     </MudItem>
@@ -155,12 +155,14 @@
     };
 
 
-    record Feature(string Title, string Description, string Icon, string Link);
+    record Feature(string Title, string Description, string Icon, string Link, bool readMore = false);
     private Feature[] features = new[]
     {
     new Feature("Data Grid",                        "Fast, virtualized tables with sorting & filtering",    Icons.Material.Filled.TableChart,   PageRoute.DataGrid),
     new Feature("Page guidelines",                  "A clear pattern to follow when developing new pages",  Icons.Material.Filled.FormatPaint,          PageRoute.Page),
     new Feature("Albot",                            "AI bot helping you with Hedin UI",                     Icons.Material.Filled.SmartToy,     PageRoute.AIChatBot),
-    new Feature("Theming and guidelines",           "Global light/dark theming, custom palettes",           Icons.Material.Filled.Palette,      PageRoute.Guidelines)
+    new Feature("Theming and guidelines",           "Global light/dark theming, custom palettes",           Icons.Material.Filled.Palette,      PageRoute.Guidelines, true),
+    new Feature("MCP Integration",                  "Connect Hedin UI to Cursor via Model Context Protocol", Icons.Material.Filled.IntegrationInstructions, PageRoute.MCP, true),
+    new Feature("Why Open Source",                  "Learn about our decision to open source Hedin.UI",      Icons.Material.Filled.Share,              PageRoute.WhyOpenSource, true)
   };
 }
