@@ -9,13 +9,32 @@
 </MudMainContent>
 
 @code {
+    /// <summary>
+    /// The content to display within the main container.
+    /// Renders inside the main content area.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
     /// Overwrite the default ZIndex value for the main page content. This may need to be configured when setting custom z-index values for e.g. the top-bar or side-bars
     /// </summary>
     [Parameter] public int ZIndex { get; set; } = 1100;
+    
+    /// <summary>
+    /// CSS class applied to the main container.
+    /// Used for custom container styling.
+    /// </summary>
     [Parameter] public string Class { get; set; } = "";
+    
+    /// <summary>
+    /// CSS styles applied to the main container.
+    /// Used for custom container styling.
+    /// </summary>
     [Parameter] public string Style { get; set; } = "";
+    
+    /// <summary>
+    /// Maximum width constraint for the main container.
+    /// Controls the responsive behavior and layout constraints.
+    /// </summary>
     [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.False;
 }

@@ -6,7 +6,21 @@
 </div>
 
 @code {
+    /// <summary>
+    /// The content to display within the frame.
+    /// Renders inside the frame container.
+    /// </summary>
     [Parameter] public RenderFragment ChildContent { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the frame container.
+    /// Used for custom frame styling.
+    /// </summary>
     [Parameter] public string Class { get; set; } = "";
+    
+    /// <summary>
+    /// CSS styles applied to the frame container.
+    /// Used for custom frame styling.
+    /// </summary>
     [Parameter] public string Style { get; set; } = "";
 }

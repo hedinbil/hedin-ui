@@ -13,16 +13,64 @@
     </MudExpansionPanels>
 </div>
 @code {
+    /// <summary>
+    /// Determines if the section should use light styling.
+    /// Automatically set to true when Disabled is true.
+    /// </summary>
     private bool light => Light || Disabled;
 
+    /// <summary>
+    /// Applies light theme styling to the value section.
+    /// Affects the visual appearance and contrast.
+    /// </summary>
     [Parameter] public bool Light { get; set; }
+    
+    /// <summary>
+    /// Controls whether the value section is expanded or collapsed.
+    /// Determines the visibility of the section content.
+    /// </summary>
     [Parameter] public bool IsExpanded { get; set; }
+    
+    /// <summary>
+    /// Event callback when the expansion state changes.
+    /// Provides the new expansion state.
+    /// </summary>
     [Parameter] public EventCallback<bool> IsExpandedChanged { get; set; }
+    
+    /// <summary>
+    /// The main content to display within the value section.
+    /// Renders when the section is expanded.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Content displayed at the bottom of the value section.
+    /// Appears below the main content.
+    /// </summary>
     [Parameter] public RenderFragment? Footer { get; set; }
+    
+    /// <summary>
+    /// Custom buttons to display in the value section.
+    /// Typically used for section-specific actions.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// Custom content for the value display.
+    /// Overrides the default value rendering.
+    /// </summary>
     [Parameter] public RenderFragment? Value { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the value section container.
+    /// Used for custom section styling.
+    /// </summary>
     [Parameter] public string? Class { get; set; }
+    
+    /// <summary>
+    /// Disables the value section when true.
+    /// Prevents user interaction and shows disabled styling.
+    /// </summary>
     [Parameter] public bool Disabled { get; set; }
 
     private async void HandleIsExpandedChanged(bool expanded)

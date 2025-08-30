@@ -5,18 +5,38 @@
 </MudTooltip>
 
 @code {
+    /// <summary>
+    /// The content that triggers the tooltip when hovered.
+    /// This is the element that the tooltip is attached to.
+    /// </summary>
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+    /// <summary>
+    /// Custom content for the tooltip.
+    /// Overrides the Text parameter when provided for more complex tooltip content.
+    /// </summary>
     [Parameter]
     public RenderFragment? TooltipContent { get; set; }
 
+    /// <summary>
+    /// The placement of the tooltip relative to the trigger element.
+    /// Determines where the tooltip appears (top, bottom, left, right, etc.).
+    /// </summary>
     [Parameter]
     public Placement Placement { get; set; } = Placement.Top;
 
+    /// <summary>
+    /// CSS class applied to the tooltip container.
+    /// Used for custom tooltip styling.
+    /// </summary>
     [Parameter]
     public string Class { get; set; } = string.Empty;
 
+    /// <summary>
+    /// CSS styles applied to the tooltip container.
+    /// Used for custom tooltip styling.
+    /// </summary>
     [Parameter]
     public string Style { get; set; } = string.Empty;
     
@@ -27,7 +47,10 @@
     [Parameter]
     public string PointerEvents { get; set; } = "auto";
     
+    /// <summary>
+    /// Text content displayed in the tooltip.
+    /// Simple text tooltip when TooltipContent is not provided.
+    /// </summary>
     [Parameter]
     public string Text { get; set; } = string.Empty;
-    
 }

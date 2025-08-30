@@ -18,7 +18,16 @@
 }
 
 @code {
+    /// <summary>
+    /// Collection of menu items to display in the navigation menu.
+    /// Each item can have sub-items for hierarchical navigation.
+    /// </summary>
     [Parameter] public List<HUIMenuItem> Items { get; set; } = new();
+    
+    /// <summary>
+    /// Additional content to display at the bottom of the navigation menu.
+    /// Typically used for custom menu items or actions.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 
     /// <summary>
@@ -41,6 +50,10 @@
     /// </summary>
     [Parameter] public bool MergeSubItemWithGroup { get; set; } = true;
 
+    /// <summary>
+    /// Limits the number of menu levels to render.
+    /// -1 means render all levels, positive values limit the depth.
+    /// </summary>
     [Parameter] public int LevelsToRender { get; set; } = -1;
 
 

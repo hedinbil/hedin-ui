@@ -32,12 +32,47 @@
     /// Place fields here, they will be formatted and sized correctly
     /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Event callback when the search button is clicked.
+    /// Typically used to apply the filter criteria.
+    /// </summary>
     [Parameter] public EventCallback OnSearchClick { get; set; }
+    
+    /// <summary>
+    /// Event callback when the clear button is clicked.
+    /// Typically used to reset all filter values.
+    /// </summary>
     [Parameter] public EventCallback OnClearClick { get; set; }
+    
+    /// <summary>
+    /// Custom buttons to display in the filter header.
+    /// Typically used for additional filter actions or controls.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// Shows the search button when true.
+    /// Enables manual filter application.
+    /// </summary>
     [Parameter] public bool ShowSearchButton { get; set; } = true;
+    
+    /// <summary>
+    /// Shows the options button when true.
+    /// Enables filter management and configuration.
+    /// </summary>
     [Parameter] public bool ShowOptionsButton { get; set; } = true;
+    
+    /// <summary>
+    /// Event callback when the options button is clicked.
+    /// Typically used to open filter management dialog.
+    /// </summary>
     [Parameter] public EventCallback OnOptionsClick { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the filter container.
+    /// Used for custom filter styling.
+    /// </summary>
     [Parameter] public string? Class { get; set; }
 
     private void HandleOptionsClick() => OnOptionsClick.InvokeAsync();

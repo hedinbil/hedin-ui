@@ -8,8 +8,22 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Source URL for the application icon image.
+    /// Displayed as a 64x64 pixel icon above the app name.
+    /// </summary>
     [Parameter] public string? Icon { get; set; }
+    
+    /// <summary>
+    /// Display name of the application.
+    /// Shown below the icon as a text label.
+    /// </summary>
     [Parameter] public string? AppName { get; set; }
+    
+    /// <summary>
+    /// URL to navigate to when the app icon is clicked.
+    /// Used for switching between different services or applications.
+    /// </summary>
     [Parameter] public string AppUrl { get; set; }
 
     private void HandleNavigationClick()

@@ -8,10 +8,34 @@
 </div>
 
 @code {
+    /// <summary>
+    /// The content to display within the dialog section.
+    /// Renders when the section is expanded.
+    /// </summary>
     [Parameter] public RenderFragment ChildContent { get; set; }
+    
+    /// <summary>
+    /// Content displayed in the section title bar.
+    /// Typically contains the section header text.
+    /// </summary>
     [Parameter] public RenderFragment TitleContent { get; set; }
+    
+    /// <summary>
+    /// Controls whether the dialog section is expanded or collapsed.
+    /// Determines the visibility of the section content.
+    /// </summary>
     [Parameter] public bool IsExpanded { get; set; }
+    
+    /// <summary>
+    /// Event callback when the expansion state changes.
+    /// Provides the new expansion state.
+    /// </summary>
     [Parameter] public EventCallback<bool> IsExpandedChanged { get; set; }
+    
+    /// <summary>
+    /// Initial expansion state when the component is first rendered.
+    /// Overrides IsExpanded if they differ during initialization.
+    /// </summary>
     [Parameter] public bool IsInitiallyExpanded { get; set; } = true;
 
     protected override void OnInitialized()

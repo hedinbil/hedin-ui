@@ -89,16 +89,43 @@
     private CancellationTokenSource? _cts;
     MudTextField<string>? _inputRef;
 
+    /// <summary>
+    /// Collection of chat messages to display in the conversation.
+    /// Each line represents a user or assistant message.
+    /// </summary>
     [Parameter, EditorRequired]
     public List<HUIChatLine> Conversation { get; set; } = new();
 
+    /// <summary>
+    /// Function called when a message is sent.
+    /// Handles the actual message processing and response generation.
+    /// </summary>
     [Parameter, EditorRequired]
     public Func<string, CancellationToken, Task> OnSendMessage { get; set; } =
         (_, _) => Task.CompletedTask;
 
+    /// <summary>
+    /// Title displayed in the chat panel header.
+    /// Describes the purpose or context of the chat.
+    /// </summary>
     [Parameter] public string Title { get; set; } = "Chat";
+    
+    /// <summary>
+    /// Text displayed when no conversation exists.
+    /// Shown in the empty state to guide users.
+    /// </summary>
     [Parameter] public string EmptyStateText { get; set; } = "Use AI to find out anything we know";
+    
+    /// <summary>
+    /// Custom buttons to display in the chat panel header.
+    /// Typically used for additional chat controls or actions.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// Custom template for rendering assistant messages.
+    /// Overrides the default assistant message display when provided.
+    /// </summary>
     [Parameter] public RenderFragment<HUIChatLine>? AssistantTemplate { get; set; }
 
     private async Task TriggerSend()

@@ -18,25 +18,86 @@
 
 
 @code {
+    /// <summary>
+    /// The current value of the input field.
+    /// Bound to the input field and updated as the user types.
+    /// </summary>
     [Parameter] public string? Value { get; set; }
+    
+    /// <summary>
+    /// Event callback when the input value changes.
+    /// Invoked when the user types in the input field or when the value is cleared.
+    /// </summary>
     [Parameter] public EventCallback<string?> ValueChanged { get; set; }
+    
+    /// <summary>
+    /// Automatically focuses the input field when it becomes visible.
+    /// Provides immediate keyboard input capability.
+    /// </summary>
     [Parameter] public bool AutoFocus { get; set; }
+    
+    /// <summary>
+    /// Event callback when the Enter key is pressed in the input field.
+    /// Typically used to trigger search or submit actions.
+    /// </summary>
     [Parameter] public EventCallback<string?> OnEnterKey { get; set; }
+    
+    /// <summary>
+    /// Text displayed in the tooltip when hovering over the button.
+    /// Provides additional context for the button's functionality.
+    /// </summary>
     [Parameter] public string? Tooltip { get; set; }
+    
+    /// <summary>
+    /// Label text displayed above the input field.
+    /// Describes what the input field is for.
+    /// </summary>
     [Parameter] public string? Label { get; set; }
+    
+    /// <summary>
+    /// The Material Design icon to display on the button.
+    /// Defaults to search icon but can be customized.
+    /// </summary>
     [Parameter] public string Icon { get; set; } = Icons.Material.Filled.Search;
+    
+    /// <summary>
+    /// Disables the button and input field when true.
+    /// Prevents user interaction and shows disabled styling.
+    /// </summary>
     [Parameter] public bool Disabled { get; set; } = false;
+    
+    /// <summary>
+    /// Controls whether the input field is visible.
+    /// When false, shows the button; when true, shows the input field.
+    /// </summary>
     [Parameter] public bool ShowInput { get; set; } = false;
+    
+    /// <summary>
+    /// Event callback when the input visibility state changes.
+    /// Invoked when switching between button and input field modes.
+    /// </summary>
     [Parameter] public EventCallback<bool> ShowInputChanged { get; set; }
 
-
+    /// <summary>
+    /// Handles clicks on the button to show the input field.
+    /// Switches from button mode to input mode.
+    /// </summary>
     private void HandleButtonClick()
     {
         ShowInput = true;
         ShowInputChanged.InvokeAsync(ShowInput);
     }
+    
+    /// <summary>
+    /// Handles the debounced search event.
+    /// Invokes the value change callback after the debounce interval.
+    /// </summary>
     private void HandleSearchDebounce() => ValueChanged.InvokeAsync(Value);
 
+    /// <summary>
+    /// Handles clicks on the close button in the input field.
+    /// Clears the value and hides the input field.
+    /// </summary>
     private void HandleSearchCancelClick()
     {
         Value = "";
@@ -45,11 +106,21 @@
         ShowInputChanged.InvokeAsync(ShowInput);
     }
 
+    /// <summary>
+    /// Handles changes to the input value.
+    /// Updates the internal value state.
+    /// </summary>
+    /// <param name="v">The new input value.</param>
     private void HandleValueChanged(string v)
     {
         Value = v;
     }
 
+    /// <summary>
+    /// Handles keyboard events in the input field.
+    /// Processes Escape key to cancel and Enter key to submit.
+    /// </summary>
+    /// <param name="args">The keyboard event arguments.</param>
     private void HandleSearchKeyUp(KeyboardEventArgs args)
     {
         if (args.Code == "Escape") HandleSearchCancelClick();

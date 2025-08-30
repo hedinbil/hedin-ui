@@ -80,36 +80,42 @@
 
     /// <summary>
     /// Activator component for displaying the Suggestion Box popover.
+    /// Custom content that triggers the suggestion box when clicked.
     /// </summary>
     [Parameter] 
     public RenderFragment ActivatorContent { get; set; }
 
     /// <summary>
     /// Footer component for the Suggestion Box.
+    /// Content displayed at the bottom of the suggestion box.
     /// </summary>
     [Parameter] 
     public RenderFragment HUISuggestionFooter { get; set; }
 
     /// <summary>
     /// Body component for Suggestion Box.
+    /// Main content displayed in the suggestion box above the feedback text area.
     /// </summary>
     [Parameter] 
     public RenderFragment HUISuggestionBody { get; set; }
 
     /// <summary>
     /// Header shown at top of Suggestion Box.
+    /// Title text displayed in the suggestion box header.
     /// </summary>
     [Parameter]
     public string Header { get; set; }
 
     /// <summary>
     /// Edit anchor origin for popover.
+    /// Determines where the popover is anchored relative to the trigger element.
     /// </summary>
     [Parameter]
     public Origin AnchorOrigin { get; set; } = Origin.BottomRight;
 
     /// <summary>
     /// Edit transform origin for popover.
+    /// Determines the transform origin point of the popover animation.
     /// </summary>
     [Parameter]
     public Origin TransformOrigin { get; set; } = Origin.TopRight;

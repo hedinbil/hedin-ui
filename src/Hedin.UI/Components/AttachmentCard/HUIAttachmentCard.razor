@@ -44,7 +44,16 @@
 
 @code {
 
+    /// <summary>
+    /// Custom buttons to display in the attachment card header.
+    /// Typically used for additional actions or controls.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// Custom content for displaying file information.
+    /// Overrides the default file information display.
+    /// </summary>
     [Parameter] public RenderFragment? FileInformation { get; set; }
 
     /// <summary>
@@ -52,6 +61,15 @@
     /// </summary>
     [Parameter] public string? ImgSrc { get; set; }
 
+    /// <summary>
+    /// Event callback when the view button is clicked.
+    /// Typically used to open or preview the attached file.
+    /// </summary>
     [Parameter] public EventCallback OnViewClick { get; set; }
+    
+    /// <summary>
+    /// Event callback when the remove button is clicked.
+    /// Typically used to delete or detach the file.
+    /// </summary>
     [Parameter] public EventCallback OnRemoveClick { get; set; }
 }

@@ -7,6 +7,15 @@
 
 
 @code {
+    /// <summary>
+    /// The severity level that determines the visual appearance of the status chip.
+    /// Affects the color and styling of the status indicator.
+    /// </summary>
     [Parameter] public Severity Severity { get; set; } = Severity.Normal;
+    
+    /// <summary>
+    /// The content to display alongside the status indicator.
+    /// Typically contains text describing the status.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
 }

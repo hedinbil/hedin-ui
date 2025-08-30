@@ -4,7 +4,16 @@
 @inherits TemplateColumn<T>
 
 @code {
+    /// <summary>
+    /// Custom content to display in the icon group column.
+    /// Typically contains multiple icon buttons or other interactive elements.
+    /// </summary>
     [Parameter] public RenderFragment<T>? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Reduces the column spacing and padding when true.
+    /// Provides a more compact appearance for dense layouts.
+    /// </summary>
     [Parameter] public bool Dense { get; set; } = false;
 
     private const string DenseStyles = "margin: -15px -12px -12px -16px; padding: 8px 12px; border-radius: 0;";

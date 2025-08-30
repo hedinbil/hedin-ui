@@ -47,12 +47,46 @@
 </MudDialog>
 
 @code {
+    /// <summary>
+    /// Cascading parameter that provides access to the MudBlazor dialog instance.
+    /// Required for dialog functionality and result handling.
+    /// </summary>
     [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
+    
+    /// <summary>
+    /// Optional validation method for Excel workbooks.
+    /// When provided, validates the imported Excel file before allowing submission.
+    /// </summary>
     [Parameter] public Func<XLWorkbook, FluentValidation.Results.ValidationResult>? ValidationMethod { get; set; }
+    
+    /// <summary>
+    /// Text displayed on the cancel button.
+    /// Customizes the cancel button label.
+    /// </summary>
     [Parameter] public string CancelText { get; set; } = "Cancel";
+    
+    /// <summary>
+    /// Text displayed on the confirm/OK button.
+    /// Customizes the submit button label.
+    /// </summary>
     [Parameter] public string OkText { get; set; } = "Confirm";
+    
+    /// <summary>
+    /// Text displayed on the clear button.
+    /// Customizes the clear button label.
+    /// </summary>
     [Parameter] public string ClearText { get; set; } = "Clear";
+    
+    /// <summary>
+    /// Text displayed in the drag and drop area.
+    /// Provides instructions for file upload.
+    /// </summary>
     [Parameter] public string DragDropText { get; set; } = "Drag and drop files here or click to open";
+    
+    /// <summary>
+    /// Enables multiple file selection when true.
+    /// When false, only one file can be selected at a time.
+    /// </summary>
     [Parameter] public bool MultipleFiles { get; set; } = false;
 
     private int nameTruncateThreshold = 40;

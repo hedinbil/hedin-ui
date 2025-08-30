@@ -33,14 +33,58 @@
 }
 
 @code {
+    /// <summary>
+    /// Reference to the data grid component.
+    /// Used for coordinating between the page table and data grid.
+    /// </summary>
     public HUIDataGrid<T>? DataGrid { get; set; }
+    
+    /// <summary>
+    /// The content to display within the page table.
+    /// Typically contains the data grid component.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Event callback when the export button is clicked.
+    /// Typically used to export data to Excel or other formats.
+    /// </summary>
     [Parameter] public EventCallback OnExportClick { get; set; }
+    
+    /// <summary>
+    /// Header text displayed in the page table module.
+    /// Describes the content of the table.
+    /// </summary>
     [Parameter] public string Header { get; set; } = "";
+    
+    /// <summary>
+    /// Shows the search field when true.
+    /// Enables quick search functionality for the table data.
+    /// </summary>
     [Parameter] public bool ShowSearchField { get; set; } = true;
+    
+    /// <summary>
+    /// Shows the export button when true.
+    /// Enables data export functionality.
+    /// </summary>
     [Parameter] public bool ShowExportButton { get; set; } = true;
+    
+    /// <summary>
+    /// Event callback when search input changes.
+    /// Provides the current search text for filtering.
+    /// </summary>
     [Parameter] public EventCallback<string?> OnSearchInput { get; set; }
+    
+    /// <summary>
+    /// Event callback when Enter key is pressed in search field.
+    /// Typically used to trigger immediate search.
+    /// </summary>
     [Parameter] public EventCallback<string?> OnSearchInputEnterKey { get; set; }
+    
+    /// <summary>
+    /// Custom buttons to display in the page table header.
+    /// Typically used for additional table actions or controls.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
 
     /// <summary>

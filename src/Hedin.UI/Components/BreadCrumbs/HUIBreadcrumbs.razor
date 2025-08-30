@@ -11,6 +11,11 @@
 }
 
 @code {
+    /// <summary>
+    /// Collection of breadcrumb items to display.
+    /// Each item represents a navigation level with text and href.
+    /// Must contain at least 2 items for the back button to function.
+    /// </summary>
     [Parameter] public List<BreadcrumbItem> Breadcrumbs { get; set; }
 
     private async void HandleOnBackClick()

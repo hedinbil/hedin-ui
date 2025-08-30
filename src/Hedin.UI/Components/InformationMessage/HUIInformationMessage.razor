@@ -49,11 +49,40 @@
 }
 
 @code {
+    /// <summary>
+    /// The information message model containing all message data.
+    /// When null, the component is not rendered.
+    /// </summary>
     [Parameter] public HUIInformationMessageModel? Model { get; set; }
+    
+    /// <summary>
+    /// Event callback when the message is marked as read.
+    /// Invoked when the user clicks the read verification link.
+    /// </summary>
     [Parameter] public EventCallback<HUIInformationMessageModel> OnReadClick { get; set; }
+    
+    /// <summary>
+    /// Event callback when the message is archived.
+    /// Invoked when the user clicks the archive link.
+    /// </summary>
     [Parameter] public EventCallback<HUIInformationMessageModel> OnArchiveClick { get; set; }
+    
+    /// <summary>
+    /// Event callback when the message is edited.
+    /// Invoked when the user clicks the edit link.
+    /// </summary>
     [Parameter] public EventCallback<HUIInformationMessageModel> OnEditClick { get; set; }
+    
+    /// <summary>
+    /// Disables all interactive elements when true.
+    /// Prevents user interaction with read/archive/edit actions.
+    /// </summary>
     [Parameter] public bool Disabled { get; set; }
+    
+    /// <summary>
+    /// Shows the edit link when true.
+    /// Controls the visibility of the edit functionality.
+    /// </summary>
     [Parameter] public bool ShowEdit { get; set; }
 
     private void HandleArchiveClick() => OnArchiveClick.InvokeAsync(Model);

@@ -17,8 +17,16 @@
     </DialogContent>
 </HUIDialog>
 @code {
+    /// <summary>
+    /// Cascading parameter that provides access to the MudBlazor dialog instance.
+    /// Required for dialog functionality and result handling.
+    /// </summary>
     [CascadingParameter] IMudDialogInstance? MudDialog { get; set; }
 
+    /// <summary>
+    /// Collection of applications to display in the app drawer.
+    /// Each app represents a service that can be switched to.
+    /// </summary>
     [Parameter] public List<HUIAppDrawerItem> Apps { get; set; } = new();
 
     void Submit() => MudDialog?.Close(DialogResult.Ok(true));

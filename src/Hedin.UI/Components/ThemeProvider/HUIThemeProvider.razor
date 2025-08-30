@@ -2,5 +2,9 @@
 
 <MudThemeProvider Theme="Theme" IsDarkMode="true"></MudThemeProvider>
 @code {
+    /// <summary>
+    /// The MudBlazor theme to apply to the application.
+    /// Required for proper theme functionality.
+    /// </summary>
     [Parameter, EditorRequired] public MudTheme? Theme { get; set; }
 }

@@ -49,18 +49,63 @@ else
 }
 
 @code {
+    /// <summary>
+    /// Determines if the frame item can be edited.
+    /// When true, shows edit mode; when false, shows read-only mode.
+    /// </summary>
     [Parameter] public bool CanBeEdited { get; set; }
+    
+    /// <summary>
+    /// Text label displayed above the value.
+    /// Describes what the frame item represents.
+    /// </summary>
     [Parameter] public string Label { get; set; }
+    
+    /// <summary>
+    /// Text value displayed in the frame item.
+    /// Shown when ValueContent is not provided.
+    /// </summary>
     [Parameter] public string Value { get; set; }
+    
+    /// <summary>
+    /// Applies primary theme styling when true.
+    /// Affects colors and visual emphasis.
+    /// </summary>
     [Parameter] public bool Primary { get; set; }
+    
+    /// <summary>
+    /// Shows a warning icon when true.
+    /// Indicates potential issues or attention needed.
+    /// </summary>
     [Parameter] public bool Warning { get; set; }
+    
+    /// <summary>
+    /// Custom warning text displayed in tooltip.
+    /// Provides additional context for the warning state.
+    /// </summary>
     [Parameter] public string? WarningText { get; set; }
+    
+    /// <summary>
+    /// Shows a lock icon when true.
+    /// Indicates the item is locked or read-only.
+    /// </summary>
     [Parameter] public bool Locked { get; set; }
+    
+    /// <summary>
+    /// Width of the frame item as a percentage.
+    /// Controls the flex basis and sizing behavior.
+    /// </summary>
     [Parameter] public string Width { get; set; }
+    
+    /// <summary>
+    /// Content displayed in edit mode.
+    /// Renders when CanBeEdited is true.
+    /// </summary>
     [Parameter] public RenderFragment ChildContent { get; set; }
 
     /// <summary>
     /// Use this to override the default value content.
+    /// Customizes how the value is displayed in read-only mode.
     /// </summary>
     [Parameter] public RenderFragment ValueContent { get; set; } 
 

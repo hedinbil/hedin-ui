@@ -21,14 +21,35 @@
 }
 
 @code {
+    /// <summary>
+    /// Text displayed as the section header.
+    /// When empty, the section header is not shown.
+    /// </summary>
     [Parameter] public string? Header { get; set; }
+    
+    /// <summary>
+    /// The content to display within the expandable section.
+    /// Renders when the section is expanded.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
     /// <summary>
     /// Buttons are per default shown only when section is expanded
     /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// Controls whether the section is expanded or collapsed.
+    /// Determines the visibility of the section content.
+    /// </summary>
     [Parameter] public bool IsExpanded { get; set; } = true;
+    
+    /// <summary>
+    /// Event callback when the expansion state changes.
+    /// Provides the new expansion state.
+    /// </summary>
     [Parameter] public EventCallback<bool> IsExpandedChanged { get; set; }
+    
     /// <summary>
     /// Overridable, to show buttons even if the section is collapsed
     /// </summary>

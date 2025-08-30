@@ -2,6 +2,10 @@
 @inherits ComponentBase
 
 @code {
+    /// <summary>
+    /// Captures any unmatched attribute values and passes them to the underlying HTML element.
+    /// This allows components to accept additional HTML attributes without explicitly defining them as parameters.
+    /// </summary>
     [Parameter(CaptureUnmatchedValues = true)]
     public Dictionary<string, object>? AdditionalAttributes { get; set; }
 }

@@ -24,10 +24,27 @@
 </MudExpansionPanels>
 
 @code {
+    /// <summary>
+    /// Text displayed as the contact group header.
+    /// Describes the group of contacts.
+    /// </summary>
     [Parameter] public string? Header { get; set; }
+    
+    /// <summary>
+    /// Controls whether the contact group is expanded or collapsed.
+    /// Determines the visibility of the contact list.
+    /// </summary>
     [Parameter] public bool IsExpanded { get; set; } = false;
+    
+    /// <summary>
+    /// The content to display within the contact group.
+    /// Typically contains individual contact items.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Custom buttons to display in the contact group header.
+    /// Shown only when the group is expanded.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
-
-
 }

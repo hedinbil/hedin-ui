@@ -20,13 +20,29 @@
     private string _mapId = "";
     // private bool _rendered = false;
     private DotNetObjectReference<HUIMaps>? _dotNetRef;
-    private bool _needsInit;    // we’ve got new data and must call createInstance
-    private bool _needsUpdate;  // we’ve got new data and must call updatePoints
+    private bool _needsInit;    // we've got new data and must call createInstance
+    private bool _needsUpdate;  // we've got new data and must call updatePoints
 
+    /// <summary>
+    /// Collection of map points to display on the map.
+    /// Each point represents a location with optional metadata and styling.
+    /// </summary>
     [Parameter] public List<HUIMapPoint> Points { get; set; } = new();
+    
     private bool _lastAutoFit;
+    
+    /// <summary>
+    /// Automatically adjusts the map view to fit all points when true.
+    /// Ensures all points are visible within the map bounds.
+    /// </summary>
     [Parameter] public bool AutoFit { get; set; } = true;
+    
     private bool _darkMode;
+    
+    /// <summary>
+    /// Enables dark mode styling for the map when true.
+    /// Provides better visibility in low-light conditions.
+    /// </summary>
     [Parameter]
     public bool DarkMode
     {
@@ -42,13 +58,39 @@
             }
         }
     }
+    
+    /// <summary>
+    /// Configuration options for map controls and behavior.
+    /// Controls which UI elements are displayed and map interaction settings.
+    /// </summary>
     [Parameter]
     public HUIMapsControlOptions? ControlOptions { get; set; }
         = new();
+    
+    /// <summary>
+    /// Event callback when a map point is clicked.
+    /// Provides the clicked point data for custom handling.
+    /// </summary>
     [Parameter] public EventCallback<HUIMapPoint> OnPointClick { get; set; }
+    
+    /// <summary>
+    /// Width of the map container.
+    /// CSS value that determines the horizontal size of the map.
+    /// </summary>
     [Parameter] public string Width { get; set; } = "100%";
+    
+    /// <summary>
+    /// Height of the map container.
+    /// CSS value that determines the vertical size of the map.
+    /// </summary>
     [Parameter] public string Height { get; set; } = "500px";
+    
+    /// <summary>
+    /// CSS class applied to the map container.
+    /// Used for custom map styling.
+    /// </summary>
     [Parameter] public string? Class { get; set; }
+    
     /// <summary>The latitude to use before any points have loaded.</summary>
     [Parameter] public double? DefaultLat { get; set; }
 

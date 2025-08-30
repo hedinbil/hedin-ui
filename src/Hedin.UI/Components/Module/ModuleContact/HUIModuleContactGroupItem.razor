@@ -7,8 +7,21 @@
     </span>
 }
 @code {
+    /// <summary>
+    /// Material Design icon to display alongside the contact item.
+    /// Provides visual context for the contact information.
+    /// </summary>
     [Parameter] public string Icon { get; set; } = "";
+    
+    /// <summary>
+    /// The content to display for the contact item.
+    /// Typically contains contact details like name, email, or phone.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the contact item container.
+    /// Used for custom contact item styling.
+    /// </summary>
     [Parameter] public string? Class { get; set; }
-
 }

@@ -15,20 +15,43 @@
 
 
 @code {
+    /// <summary>
+    /// The data item associated with this input row.
+    /// Passed to event callbacks when add or delete actions are performed.
+    /// </summary>
     [Parameter]
     public TItem Item { get; set; }
 
+    /// <summary>
+    /// The content to display in the input row.
+    /// Typically contains form fields or other input components.
+    /// </summary>
     [Parameter]
     public RenderFragment ChildContent { get; set; }
 
+    /// <summary>
+    /// Event callback when the add button is clicked.
+    /// Provides the associated item for context.
+    /// </summary>
     [Parameter]
     public EventCallback<TItem> OnAddClick { get; set; }
 
+    /// <summary>
+    /// Event callback when the delete button is clicked.
+    /// Provides the associated item for context.
+    /// </summary>
     [Parameter]
     public EventCallback<TItem> OnDeleteClick { get; set; }
 
+    /// <summary>
+    /// Handles clicks on the add button.
+    /// Invokes the OnAddClick callback with the current item.
+    /// </summary>
     private void HandleOnAddClick() => OnAddClick.InvokeAsync(Item);
 
+    /// <summary>
+    /// Handles clicks on the delete button.
+    /// Invokes the OnDeleteClick callback with the current item.
+    /// </summary>
     private void HandleOnDeleteClick() => OnDeleteClick.InvokeAsync(Item);
-
 }

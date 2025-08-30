@@ -18,10 +18,34 @@
     </MudExpansionPanel>
 </MudExpansionPanels>
 @code {
+    /// <summary>
+    /// The URL to navigate to when the module link is clicked.
+    /// Opens in a new tab when clicked.
+    /// </summary>
     [Parameter, EditorRequired] public string? Url { get; set; }
+    
+    /// <summary>
+    /// Text displayed as the module link header.
+    /// Describes the destination or purpose of the link.
+    /// </summary>
     [Parameter, EditorRequired] public string? Header { get; set; }
+    
+    /// <summary>
+    /// Custom buttons to display alongside the module link.
+    /// Typically used for additional actions or controls.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the module link container.
+    /// Used for custom link styling.
+    /// </summary>
     [Parameter] public string? Class { get; set; }
+    
+    /// <summary>
+    /// Disables the module link when true.
+    /// Prevents navigation and shows disabled styling.
+    /// </summary>
     [Parameter] public bool Disabled { get; set; } = false;
     private async Task Navigate() {
         if (!Disabled)

@@ -56,81 +56,185 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Collection of currently selected values.
+    /// Bound to the component's selection state.
+    /// </summary>
     [Parameter]
     public IEnumerable<T>? Values { get; set; }
 
+    /// <summary>
+    /// Event callback when the selection changes.
+    /// Provides the updated collection of selected values.
+    /// </summary>
     [Parameter]
     public EventCallback<IEnumerable<T>> ValuesChanged { get; set; }
 
+    /// <summary>
+    /// Label text displayed above the autocomplete input.
+    /// Describes what the multi-select is for.
+    /// </summary>
     [Parameter]
     public string Label { get; set; }
 
+    /// <summary>
+    /// Function that provides search results based on user input.
+    /// Required for the autocomplete functionality to work.
+    /// </summary>
     [Parameter, EditorRequired]
     public Func<string?, Task<IEnumerable<T>>> SearchFunc { get; set; }
 
+    /// <summary>
+    /// Function that converts items to display text in the dropdown.
+    /// Required for proper item display in the autocomplete list.
+    /// </summary>
     [Parameter, EditorRequired]
     public Func<T, string> ToStringFunc { get; set; }
 
+    /// <summary>
+    /// Function that converts selected items to text for chip display.
+    /// Required for proper chip text rendering.
+    /// </summary>
     [Parameter, EditorRequired]
     public Func<T, string> ChipToStringFunc { get; set; }
 
+    /// <summary>
+    /// Function that provides tooltip text for chips.
+    /// Optional - when not provided, no tooltips are shown.
+    /// </summary>
     [Parameter]
     public Func<T, string> ChipTooltipStringFunc { get; set; }
 
+    /// <summary>
+    /// Function that determines if an item should be disabled.
+    /// Optional - when not provided, all items are enabled.
+    /// </summary>
     [Parameter]
     public Func<T, bool> ItemDisabledFunc { get; set; }
 
+    /// <summary>
+    /// CSS class applied to the component container.
+    /// Used for custom styling.
+    /// </summary>
     [Parameter]
     public string Class { get; set; }
 
+    /// <summary>
+    /// CSS styles applied to the component container.
+    /// Used for custom styling.
+    /// </summary>
     [Parameter]
     public string Style { get; set; }
 
+    /// <summary>
+    /// CSS class applied to each item template.
+    /// Used for consistent item styling.
+    /// </summary>
     [Parameter]
     public string ItemTemplateClass { get; set; }
 
+    /// <summary>
+    /// Color theme for the chips and other UI elements.
+    /// Affects the visual appearance of the component.
+    /// </summary>
     [Parameter]
     public Color Color { get; set; }
 
+    /// <summary>
+    /// Makes the field required when true.
+    /// Shows validation error when no items are selected.
+    /// </summary>
     [Parameter]
     public bool Required { get; set; }
 
+    /// <summary>
+    /// Template for rendering each item in the dropdown.
+    /// Customizes the appearance of individual items.
+    /// </summary>
     [Parameter]
     public RenderFragment<T> ItemTemplate { get; set; }
 
+    /// <summary>
+    /// Template for rendering disabled items.
+    /// Customizes the appearance of disabled items.
+    /// </summary>
     [Parameter]
     public RenderFragment<T> ItemDisabledTemplate { get; set; }
 
+    /// <summary>
+    /// Enables clearing the selection when true.
+    /// Shows a clear button in the autocomplete input.
+    /// </summary>
     [Parameter]
     public bool Clearable { get; set; }
 
+    /// <summary>
+    /// Disables the entire component when true.
+    /// Prevents user interaction and shows disabled styling.
+    /// </summary>
     [Parameter]
     public bool Disabled { get; set; }
 
+    /// <summary>
+    /// Enables the "Select All" functionality when true.
+    /// Shows a checkbox to select/deselect all available items.
+    /// </summary>
     [Parameter]
     public bool SelectAll { get; set; }
 
+    /// <summary>
+    /// Current state of the "Select All" checkbox.
+    /// Bound to the select all functionality.
+    /// </summary>
     [Parameter]
     public bool SelectAllValue { get; set; }
 
+    /// <summary>
+    /// Text displayed when all items are selected.
+    /// Shown in a special chip when SelectAllValue is true.
+    /// </summary>
     [Parameter]
     public string AllItemsSelectedText { get; set; } = "All items selected";
 
+    /// <summary>
+    /// Event callback when the "Select All" state changes.
+    /// Provides the new select all value.
+    /// </summary>
     [Parameter]
     public EventCallback<bool> SelectAllValueChanged { get; set; }
 
+    /// <summary>
+    /// Text displayed on the "Select All" checkbox.
+    /// Describes the select all functionality.
+    /// </summary>
     [Parameter]
     public String SelectAllText { get; set; }
 
+    /// <summary>
+    /// Content displayed before the items in the dropdown.
+    /// Appears above the item list when the dropdown is open.
+    /// </summary>
     [Parameter]
     public RenderFragment BeforeItemsTemplate { get; set; }
 
+    /// <summary>
+    /// Content displayed when no items are available.
+    /// Customizes the empty state message.
+    /// </summary>
     [Parameter]
     public RenderFragment NoItemsTemplate { get; set; }
 
+    /// <summary>
+    /// Reduces the spacing for a more compact appearance.
+    /// Affects the overall component density.
+    /// </summary>
     [Parameter]
     public bool Dense { get; set; } = true;
 
+    /// <summary>
+    /// Maximum height of the dropdown list.
+    /// Prevents the dropdown from becoming too tall.
+    /// </summary>
     [Parameter]
     public int MaxHeight { get; set; } = 300;
 

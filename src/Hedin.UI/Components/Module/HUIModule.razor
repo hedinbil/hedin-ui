@@ -103,28 +103,103 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Text displayed as the module header.
+    /// Used when HeaderContent is not provided.
+    /// </summary>
     [Parameter] public string? Header { get; set; }
+    
+    /// <summary>
+    /// Custom content for the module header.
+    /// Overrides the Header text when provided.
+    /// </summary>
     [Parameter] public RenderFragment? HeaderContent { get; set; }
+    
+    /// <summary>
+    /// Controls whether the module is expanded or collapsed.
+    /// Determines the visibility of the module content.
+    /// </summary>
     [Parameter] public bool IsExpanded { get; set; }
+    
+    /// <summary>
+    /// Enables expansion/collapse functionality.
+    /// When false, the module is always expanded.
+    /// </summary>
     [Parameter] public bool Expandable { get; set; } = true;
+    
+    /// <summary>
+    /// Main content of the module.
+    /// Displayed in the expandable section.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Content displayed at the bottom of the module.
+    /// Appears below the main content.
+    /// </summary>
     [Parameter] public RenderFragment? Footer { get; set; }
+    
+    /// <summary>
+    /// Action buttons displayed in the module header.
+    /// Typically used for module-specific actions.
+    /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
     /// <summary>
     /// Makes the buttons visible in the header. Default behaviour is to show buttons only when the module is expanded.
     /// </summary>
     [Parameter] public bool ButtonsVisible { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the module container.
+    /// Used for custom styling.
+    /// </summary>
     [Parameter] public string? Class { get; set; }
+    
+    /// <summary>
+    /// Enables toggle switch instead of expansion button.
+    /// Provides a different UI for expanding/collapsing.
+    /// </summary>
     [Parameter] public bool UseToggleSwitch { get; set; }
+    
+    /// <summary>
+    /// Disables the toggle switch when true.
+    /// Prevents user interaction with the toggle.
+    /// </summary>
     [Parameter] public bool ToggleSwitchDisabled { get; set; }
+    
+    /// <summary>
+    /// Tooltip text displayed when hovering over the toggle switch.
+    /// Provides additional context for the toggle functionality.
+    /// </summary>
     [Parameter] public string? ToggleSwitchTooltip { get; set; }
+    
+    /// <summary>
+    /// Disables the entire module when true.
+    /// Prevents all user interaction and shows disabled styling.
+    /// </summary>
     [Parameter] public bool Disabled { get; set; }
+    
+    /// <summary>
+    /// Event callback when the expansion state changes.
+    /// Provides the new expansion state.
+    /// </summary>
     [Parameter] public EventCallback<bool> ExpandedChanged { get; set; }
+    
+    /// <summary>
+    /// Handles clicks on the expansion button.
+    /// Toggles the expansion state.
+    /// </summary>
     private void HandleExpansionButtonClick() => IsExpanded = !IsExpanded;
+    
+    /// <summary>
+    /// Handles changes to the toggle switch value.
+    /// Updates the expansion state and invokes the change callback.
+    /// </summary>
+    /// <param name="value">The new toggle switch value.</param>
     private void OnExpandedChanged(bool value)
     {
         IsExpanded = value;
         ExpandedChanged.InvokeAsync(value);
     }
-
 }

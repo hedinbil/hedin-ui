@@ -27,17 +27,53 @@
 </MudExpansionPanels>
 
 @code {
+    /// <summary>
+    /// The content to display within the document folder.
+    /// Renders when the folder is expanded.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
     /// <summary>
     /// Buttons are per default shown only when folder is expanded
     /// </summary>
     [Parameter] public RenderFragment? Buttons { get; set; }
+    
+    /// <summary>
+    /// Controls whether the document folder is expanded or collapsed.
+    /// Determines the visibility of the folder content.
+    /// </summary>
     [Parameter] public bool IsExpanded { get; set; } = false;
+    
+    /// <summary>
+    /// Indicates if this is a root-level document folder.
+    /// Affects styling and layout behavior.
+    /// </summary>
     [Parameter] public bool IsRoot { get; set; } = true;
+    
+    /// <summary>
+    /// Name displayed for the document folder.
+    /// Shown as the folder label.
+    /// </summary>
     [Parameter] public string? Name { get; set; }
+    
+    /// <summary>
+    /// Indicates if the document folder is currently being searched.
+    /// Affects visual appearance during search operations.
+    /// </summary>
     [Parameter] public bool IsSearching { get; set; } = false;
+    
+    /// <summary>
+    /// Indicates if the folder contains subfolders.
+    /// Affects folder icon and behavior.
+    /// </summary>
     [Parameter] public bool HasSubfolders { get; set; }
+    
+    /// <summary>
+    /// Indicates if the folder contains documents.
+    /// Affects folder icon and behavior.
+    /// </summary>
     [Parameter] public bool HasDocuments { get; set; }
+    
     /// <summary>
     /// Overridable, to show buttons even if the section is collapsed
     /// </summary>

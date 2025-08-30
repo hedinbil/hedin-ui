@@ -45,6 +45,10 @@
     </div>
 }
 @code {
+    /// <summary>
+    /// Reference to the data grid component that this context menu manages.
+    /// Required for accessing grid state and column information.
+    /// </summary>
     [Parameter] public HUIDataGrid<T> DataGrid { get; set; }
 
     private bool _isOpen = false;

@@ -64,63 +64,347 @@
 </div>
 
 @code {
+    /// <summary>
+    /// Cascading parameter that provides access to the parent page table component.
+    /// Used for coordinating between the page table and data grid.
+    /// </summary>
     [CascadingParameter(Name = "HUIPageTable")] public HUIPageTable<T>? ParentPageTable { get; set; }
+    
     // Parameters and internal state
+    /// <summary>
+    /// Collection of items to display in the data grid.
+    /// If not provided, ServerData will be used instead.
+    /// </summary>
     [Parameter] public IEnumerable<T>? Items { get; set; }
+    
+    /// <summary>
+    /// Function that provides server-side data for the grid.
+    /// Used for server-side pagination, filtering, and sorting.
+    /// </summary>
     [Parameter] public Func<GridState<T>, Task<GridData<T>>>? ServerData { get; set; }
+    
+    /// <summary>
+    /// Indicates whether the grid is currently loading data.
+    /// Shows a loading indicator when true.
+    /// </summary>
     [Parameter] public bool Loading { get; set; }
+    
+    /// <summary>
+    /// Enables filtering functionality in the data grid.
+    /// Users can filter data by column values.
+    /// </summary>
     [Parameter] public bool Filterable { get; set; } = false;
+    
+    /// <summary>
+    /// Determines how sorting is handled in the grid.
+    /// Multiple allows sorting by multiple columns simultaneously.
+    /// </summary>
     [Parameter] public SortMode SortMode { get; set; } = SortMode.Multiple;
+    
+    /// <summary>
+    /// Enables grouping functionality in the data grid.
+    /// Users can group data by column values.
+    /// </summary>
     [Parameter] public bool Groupable { get; set; } = false;
+    
+    /// <summary>
+    /// Enables hover effects on grid rows.
+    /// Provides visual feedback when hovering over rows.
+    /// </summary>
     [Parameter] public bool Hover { get; set; } = true;
+    
+    /// <summary>
+    /// Sets the elevation (shadow depth) of the grid.
+    /// Higher values create more pronounced shadows.
+    /// </summary>
     [Parameter] public int Elevation { get; set; } = 1;
+    
+    /// <summary>
+    /// Enables alternating row colors (striped appearance).
+    /// Improves readability of large datasets.
+    /// </summary>
     [Parameter] public bool Striped { get; set; } = true;
+    
+    /// <summary>
+    /// Function that returns custom CSS styles for grid rows.
+    /// Called for each row with the row data and index.
+    /// </summary>
     [Parameter] public Func<T, int, string> RowStyleFunc { get; set; }
+    
+    /// <summary>
+    /// Function that returns custom CSS classes for grid rows.
+    /// Called for each row with the row data and index.
+    /// </summary>
     [Parameter] public Func<T, int, string> RowClassFunc { get; set; }
+    
+    /// <summary>
+    /// Enables drag and drop column reordering.
+    /// Users can rearrange columns by dragging them.
+    /// </summary>
     [Parameter] public bool DragDropColumnReordering { get; set; } = true;
+    
+    /// <summary>
+    /// Determines how column resizing is handled.
+    /// None disables resizing, other options allow different resize behaviors.
+    /// </summary>
     [Parameter] public ResizeMode ColumnResizeMode { get; set; } = ResizeMode.None;
+    
+    /// <summary>
+    /// Shows column options menu for each column.
+    /// Provides quick access to column-specific settings.
+    /// </summary>
     [Parameter] public bool ShowColumnOptions { get; set; } = false;
+    
+    /// <summary>
+    /// Content that defines the columns of the data grid.
+    /// Should contain HUIDataGridColumn components.
+    /// </summary>
     [Parameter] public RenderFragment Columns { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to all grid rows.
+    /// Used for consistent row styling.
+    /// </summary>
     [Parameter] public string RowClass { get; set; }
+    
+    /// <summary>
+    /// CSS styles applied to all grid rows.
+    /// Used for consistent row styling.
+    /// </summary>
     [Parameter] public string RowStyle { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the entire data grid container.
+    /// Used for custom grid styling.
+    /// </summary>
     [Parameter] public string Class { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the grid header.
+    /// Used for custom header styling.
+    /// </summary>
     [Parameter] public string HeaderClass { get; set; }
+    
+    /// <summary>
+    /// Enables hiding/showing columns.
+    /// Users can toggle column visibility.
+    /// </summary>
     [Parameter] public bool Hideable { get; set; } = true;
+    
+    /// <summary>
+    /// Sets the height of the data grid.
+    /// Can be a CSS value like "400px" or "50vh".
+    /// </summary>
     [Parameter] public string Height { get; set; }
+    
+    /// <summary>
+    /// Fixes the header in place when scrolling.
+    /// Header remains visible during vertical scrolling.
+    /// </summary>
     [Parameter] public bool FixedHeader { get; set; } = true;
+    
+    /// <summary>
+    /// Reduces the spacing between rows for a more compact appearance.
+    /// Useful for displaying more data in limited space.
+    /// </summary>
     [Parameter] public bool Dense { get; set; } = false;
+    
+    /// <summary>
+    /// Shows horizontal scrollbar when content exceeds grid width.
+    /// Useful for grids with many columns.
+    /// </summary>
     [Parameter] public bool HorizontalScrollbar { get; set; }
+    
+    /// <summary>
+    /// CSS class applied to the grid footer.
+    /// Used for custom footer styling.
+    /// </summary>
     [Parameter] public string FooterClass { get; set; }
+    
+    /// <summary>
+    /// Custom content for the grid pager.
+    /// Overrides the default pager when provided.
+    /// </summary>
     [Parameter] public RenderFragment PagerContent { get; set; }
+    
+    /// <summary>
+    /// Content displayed when no records are available.
+    /// Customizes the empty state message.
+    /// </summary>
     [Parameter] public RenderFragment NoRecordsContent { get; set; }
+    
+    /// <summary>
+    /// Content displayed in the grid toolbar.
+    /// Used for custom toolbar buttons and controls.
+    /// </summary>
     [Parameter] public RenderFragment ToolBarContent { get; set; }
+    
+    /// <summary>
+    /// Enables multiple row selection.
+    /// Users can select multiple rows simultaneously.
+    /// </summary>
     [Parameter] public bool MultiSelection { get; set; } = false;
+    
+    /// <summary>
+    /// Collection of currently selected items.
+    /// Bound to the grid's selection state.
+    /// </summary>
     [Parameter] public HashSet<T> SelectedItems { get; set; } = new();
+    
+    /// <summary>
+    /// Event callback when the selection changes.
+    /// Provides the updated collection of selected items.
+    /// </summary>
     [Parameter] public EventCallback<HashSet<T>> SelectedItemsChanged { get; set; }
+    
+    /// <summary>
+    /// Content for expandable rows.
+    /// Displays additional information below the main row content.
+    /// </summary>
     [Parameter] public RenderFragment<CellContext<T>> ChildRowContent { get; set; }
+    
+    /// <summary>
+    /// Enables row selection by clicking anywhere on the row.
+    /// When false, only clicking the checkbox selects the row.
+    /// </summary>
     [Parameter] public bool SelectOnRowClick { get; set; } = true;
+    
+    /// <summary>
+    /// Currently selected single item.
+    /// Used when MultiSelection is false.
+    /// </summary>
     [Parameter] public T SelectedItem { get; set; }
+    
+    /// <summary>
+    /// Event callback when a single item is selected.
+    /// Provides the newly selected item.
+    /// </summary>
     [Parameter] public EventCallback<T> SelectedItemChanged { get; set; }
+    
+    /// <summary>
+    /// Determines how editing is handled in the grid.
+    /// Cell mode allows inline editing, other modes use dialogs.
+    /// </summary>
     [Parameter] public DataGridEditMode EditMode { get; set; } = DataGridEditMode.Cell;
+    
+    /// <summary>
+    /// Event callback when editing begins for an item.
+    /// Provides the item being edited.
+    /// </summary>
     [Parameter] public EventCallback<T> StartedEditingItem { get; set; }
+    
+    /// <summary>
+    /// Event callback when editing is canceled for an item.
+    /// Provides the item that was being edited.
+    /// </summary>
     [Parameter] public EventCallback<T> CanceledEditingItem { get; set; }
+    
+    /// <summary>
+    /// Event callback when editing is committed for an item.
+    /// Provides the item with committed changes.
+    /// </summary>
     [Parameter] public EventCallback<T> CommittedItemChanges { get; set; }
+    
+    /// <summary>
+    /// Determines what triggers editing mode.
+    /// Manual requires explicit activation, other options use different triggers.
+    /// </summary>
     [Parameter] public DataGridEditTrigger EditTrigger { get; set; } = DataGridEditTrigger.Manual;
+    
+    /// <summary>
+    /// Makes the grid read-only when true.
+    /// Disables all editing functionality.
+    /// </summary>
     [Parameter] public bool ReadOnly { get; set; } = true;
+    
+    /// <summary>
+    /// Breakpoint at which the grid switches to mobile layout.
+    /// Affects responsive behavior and column stacking.
+    /// </summary>
     [Parameter] public Breakpoint Breakpoint { get; set; } = Breakpoint.Xs;
+    
+    /// <summary>
+    /// Culture information for formatting dates, numbers, and text.
+    /// Affects sorting, filtering, and display formatting.
+    /// </summary>
     [Parameter] public CultureInfo Culture { get; set; }
+    
+    /// <summary>
+    /// Enables virtualization for large datasets.
+    /// Only renders visible rows for better performance.
+    /// </summary>
     [Parameter] public bool Virtualize { get; set; } = false;
+    
+    /// <summary>
+    /// Function that provides virtualized server-side data.
+    /// Used with Virtualize=true for large datasets.
+    /// </summary>
     [Parameter] public Func<GridStateVirtualize<T>, CancellationToken, Task<GridData<T>>> VirtualizeServerData { get; set; }
+    
+    /// <summary>
+    /// Event callback when a row is clicked.
+    /// Provides information about the click event and row.
+    /// </summary>
     [Parameter] public EventCallback<DataGridRowClickEventArgs<T>> RowClick { get; set; }
+    
+    /// <summary>
+    /// When true, cell content wraps to multiple lines.
+    /// When false, content is truncated with ellipsis.
+    /// </summary>
     [Parameter] public bool WrapCellContent { get; set; } = false;
+    
+    /// <summary>
+    /// Enables the settings menu for saving/loading grid state.
+    /// Requires a unique Id to be set.
+    /// </summary>
     [Parameter] public bool EnableSettingsMenu { get; set; } = false;
+    
+    /// <summary>
+    /// Unique identifier for the grid instance.
+    /// Required for state persistence and settings menu functionality.
+    /// </summary>
     [Parameter] public string? Id { get; set; }
+    
+    /// <summary>
+    /// Event callback when a row is clicked.
+    /// Alternative to RowClick for simpler click handling.
+    /// </summary>
     [Parameter] public EventCallback<T> OnRowClick { get; set; }
+    
+    /// <summary>
+    /// Shows the pagination controls when true.
+    /// Hides pagination when false.
+    /// </summary>
     [Parameter] public bool ShowPager { get; set; } = true;
+    
+    /// <summary>
+    /// Number of rows displayed per page.
+    /// Affects pagination and performance.
+    /// </summary>
     [Parameter] public int RowsPerPage { get; set; } = 10;
+    
+    /// <summary>
+    /// Event callback when the rows per page changes.
+    /// Provides the new rows per page value.
+    /// </summary>
     [Parameter] public EventCallback<int> RowsPerPageChanged { get; set; }
+    
+    /// <summary>
+    /// Options for edit dialogs when EditMode is not Cell.
+    /// Configures dialog appearance and behavior.
+    /// </summary>
     [Parameter] public DialogOptions EditDialogOptions { get; set; }
+    
+    /// <summary>
+    /// Current page number (zero-based).
+    /// Used for pagination and state management.
+    /// </summary>
     [Parameter] public int CurrentPage { get; set; } = 0;
+    
+    /// <summary>
+    /// Event callback when the current page changes.
+    /// Provides the new page number.
+    /// </summary>
     [Parameter] public EventCallback<int> CurrentPageChanged { get; set; }
 
     public MudDataGrid<T> InnerGridRef { get; private set; }

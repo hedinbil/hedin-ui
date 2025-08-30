@@ -28,6 +28,10 @@
 }
 
 @code {
+    /// <summary>
+    /// Collection of menu items to display in the horizontal navigation tabs.
+    /// Each item represents a tab in the horizontal navigation.
+    /// </summary>
     [Parameter] public List<HUIMenuItem> Items { get; set; } = new();
 
     /// <summary>
@@ -35,6 +39,11 @@
     /// If this is set during initialization, the tab will be selected when the component is rendered.
     /// </summary>
     [Parameter] public HUIMenuItem? ActiveItem { get; set; }
+    
+    /// <summary>
+    /// Controls whether authorization is required to view menu items.
+    /// When false, all menu items are shown regardless of user authorization.
+    /// </summary>
     [Parameter] public bool RequireAuthorization { get; set; } = true;
  
     private int GetActiveTabIndex()

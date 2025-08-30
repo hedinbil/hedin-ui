@@ -15,10 +15,39 @@
     </div>
 }
 @code {
+    /// <summary>
+    /// The content to display within the dialog overlay.
+    /// Renders when the overlay is visible.
+    /// </summary>
     [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    /// <summary>
+    /// Controls the visibility of the dialog overlay.
+    /// When true, shows the overlay; when false, hides it.
+    /// </summary>
     [Parameter] public bool IsVisible { get; set; }
+    
+    /// <summary>
+    /// Centers the content within the overlay when true.
+    /// Provides vertical and horizontal centering for the overlay content.
+    /// </summary>
     [Parameter] public bool Center { get; set; } = true;
+    
+    /// <summary>
+    /// Adds padding around the overlay content when true.
+    /// Provides spacing between the overlay edges and content.
+    /// </summary>
     [Parameter] public bool Gutters { get; set; } = true;
+    
+    /// <summary>
+    /// CSS class applied to the overlay container.
+    /// Used for custom overlay styling.
+    /// </summary>
     [Parameter] public string Class { get; set; } = "";
+    
+    /// <summary>
+    /// CSS styles applied to the overlay container.
+    /// Used for custom overlay styling.
+    /// </summary>
     [Parameter] public string Style { get; set; } = "";
 }

@@ -25,17 +25,51 @@
 </MudContainer>
 
 @code {
+    /// <summary>
+    /// Main title of the blog post.
+    /// Displayed as the primary heading.
+    /// </summary>
     [Parameter, EditorRequired] public string? Header { get; set; }
+    
+    /// <summary>
+    /// Secondary title or subtitle of the blog post.
+    /// Displayed below the main header.
+    /// </summary>
     [Parameter, EditorRequired] public string? SubHeader { get; set; }
+    
+    /// <summary>
+    /// Main content text of the blog post.
+    /// Supports text truncation with "show more" functionality.
+    /// </summary>
     [Parameter, EditorRequired] public string BodyText { get; set; } = "";
+    
+    /// <summary>
+    /// Custom content displayed below the main header.
+    /// Allows for additional header elements like metadata or actions.
+    /// </summary>
     [Parameter] public RenderFragment HeaderContent { get; set; }
+    
+    /// <summary>
+    /// Source URL for the blog post image.
+    /// When provided, displays an image above the content.
+    /// </summary>
     [Parameter] public string? ImgSrc { get; set; }
+    
+    /// <summary>
+    /// Alt text for the blog post image.
+    /// Provides accessibility description for the image.
+    /// </summary>
     [Parameter] public string? ImgAlt { get; set; }
+    
     /// <summary>
     /// Displays skeleton if true and ImgSrc is empty.
+    /// Shows a loading placeholder when lazy loading images.
+    /// </summary>
     [Parameter] public bool ImgLazyLoad { get; set; }
+    
     /// <summary>
     /// When the body text reaches this limit the text will be truncated "..." and a "show more" button will be visible.
+    /// Controls the text truncation behavior.
     /// </summary>
     [Parameter] public int MaxBodyLength { get; set; } = 300;
     private bool showMore = false;

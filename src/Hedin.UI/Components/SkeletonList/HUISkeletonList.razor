@@ -6,9 +6,33 @@
 }
 
 @code {
+    /// <summary>
+    /// Number of skeleton items to display.
+    /// Controls how many loading placeholders are shown.
+    /// </summary>
     [Parameter] public int Count { get; set; } = 8;
+    
+    /// <summary>
+    /// Height of each skeleton item.
+    /// CSS value that determines the vertical size of the skeleton.
+    /// </summary>
     [Parameter] public string Height { get; set; } = "40px";
+    
+    /// <summary>
+    /// Width of each skeleton item.
+    /// CSS value that determines the horizontal size of the skeleton.
+    /// </summary>
     [Parameter] public string Width { get; set; } = "";
+    
+    /// <summary>
+    /// CSS class applied to each skeleton item.
+    /// Used for custom skeleton styling.
+    /// </summary>
     [Parameter] public string Class { get; set; } = "";
+    
+    /// <summary>
+    /// Type of skeleton to display.
+    /// Determines the visual shape of the skeleton (rectangle, circle, text, etc.).
+    /// </summary>
     [Parameter] public SkeletonType SkeletonType { get; set; } = SkeletonType.Rectangle;
 }

@@ -4,30 +4,55 @@
 @inherits TemplateColumn<T>
 
 @code {
+    /// <summary>
+    /// Event callback when the icon button is clicked.
+    /// Provides the row data item for context.
+    /// </summary>
     [Parameter] public EventCallback<T> OnClick { get; set; }
+    
     /// <summary>
     /// Set the tooltip for the icon button.
     /// </summary>
     [Parameter] public string Tooltip { get; set; } = string.Empty;
+    
+    /// <summary>
+    /// Material Design icon to display on the button.
+    /// Should be a valid Material Icons name.
+    /// </summary>
     [Parameter] public string Icon { get; set; }
+    
+    /// <summary>
+    /// Reduces the button size and spacing when true.
+    /// Provides a more compact appearance for dense layouts.
+    /// </summary>
     [Parameter] public bool Dense { get; set; } = false;
+    
+    /// <summary>
+    /// Visual style variant of the icon button.
+    /// Determines the button's appearance (text, outlined, filled, etc.).
+    /// </summary>
     [Parameter] public Variant Variant { get; set; } = Variant.Text;
+    
     /// <summary>
     /// Set the icon for the badge. When set, a badge will be displayed on the icon button.
     /// </summary>
     [Parameter] public string BadgeIcon { get; set; } = string.Empty;
+    
     /// <summary>
     /// Set to true to allow the badge to overlap the icon button.
     /// </summary>
     [Parameter] public bool BadgeOverlap { get; set; }
+    
     /// <summary>
     /// Function to generate the Href for the icon button link.
     /// </summary>
     [Parameter] public Func<T, string> GetHref { get; set; }
+    
     /// <summary>
     /// Target for the icon button link. Default is "_blank".
     /// </summary>
     [Parameter] public string Target { get; set; } = "_blank";
+    
     /// <summary>
     /// Set the pointer events CSS property on the tooltip. auto is the default value.
     /// Suitable values are "none", "auto", "visible", "visibleFill", "visiblePainted", and "visibleStroke".
