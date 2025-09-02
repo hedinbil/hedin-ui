@@ -59,7 +59,7 @@ jobs:
           
   deploy_to_dev:
     name: 'Deploy to dev'
-    runs-on: [linux-runner]
+    runs-on: ubuntu-latest
     defaults:
       run:
         shell: bash
