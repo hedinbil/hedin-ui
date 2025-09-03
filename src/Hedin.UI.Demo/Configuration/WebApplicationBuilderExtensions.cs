@@ -59,15 +59,6 @@ public static class WebApplicationBuilderExtensions
             return azureClient.GetChatClient(builder.Configuration["AzureOpenAI:DeploymentName"]!);
         });
 
-
-        builder.Services.AddSingleton(provider =>
-        {
-            var searchEndpoint = new Uri(builder.Configuration["CognitiveSearch:Endpoint"]!);
-            var searchApiKey = builder.Configuration["CognitiveSearch:ApiKey"]!;
-            var indexName = builder.Configuration["CognitiveSearch:IndexName"]!;
-            return new SearchClient(searchEndpoint, indexName, new AzureKeyCredential(searchApiKey));
-        });
-
         return builder;
     }
 
