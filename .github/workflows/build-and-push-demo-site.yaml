@@ -65,15 +65,19 @@ jobs:
     environment: dev
     needs: docker_build_push_acr
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: hedin-ui
       - id: generate-tag
-        uses: ./.github/actions/generate-tag
+        uses: hedin-ui/.github/actions/generate-tag
         with:
           team: ims
           component: hedin-ui
       - name: Construct commit URL
         run: echo "COMMIT_URL=https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" >> $GITHUB_ENV
       - id: deploy
-        uses: ./.github/actions/gitops-deploy-via-script
+        uses: hedin-ui/.github/actions/gitops-deploy-via-script
         with:
           team: ims
           component: hedin-ui
