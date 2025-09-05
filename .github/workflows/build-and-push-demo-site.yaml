@@ -55,7 +55,6 @@ jobs:
           az acr login --name hedinit
           cd hedin-ui-admin/src/Hedin.UI.Demo/
           dotnet publish . --os linux --arch x64 /t:PublishContainer -c Release -p ContainerImageTags='${{ env.SHA }}'  -p ContainerRegistryImageName='hedinit.azurecr.io/ims/hedin-ui-admin-demo'
-          docker push hedinit.azurecr.io/ims/hedin-ui-admin-demo:${{ env.SHA }}
           
   deploy_to_dev:
     name: 'Deploy to dev'
