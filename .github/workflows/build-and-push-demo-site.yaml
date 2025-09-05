@@ -64,6 +64,12 @@ jobs:
         shell: bash
     ##needs: docker_build_push_acr
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          path: hedin-applications-state
+          repository: hedinbil/hedin-applications-state
+          token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
       - id: generate-tag
         uses: hedinbil/hedin-github-actions-public/gitops-deploy-via-script@main
         with:
@@ -81,6 +87,6 @@ jobs:
           image-tag: ${{ steps.generate-tag.outputs.tag }}
           git-user-email: 'automation@hedinit.io'
           git-user-name: 'GitHub Actions - Hedin Ui Demo'
-          pat-token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
+          #pat-token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
           github-actor: ${{ github.actor }}
           github-commit-url: ${{ env.COMMIT_URL }}
