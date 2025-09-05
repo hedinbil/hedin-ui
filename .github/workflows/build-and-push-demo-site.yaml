@@ -12,49 +12,49 @@ on:
   workflow_dispatch:
 
 jobs:
-  docker_build_push_acr:
-    name: 'Docker Build and Push to ACR'
-    runs-on: ubuntu-latest
+  # docker_build_push_acr:
+  #   name: 'Docker Build and Push to ACR'
+  #   runs-on: ubuntu-latest
 
-    environment: dev
+  #   environment: dev
     
-    defaults:
-      run:
-        shell: bash
+  #   defaults:
+  #     run:
+  #       shell: bash
     
-    steps:        
-      - uses: AutoModality/action-clean@v1
+  #   steps:        
+  #     - uses: AutoModality/action-clean@v1
       
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          path: hedin-ui-admin
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #       with:
+  #         path: hedin-ui-admin
 
-      - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.x'
+  #     - name: Setup .NET Core
+  #       uses: actions/setup-dotnet@v4
+  #       with:
+  #         dotnet-version: '9.x'
           
-      - name: Az CLI login
-        uses: azure/login@v1
-        with:
-          client-id: ${{ secrets.AZURE_CLIENT_ID }}
-          tenant-id: ${{ secrets.AZURE_TENANT_ID }}
-          subscription-id: ${{ secrets.OPERATIONS_HUB_CORE_PROD_AZURE_SUBSCRIPTION_ID }}
+  #     - name: Az CLI login
+  #       uses: azure/login@v1
+  #       with:
+  #         client-id: ${{ secrets.AZURE_CLIENT_ID }}
+  #         tenant-id: ${{ secrets.AZURE_TENANT_ID }}
+  #         subscription-id: ${{ secrets.OPERATIONS_HUB_CORE_PROD_AZURE_SUBSCRIPTION_ID }}
       
-      - uses: benjlevesque/short-sha@v2.2
-        id: short-sha
-        with:
-          length: 7
-      - run: echo $SHA
-        env:
-          SHA: ${{ steps.short-sha.outputs.sha }}
+  #     - uses: benjlevesque/short-sha@v2.2
+  #       id: short-sha
+  #       with:
+  #         length: 7
+  #     - run: echo $SHA
+  #       env:
+  #         SHA: ${{ steps.short-sha.outputs.sha }}
 
-      - name: Build and push
-        run: |
-          az acr login --name hedinit
-          cd hedin-ui-admin/src/Hedin.UI.Demo/
-          dotnet publish . --os linux --arch x64 /t:PublishContainer -c Release -p ContainerImageTags='${{ env.SHA }}'  -p ContainerRegistryImageName='hedinit.azurecr.io/ims/hedin-ui-admin-demo'
+  #     - name: Build and push
+  #       run: |
+  #         az acr login --name hedinit
+  #         cd hedin-ui-admin/src/Hedin.UI.Demo/
+  #         dotnet publish . --os linux --arch x64 /t:PublishContainer -c Release -p ContainerImageTags='${{ env.SHA }}'  -p ContainerRegistryImageName='hedinit.azurecr.io/ims/hedin-ui-admin-demo'
           
   deploy_to_dev:
     name: 'Deploy to dev'
@@ -62,8 +62,7 @@ jobs:
     defaults:
       run:
         shell: bash
-    environment: dev
-    needs: docker_build_push_acr
+    ##needs: docker_build_push_acr
     steps:
       - id: generate-tag
         uses: hedinbil/hedin-github-actions-public/gitops-deploy-via-script@main
