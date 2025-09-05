@@ -71,7 +71,7 @@ jobs:
           repository: hedinbil/hedin-applications-state
           token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
       - id: generate-tag
-        uses: hedinbil/hedin-github-actions-public/gitops-deploy-via-script@main
+        uses: hedinbil/hedin-github-actions-public/generate-tag@main
         with:
           team: ims
           component: hedin-ui
@@ -82,7 +82,7 @@ jobs:
         with:
           team: ims
           component: hedin-ui
-          environment: 'dev'
+          environment: dev
           full-image-name: ${{ steps.generate-tag.outputs.full-image-name }}
           image-tag: ${{ steps.generate-tag.outputs.tag }}
           git-user-email: 'automation@hedinit.io'
