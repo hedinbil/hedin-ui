@@ -67,14 +67,14 @@ jobs:
     needs: docker_build_push_acr
     steps:
       - id: generate-tag
-        uses: ./.github/actions/generate-tag.yaml
+        uses: ./.github/actions/generate-tag
         with:
           team: ims
           component: hedin-ui
       - name: Construct commit URL
         run: echo "COMMIT_URL=https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" >> $GITHUB_ENV
       - id: deploy
-        uses: ./.github/actions/gitops-deploy-via-script.yaml
+        uses: ./.github/actions/gitops-deploy-via-script
         with:
           team: ims
           component: hedin-ui
