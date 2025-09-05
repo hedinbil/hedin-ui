@@ -59,6 +59,8 @@ jobs:
   deploy_to_dev:
     name: 'Deploy to dev'
     runs-on: ubuntu-latest
+    needs: docker_build_push_acr
+    environment: dev
     defaults:
       run:
         shell: bash
