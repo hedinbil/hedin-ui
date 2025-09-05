@@ -1,0 +1,63 @@
+name: 'Generate image name and tag'
+description: 'Gets the image name and tag according to Hedin naming convention'
+inputs:
+  container-registry:
+    description: 'Url to container registry'
+    required: true
+    default: 'hedinit.azurecr.io'
+  team:
+    description: 'Team name'
+    required: true
+  component:
+    description: 'Name of the component'
+    required: true
+outputs:
+  tag:
+    description: "Image tag"
+    value: ${{ steps.generate-tag.outputs.tag }}
+  full-image-name:
+    description: "Full image name"
+    value: ${{ steps.generate-full-name.outputs.full-image-name }}
+runs:
+  using: "composite"
+  steps:
+    # This step uses the short-sha action to get a shortened SHA of the current commit.
+    # For example, if the SHA is 'abc123def456ghi789', it might output 'abc123d'.
+    - uses: benjlevesque/short-sha@v3.0
+      id: short-sha
+      with:
+        length: 7
+
+    # This step extracts the reference name from the GITHUB_REF environment variable and stores it in the REF_NAME environment variable.
+    # For example, if GITHUB_REF is 'refs/heads/main', REF_NAME will be 'main'.
+    - name: Extract reference name
+      run: echo "REF_NAME=$(echo ${GITHUB_REF#refs/*/} | sed 's|\([0-9]*\)/merge|pr\1|')" >> $GITHUB_ENV
+      shell: bash
+
+    # This step generates a tag by combining the reference name and the short SHA, and stores it in the output variable 'tag'.
+    # For example, if REF_NAME is 'main' and the short SHA is 'abc123d', the tag will be 'main-abc123d'.
+    - id: generate-tag
+      run: |
+        echo "tag=$(echo $REF_NAME-$SHA)"
+        echo "tag=$(echo $REF_NAME-$SHA)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # This step generates the full name of the Docker image by combining the container registry, team, component, and tag.
+    # For example, if the container registry is 'docker.io', the team is 'myteam', the component is 'mycomponent', and the tag is 'main-abc123d',
+    # the full image name will be 'docker.io/myteam/mycomponent:main-abc123d'.
+    - id: generate-full-name
+      run: |
+        URL=$(echo ${{ inputs.container-registry }}/${{ inputs.team }}/${{ inputs.component }}:${{ steps.generate-tag.outputs.tag }})
+        echo "full-image-name=$(echo $URL)"
+        echo "full-image-name=$(echo $URL)" >> $GITHUB_OUTPUT
+      shell: bash
+
+    # This step generates the name of the Docker image by combining the container registry, team, and component.
+    # For example, if the container registry is 'docker.io', the team is 'myteam', and the component is 'mycomponent',
+    # the image name will be 'docker.io/myteam/mycomponent'.
+    - id: generate-name
+      run: |
+        URL=$(echo ${{ inputs.container-registry }}/${{ inputs.team }}/${{ inputs.component }})
+        echo "image-name=$(echo $URL)"
+        echo "image-name=$(echo $URL)" >> $GITHUB_OUTPUT
+      shell: bash

@@ -67,16 +67,14 @@ jobs:
     needs: docker_build_push_acr
     steps:
       - id: generate-tag
-        uses: ./.github/actions/gitops-deploy-via-script.yaml
+        uses: ./.github/actions/generate-tag.yaml
         with:
           team: ims
           component: hedin-ui
-      - name: Install ArgoCD cli
-        uses: hedinbil/hedin-github-actions/argocd-install@main
       - name: Construct commit URL
         run: echo "COMMIT_URL=https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" >> $GITHUB_ENV
       - id: deploy
-        uses: hedinbil/hedin-github-actions/gitops-deploy-via-script@main
+        uses: ./.github/actions/gitops-deploy-via-script.yaml
         with:
           team: ims
           component: hedin-ui
