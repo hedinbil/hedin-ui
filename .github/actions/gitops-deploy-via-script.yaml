@@ -1,0 +1,133 @@
+# This GitHub Action updates the Application State repository with a new image tag.
+# It takes as input the team name, component name, image tag, full image name, environment, git user email, git user name, ArgoCD application name, ArgoCD token, PAT token, GitHub actor, and GitHub commit URL.
+# The action checks out the repository, validates the inputs, checks if Argo CD CLI is installed, and updates the application.yaml or kustomization.yaml file with the new image tag.
+# It then commits and pushes the changes to the repository, and syncs the ArgoCD application.
+
+name: 'Update Applications State'
+description: 'Update Application State repo with new image tag'
+inputs:
+  team:
+    description: 'Team name'
+    required: true
+  component:
+    description: 'Name of the component'
+    required: true
+  image-tag:
+    description: 'Image tag'
+    required: true
+  full-image-name:
+    description: 'Full image name'
+    required: true
+  environment:
+    description: 'Environment'
+    required: true
+  git-user-email:
+    description: 'Git user email'
+    required: true
+  git-user-name:
+    description: 'Git user name'
+    required: true
+  # argocd-application-name:
+  #   description: 'ArgoCD application name'
+  #   required: true
+  # argocd-token:
+  #   description: 'ArgoCD token'
+  #   required: true
+  pat-token:
+    description: 'PAT token'
+    required: true
+  github-actor:
+    description: 'GitHub actor'
+    required: true
+  github-commit-url:
+    description: 'GitHub commit url'
+    required: true
+  # skip-sync:
+  #   description: 'Skip the sync step'
+  #   required: false
+  #   default: 'false'
+runs:
+  using: "composite"
+  steps:
+  # This step checks out the repository 'hedinbil/hedin-applications-state' into a directory named 'hedin-applications-state'.
+  - name: Checkout
+    uses: actions/checkout@v4
+    with:
+      path: hedin-applications-state
+      repository: hedinbil/hedin-applications-state
+      token: ${{ inputs.pat-token }}
+
+  # This step sets the global git user email and name to the inputs provided.
+  - run: |
+      git config --global user.email "${{ inputs.git-user-email }}"
+      git config --global user.name "${{ inputs.git-user-name }}"
+    shell: bash
+
+  # This step checks if Argo CD CLI is installed on the runner. If not, it throws an error.
+  # - name: Validate Argo CD CLI installation
+  #   run: |
+  #     if ! command -v argocd &> /dev/null; then
+  #       echo "::error::Argo CD CLI is not installed on this runner."
+  #       exit 1
+  #     else
+  #       echo "Argo CD CLI is installed, proceeding..."
+  #     fi
+  #   shell: bash
+
+  - name: Update versions.json via script
+    run: |
+      export VERSION="${{ inputs.image-tag }}"
+      cd hedin-applications-state
+      git pull
+      
+      echo "Executing update-image-${{ inputs.team }}.sh script with parameters ${{ inputs.component }}-${{ inputs.environment}} ${{ inputs.image-tag }}..."
+
+      ## temporary fix since integrations team has branch as input to their script
+      EXTRA_ARG=""
+      if [ "${{ inputs.team }}" = "integrations" ]; then
+        EXTRA_ARG="main"
+      fi
+
+      ./scripts/update-image-${{ inputs.team }}.sh ${{ inputs.component }}-${{ inputs.environment}} ${{ inputs.image-tag }} $EXTRA_ARG
+      git status
+
+      if git diff --exit-code; then
+        echo "No changes to commit"
+      else
+        git add applications/${{ inputs.team }}/versions.json
+
+        EMOJI=":police_car:"
+
+        git commit -m "$EMOJI Updated ${{ inputs.argocd-application-name }} with new image tag ${{ inputs.image-tag }}" -m "Updated image to ${{ inputs.full-image-name }} by automated GitHub Action in ${{ inputs.environment }} environment for ${{ inputs.component }} repo. Triggered by ${{ github.actor }}. For more information - ${{ inputs.github-commit-url }}"
+
+        attempt=1
+        max_attempts=3
+        while [ $attempt -le $max_attempts ]; do
+          git pull --rebase
+          if git push; then
+            echo "Push succeeded on attempt $attempt"
+            break
+          else
+            echo "Push attempt $attempt failed, retrying..."
+            attempt=$((attempt + 1))
+            sleep 5 # wait for a few seconds before retrying
+          fi
+        done
+        
+        if [ $attempt -gt $max_attempts ]; then
+          echo "Push failed after $max_attempts attempts."
+          exit 1
+        fi
+      fi
+    shell: bash
+
+  # This step syncs the specified ArgoCD application and waits for it to reach a healthy state.
+  # - name: sync and wait for successfull start
+  #   if: ${{ inputs.skip-sync != 'true' }}
+  #   shell: bash
+  #   run: |
+  #     argocd app sync ${{ inputs.argocd-application-name }} --grpc-web --retry-limit 3 --retry-backoff-duration 10s
+  #     argocd app wait ${{ inputs.argocd-application-name }} --grpc-web --timeout 300
+  #   env:
+  #     ARGOCD_SERVER: argocd.hedinit.io
+  #     ARGOCD_AUTH_TOKEN: ${{ inputs.argocd-token }}

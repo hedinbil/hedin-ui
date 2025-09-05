@@ -59,35 +59,32 @@ jobs:
           
   deploy_to_dev:
     name: 'Deploy to dev'
-    runs-on: ubuntu-latest
+    runs-on: [linux-runner]
     defaults:
       run:
         shell: bash
     environment: dev
     needs: docker_build_push_acr
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - id: generate-tag
+        uses: ./.github/actions/gitops-deploy-via-script.yaml
         with:
-          path: hedin-applications-state
-          repository: hedinbil/hedin-applications-state
-          token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
-      - run: git config --global user.email "github-actions@hedinit.com"
-      - run: git config --global user.name "GitHub Actions - ims-hedin-ui-demo"
-      - uses: benjlevesque/short-sha@v2.2
-        id: short-sha
+          team: ims
+          component: hedin-ui
+      - name: Install ArgoCD cli
+        uses: hedinbil/hedin-github-actions/argocd-install@main
+      - name: Construct commit URL
+        run: echo "COMMIT_URL=https://github.com/$GITHUB_REPOSITORY/commit/$GITHUB_SHA" >> $GITHUB_ENV
+      - id: deploy
+        uses: hedinbil/hedin-github-actions/gitops-deploy-via-script@main
         with:
-          length: 7
-      - run: echo $SHA
-        env:
-          SHA: ${{ steps.short-sha.outputs.sha }}
-
-      - name: Update Image Tag in Application State
-        run: |
-          export VERSION="${{ env.SHA }}"
-
-          cd hedin-applications-state
-          bash scripts/update-image-ims.sh hedinUiDev $VERSION
-          git add applications/ims/versions.json
-          git commit -m "DEV - updating image to $NEW_IMAGE"
-          git push
+          team: ims
+          component: hedin-ui
+          environment: 'dev'
+          full-image-name: ${{ steps.generate-tag.outputs.full-image-name }}
+          image-tag: ${{ steps.generate-tag.outputs.tag }}
+          git-user-email: 'automation@hedinit.io'
+          git-user-name: 'GitHub Actions - Hedin Ui Demo'
+          pat-token: ${{ secrets.HEDIN_APPLICATIONS_STATE_PAT }}
+          github-actor: ${{ github.actor }}
+          github-commit-url: ${{ env.COMMIT_URL }}
