@@ -1,6 +1,21 @@
 # Installation Guide
 
-This library is wrapping MudBlazor. Original installation guides can be found **[here](https://mudblazor.com/getting-started/installation)**. However, using Hedin.UI this guide needs to be followed.
+Hedin.UI is built on top of [MudBlazor](https://mudblazor.com/), but **you do not need to install MudBlazor separately**.  
+By installing **Hedin.UI**, you automatically get MudBlazor included and ready to use.  
+
+There are two ways to get started:
+
+## Option 1 – Use the Template Project (Recommended)
+The repository contains a ready-made template project that already has Hedin.UI configured.  
+You can copy this project into your own solution and start coding right away:
+
+➡️ [Hedin.UI.Template.Server](https://github.com/hedinbil/hedin-ui/tree/main/src/Hedin.UI.Template.Server)
+
+With this template you don’t need to follow the manual steps below.
+
+## Option 2 – Manual Installation
+If you prefer to add Hedin.UI manually to an existing Blazor project, follow this step-by-step guide.
+
 
 ## Install the package
 
