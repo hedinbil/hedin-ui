@@ -10,7 +10,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hedin.UI" Version="1.15.23" />
+    <PackageReference Include="Hedin.UI" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="wwwroot\HedinUI.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\HedinUI-favicon.svg">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>
