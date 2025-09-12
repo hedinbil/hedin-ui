@@ -1,4 +1,4 @@
-﻿using Azure.AI.OpenAI;
+using Azure.AI.OpenAI;
 using Azure;
 using Azure.Identity;
 using Azure.Search.Documents;
@@ -70,6 +70,12 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddSingleton<MarkdownReader>();
         builder.Services.AddTransient<HUILocalizer>();
         builder.Services.AddSingleton<AiMessageStateService>();
+        
+        // SEO Services
+        builder.Services.AddScoped<Hedin.UI.Demo.Services.SEO.ISeoService, Hedin.UI.Demo.Services.SEO.SeoService>();
+        builder.Services.AddScoped<Hedin.UI.Demo.Services.SEO.ISitemapService, Hedin.UI.Demo.Services.SEO.SitemapService>();
+        builder.Services.AddScoped<Hedin.UI.Demo.Services.SEO.SeoHeadContentService>();
+        
         return builder;
     }
     public static WebApplicationBuilder AddUIConfiguration(this WebApplicationBuilder builder)
@@ -81,6 +87,10 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddRazorPages();
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
+        
+        // Add controllers for SEO endpoints
+        builder.Services.AddControllers();
+        
         return builder;
     }
 

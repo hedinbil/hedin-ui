@@ -1,0 +1,145 @@
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
+@attribute [Route(PageRoute.Components)]
+@attribute [HUIPageSettings("Components", 2)]
+@inject ISeoService SeoService
+
+<HUIPage Header="Components" PageDescription="Explore all Hedin UI components with live examples and documentation">
+    <MudContainer MaxWidth="MaxWidth.ExtraLarge">
+        <MudText Typo="Typo.h4" Class="mb-4">Hedin UI Component Library</MudText>
+        <MudText Typo="Typo.body1" Class="mb-6">
+            Browse our comprehensive collection of Blazor components built on top of MudBlazor. 
+            Each component includes live examples, API documentation, and code samples to help you build better applications faster.
+        </MudText>
+
+        <MudGrid Spacing="4">
+            @foreach (var category in _componentCategories)
+            {
+                <MudItem xs="12" sm="6" md="4">
+                    <MudCard Hover="true" Elevation="2" Style="height: 100%">
+                        <MudCardContent>
+                            <div class="d-flex align-center mb-3">
+                                <MudIcon Icon="@category.Icon" Size="Size.Large" Color="Color.Primary" Class="mr-3" />
+                                <MudText Typo="Typo.h6">@category.Name</MudText>
+                            </div>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-3">
+                                @category.Description
+                            </MudText>
+                            <MudChipSet>
+                                @foreach (var component in category.Components.Take(3))
+                                {
+                                    <MudChip Size="Size.Small" Variant="Variant.Outlined">@component.Name</MudChip>
+                                }
+                                @if (category.Components.Count > 3)
+                                {
+                                    <MudChip Size="Size.Small" Variant="Variant.Text">+@(category.Components.Count - 3) more</MudChip>
+                                }
+                            </MudChipSet>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="@category.Components.First().Route" Variant="Variant.Text" Color="Color.Primary">
+                                Explore Components
+                            </MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+
+        <MudText Typo="Typo.h5" Class="mt-8 mb-4">Popular Components</MudText>
+        <MudGrid Spacing="3">
+            @foreach (var component in _popularComponents)
+            {
+                <MudItem xs="12" sm="6" md="3">
+                    <MudCard Hover="true" Elevation="1">
+                        <MudCardContent>
+                            <MudText Typo="Typo.h6" Class="mb-2">@component.Name</MudText>
+                            <MudText Typo="Typo.body2" Color="Color.Secondary">@component.ShortDescription</MudText>
+                        </MudCardContent>
+                        <MudCardActions>
+                            <MudButton Href="@component.Route" Variant="Variant.Text" Size="Size.Small">View</MudButton>
+                        </MudCardActions>
+                    </MudCard>
+                </MudItem>
+            }
+        </MudGrid>
+    </MudContainer>
+</HUIPage>
+
+@code {
+    protected override void OnInitialized()
+    {
+        // Set SEO data for Components overview page
+        SeoService.SetPageSeoData(new SeoPageData
+        {
+            Title = "Hedin UI Components - Complete Blazor Component Library Documentation",
+            Description = "Explore the complete Hedin UI component library with interactive examples, API documentation, and code samples. Built on MudBlazor for professional Blazor applications.",
+            Keywords = "Hedin UI Components, Blazor Components, UI Library, MudBlazor Components, .NET Components, Web Components, Component Documentation",
+            Author = "Hedin IT",
+            Type = "website",
+            Priority = 0.9,
+            ChangeFrequency = "weekly",
+            OpenGraph = new OpenGraphData
+            {
+                Title = "Hedin UI Components - Complete Blazor Component Library",
+                Description = "Explore interactive examples and documentation for all Hedin UI components built for professional Blazor development.",
+                Type = "website"
+            },
+            TwitterCard = new TwitterCardData
+            {
+                Title = "Hedin UI Components Library",
+                Description = "Complete Blazor component library with interactive examples and comprehensive documentation.",
+                Card = "summary_large_image"
+            }
+        });
+    }
+
+    private record ComponentCategory(string Name, string Description, string Icon, List<Component> Components);
+    private record Component(string Name, string ShortDescription, string Route);
+
+    private List<ComponentCategory> _componentCategories = new()
+    {
+        new("Layout & Navigation", "Components for page structure and navigation", Icons.Material.Filled.ViewQuilt, new List<Component>
+        {
+            new("Page", "Page layout with header and structure", PageRoute.Page),
+            new("AppBar", "Application navigation bar", PageRoute.AppBar),
+            new("NavMenu", "Navigation menu components", PageRoute.NavMenu),
+            new("Breadcrumbs", "Navigation breadcrumbs", PageRoute.Breadcrumbs)
+        }),
+        new("Data Display", "Components for showing and organizing data", Icons.Material.Filled.TableChart, new List<Component>
+        {
+            new("DataGrid", "Advanced data table with features", PageRoute.DataGrid),
+            new("Module", "Modular content organization", PageRoute.ModulePage),
+            new("Charts", "Data visualization charts", PageRoute.Charts)
+        }),
+        new("Forms & Input", "Interactive form components", Icons.Material.Filled.Edit, new List<Component>
+        {
+            new("InputButton", "Button with input functionality", PageRoute.InputButton),
+            new("InputRow", "Input field with label row", PageRoute.InputRow),
+            new("MultiSelect", "Multiple selection input", PageRoute.MultiSelect)
+        }),
+        new("Feedback & Communication", "User feedback and messaging", Icons.Material.Filled.Feedback, new List<Component>
+        {
+            new("Dialog", "Modal dialogs and popups", PageRoute.Dialog),
+            new("InformationMessage", "Alert and notification messages", PageRoute.InformationMessage),
+            new("ChatPanel", "Chat and messaging interface", PageRoute.ChatPanel)
+        }),
+        new("UI Elements", "Basic UI building blocks", Icons.Material.Filled.Widgets, new List<Component>
+        {
+            new("Button", "Action buttons with variants", PageRoute.Button),
+            new("IconButton", "Icon-based buttons", PageRoute.IconButton),
+            new("StatusChip", "Status and tag chips", PageRoute.StatusChip),
+            new("Tooltip", "Contextual help tooltips", PageRoute.Tooltip)
+        })
+    };
+
+    private List<Component> _popularComponents = new()
+    {
+        new("DataGrid", "Advanced table component", PageRoute.DataGrid),
+        new("Page", "Page layout structure", PageRoute.Page),
+        new("Dialog", "Modal dialog component", PageRoute.Dialog),
+        new("Button", "Interactive button component", PageRoute.Button),
+        new("Charts", "Data visualization", PageRoute.Charts),
+        new("NavMenu", "Navigation menu", PageRoute.NavMenu)
+    };
+}

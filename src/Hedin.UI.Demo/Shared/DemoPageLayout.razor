@@ -1,10 +1,12 @@
-﻿@using Brism
+@using Brism
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
 @typeparam TItem
 @inject IJSRuntime JSRuntime
 @inject CodeBlockService cbService
+@inject ISeoService SeoService
 
 <CascadingValue TValue="Type" Value="HUIComponent" Name="HUIComponent">
-    <PageTitle>Hedin UI - @_title</PageTitle>
     <MudContainer MaxWidth="MaxWidth">
         @if (!string.IsNullOrEmpty(OriginalDocsUrl))
         {
@@ -51,5 +53,83 @@
     {
         _title = typeof(TItem).Name;
         _codeBlock = await cbService.GetCodeExample(_title);
+        
+        // Set SEO data for this component demo page
+        var componentDescription = GetComponentDescription(_title);
+        var keywords = GetComponentKeywords(_title);
+        
+        SeoService.SetPageSeoData(new SeoPageData
+        {
+            Title = $"Hedin UI - {_title} Component",
+            Description = componentDescription,
+            Keywords = keywords,
+            Type = "website",
+            OpenGraph = new OpenGraphData
+            {
+                Title = $"Hedin UI - {_title} Component",
+                Description = componentDescription,
+                Type = "website"
+            },
+            TwitterCard = new TwitterCardData
+            {
+                Title = $"Hedin UI - {_title} Component",
+                Description = componentDescription,
+                Card = "summary_large_image"
+            }
+        });
+    }
+
+    private string GetComponentDescription(string componentName)
+    {
+        return componentName.ToLowerInvariant() switch
+        {
+            "button" => "Modern button component with multiple variants, sizes, and interactive states for Blazor applications.",
+            "iconbutton" => "Icon-based button component with tooltips and hover effects for clean, minimal UI interactions.",
+            "datagrid" => "Advanced data grid component with sorting, filtering, and pagination for displaying large datasets.",
+            "page" => "Page layout component providing consistent structure and navigation for Blazor applications.",
+            "dialog" => "Modal dialog component with customizable content and actions for user interactions.",
+            "frame" => "Container frame component for organizing content with borders and structured layouts.",
+            "maps" => "Interactive map component with markers and overlays for location-based applications.",
+            "charts" => "Chart components for data visualization including bar charts, line charts, and more.",
+            "navmenu" => "Navigation menu components for sidebar and horizontal navigation patterns.",
+            "tooltip" => "Tooltip component providing contextual information on hover or focus events.",
+            "informationmessage" => "Information message component for displaying alerts, notifications, and status updates.",
+            "module" => "Module components for organizing related functionality into cohesive UI sections.",
+            "chatpanel" => "Chat panel component for real-time messaging and conversation interfaces.",
+            "attachmentcard" => "Attachment card component for displaying file attachments and downloads.",
+            "breadcrumbs" => "Breadcrumb navigation component for showing page hierarchy and navigation paths.",
+            "statuschip" => "Status chip component for displaying states, tags, and categorical information.",
+            "skeletonlist" => "Skeleton loading component providing placeholder content during data loading.",
+            _ => $"Explore the {componentName} component from Hedin UI - a modern Blazor component library with comprehensive functionality and styling."
+        };
+    }
+
+    private string GetComponentKeywords(string componentName)
+    {
+        var baseKeywords = "Blazor, UI Components, .NET, C#, Web Development, Hedin UI, MudBlazor";
+        
+        var specificKeywords = componentName.ToLowerInvariant() switch
+        {
+            "button" => "Button, Click Events, UI Interactions",
+            "iconbutton" => "Icon Button, Material Icons, Tooltips",
+            "datagrid" => "Data Grid, Table, Sorting, Filtering, Pagination",
+            "page" => "Page Layout, Navigation, Routing",
+            "dialog" => "Modal Dialog, Popup, User Input",
+            "frame" => "Frame, Container, Layout",
+            "maps" => "Maps, Geolocation, Interactive Maps",
+            "charts" => "Charts, Data Visualization, Graphs",
+            "navmenu" => "Navigation, Menu, Sidebar",
+            "tooltip" => "Tooltip, Hover Effects, Help Text",
+            "informationmessage" => "Alerts, Notifications, Messages",
+            "module" => "Module, Content Organization, UI Sections",
+            "chatpanel" => "Chat, Messaging, Real-time Communication",
+            "attachmentcard" => "File Attachments, Downloads, File Management",
+            "breadcrumbs" => "Breadcrumbs, Navigation, Page Hierarchy",
+            "statuschip" => "Status, Tags, Labels, State Display",
+            "skeletonlist" => "Skeleton Loading, Placeholders, Loading States",
+            _ => "Component Documentation"
+        };
+        
+        return $"{baseKeywords}, {specificKeywords}";
     }
 }

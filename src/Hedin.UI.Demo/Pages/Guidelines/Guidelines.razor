@@ -1,8 +1,11 @@
-﻿@using Brism
+@using Brism
 @using System.Globalization
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
 @attribute [Route(PageRoute.Guidelines)]
 @attribute [HUIPageSettings("Guidelines & Tools", 3)]
 @inject NavigationManager NavigationManager
+@inject ISeoService SeoService
 
 
 <HUIPage Header="Guidelines" PageDescription="These are rules and guidelines to follow when using Hedin.UI and MudBlazor">
@@ -230,6 +233,33 @@ public class PageModel
 </HUIPage>
 
 @code {
+    protected override void OnInitialized()
+    {
+        // Set SEO data for Guidelines page
+        SeoService.SetPageSeoData(new SeoPageData
+        {
+            Title = "Hedin UI Guidelines & Best Practices - Theming, Routing, and Development Tools",
+            Description = "Learn Hedin UI best practices, development guidelines, theming patterns, routing conventions, and component usage recommendations for building professional Blazor applications.",
+            Keywords = "Hedin UI Guidelines, Blazor Best Practices, UI Development, Theming Guide, Component Guidelines, .NET Development Standards",
+            Author = "Hedin IT",
+            Type = "article",
+            Priority = 0.7,
+            ChangeFrequency = "monthly",
+            OpenGraph = new OpenGraphData
+            {
+                Title = "Hedin UI Guidelines & Best Practices",
+                Description = "Complete guide to Hedin UI development practices, theming patterns, and component usage recommendations.",
+                Type = "article"
+            },
+            TwitterCard = new TwitterCardData
+            {
+                Title = "Hedin UI Guidelines & Best Practices",
+                Description = "Learn best practices for building professional Blazor applications with Hedin UI components and theming.",
+                Card = "summary_large_image"
+            }
+        });
+    }
+
     private void HandleOnStateTestClick()
     {
         NavigationManager.NavigateTo(PageRoute.DemoStateManagement);

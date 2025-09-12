@@ -41,6 +41,9 @@ app.UseAntiforgery();
 app.UseAuthentication();
 app.UseAuthorization();
 
+// Map controllers for SEO endpoints
+app.MapControllers();
+
 app.MapMcp(pattern: "mcp").AllowAnonymous();
 
 app.Run();

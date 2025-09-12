@@ -1,0 +1,44 @@
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
+@inject ISeoService SeoService
+
+@code {
+    [Parameter] public string? Title { get; set; }
+    [Parameter] public string? Description { get; set; }
+    [Parameter] public string? Keywords { get; set; }
+    [Parameter] public string? ImageUrl { get; set; }
+    [Parameter] public string? Type { get; set; } = "website";
+    [Parameter] public double Priority { get; set; } = 0.5;
+    [Parameter] public string? ChangeFrequency { get; set; } = "weekly";
+
+    protected override void OnInitialized()
+    {
+        if (!string.IsNullOrEmpty(Title) || !string.IsNullOrEmpty(Description))
+        {
+            SeoService.SetPageSeoData(new SeoPageData
+            {
+                Title = Title,
+                Description = Description,
+                Keywords = Keywords,
+                ImageUrl = ImageUrl,
+                Type = Type,
+                Priority = Priority,
+                ChangeFrequency = ChangeFrequency,
+                OpenGraph = new OpenGraphData
+                {
+                    Title = Title,
+                    Description = Description,
+                    Type = Type,
+                    Image = ImageUrl
+                },
+                TwitterCard = new TwitterCardData
+                {
+                    Title = Title,
+                    Description = Description,
+                    Image = ImageUrl,
+                    Card = "summary_large_image"
+                }
+            });
+        }
+    }
+}

@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Disallow specific paths that shouldn't be indexed
+Disallow: /api/
+Disallow: /_framework/
+Disallow: /_content/
+Disallow: /css/
+Disallow: /js/
+Disallow: /lib/
+
+Sitemap: https://hedin-ui.hedinit.io/sitemap.xml
+
+# Crawl-delay: 1
+
+# Hedin UI - Modern Blazor Component Library
+# https://hedin-ui.hedinit.io/

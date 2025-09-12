@@ -1,0 +1,49 @@
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
+@inject ISeoService SeoService
+@implements IDisposable
+
+@* Dynamic SEO meta tags will be rendered here *@
+@if (_initialized && !string.IsNullOrEmpty(_metaTagsHtml))
+{
+    @((MarkupString)_metaTagsHtml)
+}
+
+@code {
+    private string _metaTagsHtml = string.Empty;
+    private bool _initialized = false;
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to SEO data changes
+        SeoService.SeoDataChanged += OnSeoDataChanged;
+        UpdateMetaTags();
+        _initialized = true;
+    }
+
+    private void OnSeoDataChanged()
+    {
+        UpdateMetaTags();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdateMetaTags()
+    {
+        try
+        {
+            _metaTagsHtml = SeoService.GenerateMetaTagsHtml();
+        }
+        catch (Exception)
+        {
+            _metaTagsHtml = string.Empty;
+        }
+    }
+
+    public void Dispose()
+    {
+        if (SeoService != null)
+        {
+            SeoService.SeoDataChanged -= OnSeoDataChanged;
+        }
+    }
+}

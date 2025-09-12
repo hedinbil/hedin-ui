@@ -1,0 +1,35 @@
+@using Hedin.UI.Demo.Services.SEO
+@inject ISeoService SeoService
+@implements IDisposable
+
+<PageTitle>@_currentTitle</PageTitle>
+
+@code {
+    private string _currentTitle = "Hedin UI";
+
+    protected override void OnInitialized()
+    {
+        // Subscribe to SEO data changes
+        SeoService.SeoDataChanged += OnSeoDataChanged;
+        UpdateTitle();
+    }
+
+    private void OnSeoDataChanged()
+    {
+        UpdateTitle();
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void UpdateTitle()
+    {
+        _currentTitle = SeoService.GetCurrentTitle();
+    }
+
+    public void Dispose()
+    {
+        if (SeoService != null)
+        {
+            SeoService.SeoDataChanged -= OnSeoDataChanged;
+        }
+    }
+}

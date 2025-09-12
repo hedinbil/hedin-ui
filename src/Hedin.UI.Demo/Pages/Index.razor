@@ -1,5 +1,8 @@
-﻿@layout StartLayout
+@layout StartLayout
 @attribute [Route("/")]
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
+@inject ISeoService SeoService
 
 <div>
 
@@ -137,6 +140,34 @@
     // public record Stat(string Label, string Value, string Icon);
     public record ExternalSource(string Title, string Icon, string Body, string UrlName, string Url);
     private string MyLibVersion = typeof(Hedin.UI.HUIAppBar).Assembly.GetName().Version?.ToString() ?? "1.0.0";
+    
+    protected override void OnInitialized()
+    {
+        // Set SEO data for home page - highest priority page
+        SeoService.SetPageSeoData(new SeoPageData
+        {
+            Title = "Hedin UI - Modern Blazor Component Library for .NET Developers",
+            Description = "Build Blazor applications faster with Hedin UI - an open source extension of MudBlazor. Get enterprise-grade components, flexible theming, and established UI patterns for professional web development.",
+            Keywords = "Blazor, UI Components, .NET, C#, Web Development, Component Library, MudBlazor, Enterprise UI, Open Source, Hedin IT",
+            Author = "Hedin IT",
+            Type = "website",
+            Priority = 1.0,
+            ChangeFrequency = "daily",
+            OpenGraph = new OpenGraphData
+            {
+                Title = "Hedin UI - Modern Blazor Component Library",
+                Description = "Build Blazor applications faster with enterprise-grade components, flexible theming, and established UI patterns.",
+                Type = "website",
+                SiteName = "Hedin UI"
+            },
+            TwitterCard = new TwitterCardData
+            {
+                Title = "Hedin UI - Modern Blazor Component Library",
+                Description = "Build Blazor applications faster with enterprise-grade components and flexible theming for professional web development.",
+                Card = "summary_large_image"
+            }
+        });
+    }
   //   private Stat[] stats = new[]
   //   {
   //   new Stat("Downloads",    "15.9 M",     Icons.Material.Filled.CloudDownload),

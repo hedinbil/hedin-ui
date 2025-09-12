@@ -1,4 +1,4 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @inject IHUIPageHelper HUIPageHelper
 @inject IOptions<TitleService> TitleService
 @inject AiMessageStateService MessageService
@@ -7,7 +7,9 @@
 <MudPopoverProvider />
 <MudDialogProvider CloseOnEscapeKey="false" BackdropClick="true" FullWidth="true" CloseButton="false" />
 <MudSnackbarProvider />
-<PageTitle>@TitleService.Value.AppTitle</PageTitle>
+
+@* Dynamic SEO Page Title *@
+<Hedin.UI.Demo.Components.SEO.SeoPageTitle />
 
 <MudLayout>
     <HUIAppBar MenuButtonVisibilityChanged="v => _drawerLeftOpen = v" MenuButtonClicked="DrawerToggle"

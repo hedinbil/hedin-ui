@@ -1,4 +1,4 @@
-﻿@inject IHostEnvironment Env
+@inject IHostEnvironment Env
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,7 +23,10 @@
 
     <!-- Choose ONE theme from below (we're using synthwave84 as an example) -->
     <link href="@Assets["_content/Brism/prism-one-dark.css"]" rel="stylesheet" />
+    
+    @* SEO Meta Tags *@
     <HeadOutlet @rendermode="InteractiveServer" />
+    <component type="typeof(Hedin.UI.Demo.Components.SEO.SeoHead)" render-mode="InteractiveServer" />
 
 </head>
 <body>

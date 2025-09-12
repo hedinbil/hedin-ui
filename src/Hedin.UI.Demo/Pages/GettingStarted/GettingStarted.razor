@@ -1,8 +1,11 @@
-﻿@using Brism
+@using Brism
+@using Hedin.UI.Demo.Services.SEO
+@using Hedin.UI.Demo.Services.SEO.Models
 @attribute [Route(PageRoute.GettingStarted)]
 @attribute [HUIPageSettings("Getting started", 0)]
 
 @inject MarkdownReader mdReader
+@inject ISeoService SeoService
 
 <HUIPage Header="Getting started" PageDescription="This page does not represent the design of Hedin.UI.">
     <MudContainer MaxWidth="MaxWidth.Large">
@@ -15,4 +18,31 @@
 @code {
     [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
     private CodeBlockTheme cbTheme => !DarkMode ? CodeBlockTheme.AtomOneLight : CodeBlockTheme.AtomOneDark;
+    
+    protected override void OnInitialized()
+    {
+        // Set SEO data for Getting Started page
+        SeoService.SetPageSeoData(new SeoPageData
+        {
+            Title = "Getting Started with Hedin UI - Installation Guide & Quick Start",
+            Description = "Learn how to install and set up Hedin UI in your Blazor project. Complete installation guide, configuration steps, and quick start examples to get you building modern UIs fast.",
+            Keywords = "Hedin UI Installation, Blazor Setup, Getting Started, .NET Components, MudBlazor Extension, UI Library Setup",
+            Author = "Hedin IT",
+            Type = "article",
+            Priority = 0.9,
+            ChangeFrequency = "weekly",
+            OpenGraph = new OpenGraphData
+            {
+                Title = "Getting Started with Hedin UI",
+                Description = "Complete installation guide and setup instructions for Hedin UI - the modern Blazor component library.",
+                Type = "article"
+            },
+            TwitterCard = new TwitterCardData
+            {
+                Title = "Getting Started with Hedin UI",
+                Description = "Learn how to install and set up Hedin UI in your Blazor project with our complete guide.",
+                Card = "summary_large_image"
+            }
+        });
+    }
 }
