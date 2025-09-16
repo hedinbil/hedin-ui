@@ -1,4 +1,4 @@
-﻿using Blazored.LocalStorage;
+using Blazored.LocalStorage;
 using Hedin.UI.Services;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,6 +35,8 @@ namespace Hedin.UI
             services.AddTransient<ITableStateService, TableStateService>();
             services.AddTransient<IHUISettingsService, HUISettingsService>();
             services.AddScoped<IStateService, StateService>();
+            services.AddScoped<ISEOService, SEOService>();
+            services.AddScoped<ISitemapService, SitemapService>();
 
         }
 

@@ -1,4 +1,4 @@
-﻿using MudBlazor;
+using MudBlazor;
 
 namespace Hedin.UI
 {
@@ -8,12 +8,34 @@ namespace Hedin.UI
         public string DisplayName { get; }
         public int Order { get; }
         public string? Icon { get; }
-
+        
+        // SEO properties
+        public string? Title { get; set; }
+        public string? Description { get; set; }
+        public string? Keywords { get; set; }
+        public string? Image { get; set; }
+        
         public HUIPageSettingsAttribute(string displayName, int order = 99999, string? icon = "")
         {
             DisplayName = displayName;
             Order = order;
             Icon = icon;
+        }
+        
+        /// <summary>
+        /// Creates SEO data from this attribute
+        /// </summary>
+        public SEOData? ToSEOData()
+        {
+            if (string.IsNullOrEmpty(Title) && string.IsNullOrEmpty(Description))
+                return null;
+                
+            return Services.SEOData.Create(
+                Title ?? DisplayName,
+                Description ?? $"Learn about the {DisplayName} component in Hedin UI - examples, usage, and API documentation.",
+                Keywords,
+                Image
+            );
         }
     }
 

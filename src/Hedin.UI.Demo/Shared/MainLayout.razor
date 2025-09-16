@@ -1,7 +1,9 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @inject IHUIPageHelper HUIPageHelper
 @inject IOptions<TitleService> TitleService
 @inject AiMessageStateService MessageService
+@inject ISEOService SEOService
+@inject NavigationManager Navigation
 
 <HUIThemeProvider Theme="_currentTheme" />
 <MudPopoverProvider />
@@ -124,6 +126,47 @@
     {
         _menuItems = await HUIPageHelper.GetMenuItems([typeof(App).Assembly]);
         MessageService.OnMessage += async msg => await HandleAiMessage(msg);
+        
+        // Set default SEO for main layout pages
+        SetDefaultSEOForCurrentPage();
+    }
+    
+    private void SetDefaultSEOForCurrentPage()
+    {
+        var currentPath = Navigation.ToBaseRelativePath(Navigation.Uri);
+        
+        var seoData = currentPath.ToLower() switch
+        {
+            "" or "/" => Services.SEOData.Create(
+                "Hedin UI - Blazor Component Library",
+                "A comprehensive Blazor component library built on MudBlazor. Professional UI components for modern web applications with enterprise features.",
+                "Blazor, UI Components, MudBlazor, Web Development, .NET, C#, Component Library, Enterprise, Open Source",
+                "/hedin-ui-social-preview.png"
+            ),
+            "getting-started" => Services.SEOData.Create(
+                "Getting Started - Hedin UI",
+                "Get started with Hedin UI - installation guide, setup instructions, and first steps for using our Blazor component library.",
+                "Hedin UI, Getting Started, Installation, Setup, Blazor Components, Tutorial"
+            ),
+            "components" => Services.SEOData.Create(
+                "Components - Hedin UI",
+                "Browse all available components in Hedin UI. Interactive examples, API documentation, and implementation guides for each component.",
+                "Hedin UI, Components, Blazor Components, UI Library, Examples, Documentation"
+            ),
+            "guidelines" => Services.SEOData.Create(
+                "Design Guidelines - Hedin UI",
+                "Design guidelines and best practices for using Hedin UI components. Learn about our design system and implementation patterns.",
+                "Hedin UI, Design Guidelines, Best Practices, Design System, UI Patterns"
+            ),
+            _ => null
+        };
+        
+        if (seoData != null)
+        {
+            seoData.OGUrl = Navigation.Uri;
+            seoData.Canonical = Navigation.Uri;
+            SEOService.SetPageSEO(seoData);
+        }
     }
 
     void ToggleNotifications()

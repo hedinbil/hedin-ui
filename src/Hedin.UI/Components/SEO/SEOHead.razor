@@ -1,0 +1,125 @@
+@namespace Hedin.UI
+@inject ISEOService SEOService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+@if (_seoData != null)
+{
+    <!-- Basic SEO Meta Tags -->
+    <PageTitle>@_seoData.Title</PageTitle>
+    
+    @if (!string.IsNullOrEmpty(_seoData.Description))
+    {
+        <meta name="description" content="@_seoData.Description" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.Keywords))
+    {
+        <meta name="keywords" content="@_seoData.Keywords" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.Author))
+    {
+        <meta name="author" content="@_seoData.Author" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.Canonical))
+    {
+        <link rel="canonical" href="@_seoData.Canonical" />
+    }
+    
+    <!-- Open Graph Meta Tags -->
+    @if (!string.IsNullOrEmpty(_seoData.OGTitle))
+    {
+        <meta property="og:title" content="@_seoData.OGTitle" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.OGDescription))
+    {
+        <meta property="og:description" content="@_seoData.OGDescription" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.OGImage))
+    {
+        <meta property="og:image" content="@_seoData.OGImage" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.OGUrl))
+    {
+        <meta property="og:url" content="@_seoData.OGUrl" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.OGType))
+    {
+        <meta property="og:type" content="@_seoData.OGType" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.OGSiteName))
+    {
+        <meta property="og:site_name" content="@_seoData.OGSiteName" />
+    }
+    
+    <!-- Twitter Card Meta Tags -->
+    @if (!string.IsNullOrEmpty(_seoData.TwitterCard))
+    {
+        <meta name="twitter:card" content="@_seoData.TwitterCard" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.TwitterSite))
+    {
+        <meta name="twitter:site" content="@_seoData.TwitterSite" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.TwitterCreator))
+    {
+        <meta name="twitter:creator" content="@_seoData.TwitterCreator" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.TwitterTitle))
+    {
+        <meta name="twitter:title" content="@_seoData.TwitterTitle" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.TwitterDescription))
+    {
+        <meta name="twitter:description" content="@_seoData.TwitterDescription" />
+    }
+    
+    @if (!string.IsNullOrEmpty(_seoData.TwitterImage))
+    {
+        <meta name="twitter:image" content="@_seoData.TwitterImage" />
+    }
+    
+    <!-- Additional Meta Tags -->
+    @foreach (var metaTag in _seoData.AdditionalMetaTags)
+    {
+        <meta name="@metaTag.Key" content="@metaTag.Value" />
+    }
+    
+    <!-- Robots and crawling directives -->
+    <meta name="robots" content="index, follow" />
+    <meta name="googlebot" content="index, follow" />
+}
+
+@code {
+    private SEOData? _seoData;
+    
+    protected override void OnInitialized()
+    {
+        _seoData = SEOService.GetPageSEO();
+        SEOService.SEODataChanged += OnSEODataChanged;
+        
+        base.OnInitialized();
+    }
+    
+    private void OnSEODataChanged(SEOData seoData)
+    {
+        _seoData = seoData;
+        InvokeAsync(StateHasChanged);
+    }
+    
+    public void Dispose()
+    {
+        SEOService.SEODataChanged -= OnSEODataChanged;
+    }
+}

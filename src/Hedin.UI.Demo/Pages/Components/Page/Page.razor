@@ -1,5 +1,5 @@
 @attribute [Route(PageRoute.Page)]
-@attribute [HUIPageSettings("Page")]
+@attribute [HUIPageSettings("Page", Description = "A comprehensive page component for Hedin UI with built-in layout, filtering, and data display capabilities. Perfect for creating consistent page layouts in Blazor applications.", Keywords = "Page Component, Blazor Page Layout, Hedin UI Page, Data Display")]
 
 <DemoPageLayout TItem="Page" HUIComponent="typeof(HUIPage)" ChildHUIComponent="new List<Type>{typeof(HUIPageFilter), typeof(HUIPageTable<object>)}" MaxWidth="MaxWidth.ExtraExtraLarge">
     <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Page.Examples.Default)" MaxWidth="MaxWidth.ExtraExtraLarge">

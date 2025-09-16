@@ -1,7 +1,10 @@
-﻿@using Brism
+@using Brism
+@using System.Reflection
 @typeparam TItem
 @inject IJSRuntime JSRuntime
 @inject CodeBlockService cbService
+@inject ISEOService SEOService
+@inject NavigationManager Navigation
 
 <CascadingValue TValue="Type" Value="HUIComponent" Name="HUIComponent">
     <PageTitle>Hedin UI - @_title</PageTitle>
@@ -51,5 +54,36 @@
     {
         _title = typeof(TItem).Name;
         _codeBlock = await cbService.GetCodeExample(_title);
+        
+        // Set SEO data from HUIPageSettingsAttribute if available
+        var pageSettingsAttribute = typeof(TItem).GetCustomAttribute<HUIPageSettingsAttribute>();
+        if (pageSettingsAttribute != null)
+        {
+            var seoData = pageSettingsAttribute.ToSEOData();
+            if (seoData != null)
+            {
+                // Set additional SEO properties for component pages
+                seoData.OGUrl = Navigation.Uri;
+                seoData.Canonical = Navigation.Uri;
+                
+                // Add component-specific keywords
+                if (string.IsNullOrEmpty(seoData.Keywords))
+                {
+                    seoData.Keywords = $"Hedin UI, {_title}, Blazor Component, MudBlazor, UI Component, .NET, C#";
+                }
+                else
+                {
+                    seoData.Keywords = $"{seoData.Keywords}, Hedin UI, Blazor Component, MudBlazor, UI Component";
+                }
+                
+                // Set default description if not provided
+                if (seoData.Description.Contains("Learn about the"))
+                {
+                    seoData.Description = $"Explore the {_title} component in Hedin UI. View live examples, API documentation, and implementation code for this Blazor component built on MudBlazor.";
+                }
+                
+                SEOService.SetPageSEO(seoData);
+            }
+        }
     }
 }
