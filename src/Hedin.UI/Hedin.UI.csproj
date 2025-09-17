@@ -12,7 +12,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
-    <Version>$(VersionPrefix)1.0.0</Version>
+    <Version>$(VersionPrefix)1.0.1</Version>
     <NeutralLanguage>en-001</NeutralLanguage>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/hedinbil/hedin-ui</RepositoryUrl>
@@ -44,7 +44,7 @@
     <PackageReference Include="AspNetCore.SassCompiler" Version="1.86.2" />
     <PackageReference Include="Blazor-ApexCharts" Version="5.1.0" />
     <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="ClosedXML" Version="0.105.0" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="MudBlazor" Version="8.11.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="9.0.4" />
