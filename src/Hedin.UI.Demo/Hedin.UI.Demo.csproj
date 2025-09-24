@@ -6,7 +6,8 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
-        <ContainerRepository>hedinit.azurecr.io/ims/hedin-ui-admin-demo</ContainerRepository>
+        <ContainerRegistry>hedinit.azurecr.io</ContainerRegistry>
+        <ContainerRepository>ims/hedin-ui-admin-demo</ContainerRepository>
         <EnableSdkContainerSupport>true</EnableSdkContainerSupport>
     </PropertyGroup>
 
