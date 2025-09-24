@@ -1,6 +1,17 @@
-﻿@using Brism
+@using Brism
 @attribute [Route(PageRoute.GettingStarted)]
 @attribute [HUIPageSettings("Getting started", 0)]
+@inject SeoService SeoService
+
+@{
+    var seoData = SeoService.GetPageSeoData(
+        "Getting Started",
+        "Learn how to get started with Hedin UI - installation, setup, and your first component. Complete guide to building Blazor applications with Hedin UI.",
+        "getting started, blazor tutorial, hedin ui installation, blazor setup, mudblazor getting started"
+    );
+}
+
+<SeoHead SeoData="@seoData" IncludeStructuredData="true" />
 
 @inject MarkdownReader mdReader
 

@@ -1,0 +1,60 @@
+@inject SeoService SeoService
+@inject IJSRuntime JSRuntime
+
+@if (SeoData != null)
+{
+    <PageTitle>@SeoData.Title</PageTitle>
+    
+    <!-- Basic Meta Tags -->
+    <meta name="description" content="@SeoData.Description" />
+    <meta name="keywords" content="@SeoData.Keywords" />
+    <meta name="author" content="@SeoData.Author" />
+    <meta name="robots" content="@SeoData.Robots" />
+    
+    @if (!string.IsNullOrEmpty(SeoData.CanonicalUrl))
+    {
+        <link rel="canonical" href="@SeoData.CanonicalUrl" />
+    }
+    
+    <!-- Open Graph Meta Tags for Facebook, LinkedIn -->
+    <meta property="og:title" content="@SeoData.Title" />
+    <meta property="og:description" content="@SeoData.Description" />
+    <meta property="og:image" content="@SeoData.Image" />
+    <meta property="og:url" content="@SeoData.Url" />
+    <meta property="og:type" content="@SeoData.Type" />
+    <meta property="og:site_name" content="@SeoData.SiteName" />
+    
+    <!-- Twitter Card Meta Tags -->
+    <meta name="twitter:card" content="@SeoData.TwitterCard" />
+    <meta name="twitter:site" content="@SeoData.TwitterSite" />
+    <meta name="twitter:title" content="@SeoData.Title" />
+    <meta name="twitter:description" content="@SeoData.Description" />
+    <meta name="twitter:image" content="@SeoData.Image" />
+    
+    <!-- Additional Meta Tags for SEO -->
+    <meta name="theme-color" content="#1E7194" />
+    <meta name="msapplication-TileColor" content="#1E7194" />
+    
+    @if (IncludeStructuredData)
+    {
+        <script type="application/ld+json">
+            @((MarkupString)StructuredDataJson)
+        </script>
+    }
+}
+
+@code {
+    [Parameter] public SeoMetadata? SeoData { get; set; }
+    [Parameter] public bool IncludeStructuredData { get; set; } = true;
+    [Parameter] public DateTime? PublishedDate { get; set; }
+    [Parameter] public DateTime? ModifiedDate { get; set; }
+
+    private string StructuredDataJson => SeoData?.Type == "article" 
+        ? SeoService.GenerateArticleStructuredData(SeoData, PublishedDate, ModifiedDate)
+        : SeoService.GenerateStructuredData(SeoData ?? SeoService.GetDefaultSeoData());
+
+    protected override void OnParametersSet()
+    {
+        SeoData ??= SeoService.GetDefaultSeoData();
+    }
+}

@@ -1,5 +1,16 @@
-﻿@layout StartLayout
+@layout StartLayout
 @attribute [Route("/")]
+@inject SeoService SeoService
+
+@{
+    var seoData = SeoService.GetPageSeoData(
+        "Home",
+        "Hedin UI - A comprehensive Blazor component library built on MudBlazor. Get started with modern, enterprise-ready UI components for your web applications.",
+        "blazor components, mudblazor, hedin ui, enterprise ui, web components, .net, aspnet core"
+    );
+}
+
+<SeoHead SeoData="@seoData" IncludeStructuredData="true" />
 
 <div>
 

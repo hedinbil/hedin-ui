@@ -1,7 +1,13 @@
 @attribute [Route(PageRoute.Page)]
 @attribute [HUIPageSettings("Page")]
 
-<DemoPageLayout TItem="Page" HUIComponent="typeof(HUIPage)" ChildHUIComponent="new List<Type>{typeof(HUIPageFilter), typeof(HUIPageTable<object>)}" MaxWidth="MaxWidth.ExtraExtraLarge">
+<DemoPageLayout TItem="Page" 
+                HUIComponent="typeof(HUIPage)" 
+                ChildHUIComponent="new List<Type>{typeof(HUIPageFilter), typeof(HUIPageTable<object>)}" 
+                MaxWidth="MaxWidth.ExtraExtraLarge"
+                SeoTitle="HUI Page Component"
+                SeoDescription="A comprehensive page component for building consistent layouts in Hedin UI. Includes header, filters, tables, and more."
+                SeoKeywords="page component, blazor page, ui layout, hedin ui page, enterprise ui">
     <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.Page.Examples.Default)" MaxWidth="MaxWidth.ExtraExtraLarge">
     </DemoExample>
 </DemoPageLayout>

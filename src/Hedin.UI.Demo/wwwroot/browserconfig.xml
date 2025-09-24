@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<browserconfig>
+    <msapplication>
+        <tile>
+            <square150x150logo src="HedinUI-favicon.svg"/>
+            <TileColor>#1E7194</TileColor>
+        </tile>
+    </msapplication>
+</browserconfig>

@@ -1,10 +1,11 @@
-﻿@using Brism
+@using Brism
 @typeparam TItem
 @inject IJSRuntime JSRuntime
 @inject CodeBlockService cbService
+@inject SeoService SeoService
 
 <CascadingValue TValue="Type" Value="HUIComponent" Name="HUIComponent">
-    <PageTitle>Hedin UI - @_title</PageTitle>
+    <SeoHead SeoData="@_seoData" IncludeStructuredData="true" />
     <MudContainer MaxWidth="MaxWidth">
         @if (!string.IsNullOrEmpty(OriginalDocsUrl))
         {
@@ -43,13 +44,28 @@
     [Parameter] public Type? HUIComponent { get; set; }
     [Parameter] public List<Type>? ChildHUIComponent { get; set; }
     [Parameter] public MaxWidth MaxWidth { get; set; } = MaxWidth.Large;
+    [Parameter] public string? SeoTitle { get; set; }
+    [Parameter] public string? SeoDescription { get; set; }
+    [Parameter] public string? SeoKeywords { get; set; }
 
     private string _title = "Hedin UI demo";
     private string _codeBlock = "";
+    private SeoMetadata _seoData = new();
 
     protected override async Task OnInitializedAsync()
     {
         _title = typeof(TItem).Name;
         _codeBlock = await cbService.GetCodeExample(_title);
+        
+        // Generate SEO data for the component
+        _seoData = SeoService.GetComponentSeoData(
+            componentName: SeoTitle ?? _title,
+            description: SeoDescription ?? $"Learn how to use the {_title} component in Hedin UI. View live examples, API documentation, and implementation guides."
+        );
+        
+        if (!string.IsNullOrEmpty(SeoKeywords))
+        {
+            _seoData.Keywords = SeoKeywords;
+        }
     }
 }

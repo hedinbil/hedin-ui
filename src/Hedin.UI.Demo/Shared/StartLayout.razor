@@ -1,9 +1,10 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @using Hedin.UI.Demo
 @inject IOptions<TitleService> TitleService
+@inject SeoService SeoService
 
-<!-- Set your page title -->
-<PageTitle>Welcome – @TitleService.Value.AppTitle</PageTitle>
+<!-- Global SEO for Start Layout pages -->
+<SeoHead SeoData="@SeoService.GetDefaultSeoData()" IncludeStructuredData="true" />
 
 <HUIThemeProvider Theme="_currentTheme" />
 <MudPopoverProvider />

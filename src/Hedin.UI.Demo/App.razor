@@ -1,4 +1,5 @@
-﻿@inject IHostEnvironment Env
+@inject IHostEnvironment Env
+@inject SeoService SeoService
 
 <!DOCTYPE html>
 <html lang="en">
@@ -8,10 +9,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <base href="/" />
 
-    <link rel="icon" type="image/png" href="HedinUI-favicon.svg" />
+    <!-- Global SEO Meta Tags -->
+    <SeoHead SeoData="@SeoService.GetDefaultSeoData()" IncludeStructuredData="true" />
 
+    <!-- Favicons and Icons -->
+    <link rel="icon" type="image/png" href="HedinUI-favicon.svg" />
+    <link rel="apple-touch-icon" href="HedinUI-favicon.svg" />
+    <meta name="msapplication-config" content="/browserconfig.xml" />
+
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;1,100;1,200;1,300;1,400;1,500;1,600;1,700&display=swap" rel="stylesheet">
 
+    <!-- Stylesheets -->
     <link href="@Assets["_content/MudBlazor/MudBlazor.min.css"]" rel="stylesheet" />
     <link href="@Assets["_content/MudBlazor.Markdown/MudBlazor.Markdown.min.css"]" rel="stylesheet" />
     <link href="@Assets["_content/Hedin.UI/css/hedin-ui.css"]" rel="stylesheet" />
@@ -23,6 +32,11 @@
 
     <!-- Choose ONE theme from below (we're using synthwave84 as an example) -->
     <link href="@Assets["_content/Brism/prism-one-dark.css"]" rel="stylesheet" />
+    
+    <!-- Performance and Security -->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="format-detection" content="telephone=no" />
+    
     <HeadOutlet @rendermode="InteractiveServer" />
 
 </head>

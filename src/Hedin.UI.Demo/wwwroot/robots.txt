@@ -1,0 +1,17 @@
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://hedin-ui.com/sitemap.xml
+
+# Allow crawling of CSS and JS for better page analysis
+Allow: /css/
+Allow: /js/
+Allow: /_content/
+
+# Block crawling of admin or private areas (if any)
+Disallow: /admin/
+Disallow: /private/
+
+# Crawl delay to be respectful (optional)
+Crawl-delay: 1

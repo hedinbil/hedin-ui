@@ -1,4 +1,4 @@
-﻿using Azure.AI.OpenAI;
+using Azure.AI.OpenAI;
 using Azure;
 using Azure.Identity;
 using Azure.Search.Documents;
@@ -70,6 +70,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddSingleton<MarkdownReader>();
         builder.Services.AddTransient<HUILocalizer>();
         builder.Services.AddSingleton<AiMessageStateService>();
+        builder.Services.AddScoped<SeoService>();
         return builder;
     }
     public static WebApplicationBuilder AddUIConfiguration(this WebApplicationBuilder builder)
@@ -79,6 +80,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddUIConfiguration(builder.Configuration);
         builder.Services.AddMudMarkdownServices();
         builder.Services.AddRazorPages();
+        builder.Services.AddControllers(); // Add controllers for API endpoints
         builder.Services.AddRazorComponents()
             .AddInteractiveServerComponents();
         return builder;
