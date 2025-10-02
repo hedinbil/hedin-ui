@@ -1,4 +1,5 @@
-﻿@namespace Hedin.UI
+﻿@using System.Globalization
+@namespace Hedin.UI
 @if (CanBeEdited)
 {
     <div class="@($"d-flex flex-column hui-frame-item hui-input-table-grid {primaryClass}")" style="@($"{width}")">
@@ -111,7 +112,7 @@ else
 
     private string primaryClass => Primary ? "mud-theme-primary mud-primary-text" : "mud-background";
     private string primaryClassText => Primary ? "" : "mud-text-secondary";
-    private string width => !string.IsNullOrEmpty(Width) ? $"grid-column: span {Math.Max(1, Math.Round(int.Parse(Width) / 25.0))};" : "";
+    private string width => !string.IsNullOrEmpty(Width) ? $"grid-column: span {Math.Max(1, Math.Round(double.Parse(Width, CultureInfo.InvariantCulture) / 25.0))};" : "";
     private string primaryClassEditMode => Primary ? "primary-edit-mode" : "";
 
     private bool _isEditing;
