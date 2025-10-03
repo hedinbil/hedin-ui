@@ -2,13 +2,19 @@
 
 namespace Hedin.UI.Services
 {
-
-    internal class HUILocalStorageSetting
+    public enum ThemeMode
     {
-        public List<HUILocalStorageTableSetting> TableSettings { get; set; } = new();
+        Light,
+        Dark
     }
 
-    internal class HUILocalStorageTableSetting
+    public class HUILocalStorageSetting
+    {
+        public List<HUILocalStorageTableSetting> TableSettings { get; set; } = new();
+        public ThemeMode Theme { get; set; } = ThemeMode.Dark;
+    }
+
+    public class HUILocalStorageTableSetting
     {
         public string TableId { get; set; }
         public Dictionary<string, int> ColumnOrder { get; set; }
@@ -16,14 +22,14 @@ namespace Hedin.UI.Services
     }
 
 
-    internal interface ILocalStorageSettingsService
+    public interface ILocalStorageSettingsService
     {
         public Task<HUILocalStorageSetting> GetSettings();
         public Task SetSettings(HUILocalStorageSetting settings);
         public Task ClearSettings();
     }
 
-    internal class LocalStorageSettingsService : ILocalStorageSettingsService
+    public class LocalStorageSettingsService : ILocalStorageSettingsService
     {
         private const string _settingsName = "hui"; 
         private ILocalStorageService _localStorageService;
