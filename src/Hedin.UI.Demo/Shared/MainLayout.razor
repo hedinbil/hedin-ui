@@ -2,6 +2,7 @@
 @inject IHUIPageHelper HUIPageHelper
 @inject IOptions<TitleService> TitleService
 @inject AiMessageStateService MessageService
+@inject ILocalStorageSettingsService LocalStorageSettings
 
 <HUIThemeProvider Theme="_currentTheme" />
 <MudPopoverProvider />
@@ -9,6 +10,8 @@
 <MudSnackbarProvider />
 <PageTitle>@TitleService.Value.AppTitle</PageTitle>
 
+@if (_themeLoaded)
+{
 <MudLayout>
     <HUIAppBar MenuButtonVisibilityChanged="v => _drawerLeftOpen = v" MenuButtonClicked="DrawerToggle"
     LogoBrandSrc="@(_darkMode ? "./hedin-ui_light.svg" : "./hedin-ui_dark.svg")" AppDrawerItems="_appDrawerItems"
@@ -63,6 +66,7 @@
 
     </MudDrawer>
 </MudLayout>
+}
 
 @code {
     Chat? chat;
@@ -70,6 +74,7 @@
 
     private string _mainContainerClass => "px-3" + (_drawerLeftOpen ? " pl-md-0" : "");
     private bool _darkMode = true;
+    private bool _themeLoaded = false;
     private bool _animationOngoing = false;
 
     private MudTheme _currentTheme => _darkMode
@@ -95,7 +100,13 @@
     private RightPane _activeRightPane = RightPane.None;
 
     private void DrawerToggle() => _drawerLeftOpen = !_drawerLeftOpen;
-    private void HandleThemeButtonClick() => _darkMode = !_darkMode;
+    private async Task HandleThemeButtonClick()
+    {
+        _darkMode = !_darkMode;
+        var settings = await LocalStorageSettings.GetSettings();
+        settings.Theme = _darkMode ? ThemeMode.Dark : ThemeMode.Light;
+        await LocalStorageSettings.SetSettings(settings);
+    }
 
     private void HandleMessageReadClick(HUIInformationMessageModel message) => message.MarkAsRead();
     private void HandleMessageArchivedClick(HUIInformationMessageModel message) => message.Archive();
@@ -124,6 +135,18 @@
     {
         _menuItems = await HUIPageHelper.GetMenuItems([typeof(App).Assembly]);
         MessageService.OnMessage += async msg => await HandleAiMessage(msg);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            // Load theme preference from localStorage
+            var settings = await LocalStorageSettings.GetSettings();
+            _darkMode = settings.Theme == ThemeMode.Dark;
+            _themeLoaded = true;
+            StateHasChanged();
+        }
     }
 
     void ToggleNotifications()
