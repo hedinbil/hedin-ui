@@ -1,5 +1,6 @@
 @attribute [Route(PageRoute.MCP)]
 @attribute [HUIPageSettings("MCP", 6)]
+@inject SeoService SeoService
 
 <MudContainer MaxWidth="MaxWidth.Large" Class="px-3">
     <HUIPage Header="MCP" PageDescription="Model Context Protocol - Connect Hedin UI to Cursor">
@@ -63,4 +64,14 @@
 
 @code {
     [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+
+    protected override void OnInitialized()
+    {
+        SeoService.SetMetadata(
+            title: "Hedin UI MCP Integration - Connect to Cursor AI",
+            description: "Integrate Hedin UI with Cursor AI using Model Context Protocol (MCP). Enhance your development workflow with powerful UI components and design patterns.",
+            keywords: "Hedin UI, MCP, Model Context Protocol, Cursor AI, Integration, Blazor, Development Tools, AI Assistant",
+            type: "article"
+        );
+    }
 }

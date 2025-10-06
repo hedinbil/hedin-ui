@@ -36,6 +36,9 @@ namespace Hedin.UI.Demo.Services.MCP.Client
             builder.Services.AddMcpServer()
                 .WithHttpTransport()
                 .WithTools<HedinUiMcpTools>();
+            
+            builder.Services.AddScoped<SeoService>();
+            builder.Services.AddScoped<SitemapService>();
             return builder;
         }
     }

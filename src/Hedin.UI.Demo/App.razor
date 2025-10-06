@@ -1,4 +1,5 @@
 ﻿@inject IHostEnvironment Env
+@using Hedin.UI.Demo.Components
 
 <!DOCTYPE html>
 <html lang="en">
@@ -23,6 +24,7 @@
 
     <!-- Choose ONE theme from below (we're using synthwave84 as an example) -->
     <link href="@Assets["_content/Brism/prism-one-dark.css"]" rel="stylesheet" />
+    <SeoComponent />
     <HeadOutlet @rendermode="InteractiveServer" />
 
 </head>

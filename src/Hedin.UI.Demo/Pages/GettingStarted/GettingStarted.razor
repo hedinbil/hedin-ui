@@ -3,6 +3,7 @@
 @attribute [HUIPageSettings("Getting started", 0)]
 
 @inject MarkdownReader mdReader
+@inject SeoService SeoService
 
 <HUIPage Header="Getting started" PageDescription="This page does not represent the design of Hedin.UI.">
     <MudContainer MaxWidth="MaxWidth.Large">
@@ -15,4 +16,14 @@
 @code {
     [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
     private CodeBlockTheme cbTheme => !DarkMode ? CodeBlockTheme.AtomOneLight : CodeBlockTheme.AtomOneDark;
+
+    protected override void OnInitialized()
+    {
+        SeoService.SetMetadata(
+            title: "Getting Started with Hedin UI - Installation Guide",
+            description: "Learn how to install and set up Hedin UI in your Blazor application. Complete installation guide with examples and best practices.",
+            keywords: "Hedin UI, Getting Started, Installation, Blazor, MudBlazor, Setup Guide, Tutorial",
+            type: "article"
+        );
+    }
 }

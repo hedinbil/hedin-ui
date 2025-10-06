@@ -2,6 +2,7 @@
 @typeparam TItem
 @inject IJSRuntime JSRuntime
 @inject CodeBlockService cbService
+@inject SeoService SeoService
 
 <CascadingValue TValue="Type" Value="HUIComponent" Name="HUIComponent">
     <PageTitle>Hedin UI - @_title</PageTitle>
@@ -51,5 +52,13 @@
     {
         _title = typeof(TItem).Name;
         _codeBlock = await cbService.GetCodeExample(_title);
+        
+        // Set SEO metadata for component examples
+        SeoService.SetMetadata(
+            title: $"Hedin UI {_title} - Component Examples",
+            description: $"Explore {_title} component examples, code snippets, and API documentation in Hedin UI. Interactive demos and usage examples.",
+            keywords: $"Hedin UI, {_title}, Blazor, MudBlazor, Component, Examples, Documentation, Interactive Demo",
+            type: "article"
+        );
     }
 }

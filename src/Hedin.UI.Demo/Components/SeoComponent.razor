@@ -1,0 +1,68 @@
+@inject SeoService SeoService
+
+@{
+    var metadata = SeoService.CurrentMetadata;
+    var baseUrl = SeoService.GetBaseUrl();
+    var fullImageUrl = !string.IsNullOrEmpty(metadata.Image) && !metadata.Image.StartsWith("http") 
+        ? $"{baseUrl}{metadata.Image}" 
+        : metadata.Image;
+    var fullUrl = !string.IsNullOrEmpty(metadata.Url) 
+        ? (metadata.Url.StartsWith("http") ? metadata.Url : $"{baseUrl}{metadata.Url}")
+        : baseUrl;
+}
+
+<!-- Primary Meta Tags -->
+<title>@metadata.Title</title>
+<meta name="title" content="@metadata.Title" />
+<meta name="description" content="@metadata.Description" />
+<meta name="keywords" content="@metadata.Keywords" />
+<meta name="author" content="@metadata.Author" />
+<meta name="robots" content="index, follow" />
+<meta name="language" content="English" />
+<meta name="revisit-after" content="7 days" />
+
+<!-- Open Graph / Facebook -->
+<meta property="og:type" content="@metadata.Type" />
+<meta property="og:url" content="@fullUrl" />
+<meta property="og:title" content="@metadata.Title" />
+<meta property="og:description" content="@metadata.Description" />
+<meta property="og:image" content="@fullImageUrl" />
+<meta property="og:site_name" content="@metadata.SiteName" />
+<meta property="og:locale" content="@metadata.Locale" />
+
+<!-- Twitter -->
+<meta property="twitter:card" content="summary_large_image" />
+<meta property="twitter:url" content="@fullUrl" />
+<meta property="twitter:title" content="@metadata.Title" />
+<meta property="twitter:description" content="@metadata.Description" />
+<meta property="twitter:image" content="@fullImageUrl" />
+
+<!-- Additional SEO Meta Tags -->
+<meta name="theme-color" content="#1976d2" />
+<meta name="msapplication-TileColor" content="#1976d2" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="@metadata.SiteName" />
+
+<!-- Canonical URL -->
+<link rel="canonical" href="@fullUrl" />
+
+<!-- Structured Data -->
+<script type="application/ld+json">
+{
+  "@@context": "https://schema.org",
+  "@@type": "WebSite",
+  "name": "@metadata.SiteName",
+  "description": "@metadata.Description",
+  "url": "@baseUrl",
+  "author": {
+    "@@type": "Organization",
+    "name": "@metadata.Author"
+  },
+  "potentialAction": {
+    "@@type": "SearchAction",
+    "target": "@baseUrl/search?q={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
