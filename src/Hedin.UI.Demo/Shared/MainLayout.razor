@@ -37,6 +37,7 @@
                 @Body
             </TransitionComponent>
         </CascadingValue>
+        
     </HUIMainContainer>
 
 
@@ -66,6 +67,8 @@
 
     </MudDrawer>
 </MudLayout>
+
+<CookieConsent />
 }
 
 @code {
@@ -174,6 +177,7 @@
         if (chat is not null)
             await chat.Message(message);
     }
+
 
     private enum RightPane
     {

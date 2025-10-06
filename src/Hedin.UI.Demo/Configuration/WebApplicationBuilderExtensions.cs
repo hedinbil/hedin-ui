@@ -70,6 +70,7 @@ public static class WebApplicationBuilderExtensions
         builder.Services.AddSingleton<MarkdownReader>();
         builder.Services.AddTransient<HUILocalizer>();
         builder.Services.AddSingleton<AiMessageStateService>();
+        builder.Services.AddScoped<CookieConsentService>();
         return builder;
     }
     public static WebApplicationBuilder AddUIConfiguration(this WebApplicationBuilder builder)

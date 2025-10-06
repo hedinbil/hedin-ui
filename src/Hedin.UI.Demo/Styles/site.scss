@@ -155,3 +155,35 @@ $animation-offset: 200px;
     z-index: 0;
     min-height: 530px;
 }
+
+/* Cookie Consent Banner */
+.cookie-consent-banner {
+    animation: slideUp 0.3s ease-out;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.15);
+    border-top: 1px solid var(--mud-palette-divider);
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive design for cookie banner */
+@media (max-width: 768px) {
+    .cookie-consent-banner .mud-stack {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 1rem;
+    }
+    
+    .cookie-consent-banner .mud-stack .mud-stack:last-child {
+        width: 100%;
+        justify-content: center;
+    }
+}

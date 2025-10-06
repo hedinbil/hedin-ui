@@ -131,6 +131,20 @@
             </MudGrid>
         </MudContainer>
     </div>
+
+    @* Footer with Cookie Settings link for GDPR compliance *@
+    <div class="py-4" style="border-top: 1px solid var(--mud-palette-divider);">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge">
+            <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center">
+                <MudText Typo="Typo.caption" Class="text-muted">
+                    Hedin UI
+                </MudText>
+                <MudLink Href="/privacy" Target="_blank" Underline="Underline.Always" Class="text-muted">
+                    Privacy Policy
+                </MudLink>
+            </MudStack>
+        </MudContainer>
+    </div>
 </div>
 
 
@@ -148,6 +162,7 @@
             image: "/HedinUI.svg"
         );
     }
+
   //   private Stat[] stats = new[]
   //   {
   //   new Stat("Downloads",    "15.9 M",     Icons.Material.Filled.CloudDownload),

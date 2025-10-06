@@ -1,0 +1,98 @@
+@using Hedin.UI.Demo.Services
+@inject CookieConsentService CookieConsentService
+@inject IJSRuntime JSRuntime
+@implements IDisposable
+
+@if (_showBanner)
+{
+    <MudPaper Class="cookie-consent-banner" Elevation="8" Style="position: fixed; bottom: 0; left: 0; right: 0; z-index: 1300; border-radius: 0;">
+        <MudContainer MaxWidth="MaxWidth.ExtraExtraLarge" Class="py-3">
+            <MudStack Row Justify="Justify.SpaceBetween" AlignItems="AlignItems.Center" Spacing="2">
+                <MudStack Row Spacing="2" AlignItems="AlignItems.Center" Style="flex: 1;">
+                    <MudIcon Icon="@Icons.Material.Filled.Cookie" Color="Color.Primary" />
+                    <MudText Typo="Typo.body1">
+                        We use cookies to enhance your experience and analyze site usage. 
+                        <MudLink Href="/privacy" Target="_blank" Underline="Underline.Always" Style="color: inherit;">
+                            Learn more about our privacy policy
+                        </MudLink>
+                    </MudText>
+                </MudStack>
+                <MudStack Row Spacing="2" AlignItems="AlignItems.Center">
+                    <MudButton Variant="Variant.Outlined" 
+                              Color="Color.Inherit" 
+                              OnClick="RejectAll"
+                              Class="text-lowercase">
+                        Reject All
+                    </MudButton>
+                    <MudButton Variant="Variant.Filled" 
+                              Color="Color.Primary" 
+                              OnClick="AcceptAll"
+                              Class="text-lowercase">
+                        Accept All
+                    </MudButton>
+                </MudStack>
+            </MudStack>
+        </MudContainer>
+    </MudPaper>
+}
+
+
+@code {
+    private bool _showBanner = false;
+
+    protected override async Task OnInitializedAsync()
+    {
+        CookieConsentService.OnConsentChanged += OnConsentChanged;
+        await UpdateDisplayState();
+        
+        // Load analytics scripts if consent has already been given
+        await LoadAnalyticsScripts();
+    }
+
+    private async Task UpdateDisplayState()
+    {
+        _showBanner = await CookieConsentService.ShouldShowBannerAsync();
+        StateHasChanged();
+    }
+
+    private void OnConsentChanged(bool hasConsent)
+    {
+        _showBanner = !hasConsent;
+        StateHasChanged();
+    }
+
+    private async Task AcceptAll()
+    {
+        await CookieConsentService.SetConsentAsync(true);
+        await LoadAnalyticsScripts();
+        await UpdateDisplayState();
+    }
+
+    private async Task RejectAll()
+    {
+        await CookieConsentService.SetConsentAsync(false);
+        await UpdateDisplayState();
+        StateHasChanged(); // Force UI update
+    }
+
+
+    private async Task LoadAnalyticsScripts()
+    {
+        if (await CookieConsentService.ShouldShowBannerAsync()) return;
+
+        try
+        {
+            // Load Microsoft Clarity script using a more reliable method
+            await JSRuntime.InvokeVoidAsync("loadClarityScript");
+        }
+        catch
+        {
+            // Silently fail if script loading fails
+        }
+    }
+
+    public void Dispose()
+    {
+        CookieConsentService.OnConsentChanged -= OnConsentChanged;
+    }
+}
