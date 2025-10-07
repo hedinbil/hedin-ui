@@ -159,7 +159,7 @@
 
     private RenderFragment GetLinkFragment(HUIMenuItem menuItem)
     {
-        return @<MudNavLink Href="@menuItem.Url" Match="GetMatchLink(menuItem)">@Localizer[menuItem.DisplayName]</MudNavLink>;
+        return @<MudNavLink Href="@menuItem.Url" Match="GetMatchLink(menuItem)" Disabled="@menuItem.Disabled">@Localizer[menuItem.DisplayName]</MudNavLink>;
     }
 
     private void HandleGroupExpansionChanged(bool expanded, HUIMenuItem menuItem)

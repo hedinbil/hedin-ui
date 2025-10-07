@@ -27,6 +27,9 @@ namespace Hedin.UI
         public bool IsExpanded { get; set; }
         public string Policy { get; set; }
         public int Order { get; set; }
+        
+        public bool Disabled { get; set; }
+        
         public bool HasExpandedChild { get; set; }
 
         public string? Tooltip { get; set; }
@@ -47,7 +50,8 @@ namespace Hedin.UI
             string? tooltip = null,
             string? badgeData = null, 
             Color badgeColor = Color.Default,
-            Severity? dot = null)
+            Severity? dot = null,
+            bool disabled = false)
         {
             DisplayName = displayName;
             Url = url;
@@ -59,6 +63,7 @@ namespace Hedin.UI
             BadgeData = badgeData;
             BadgeColor = badgeColor;
             Dot = dot;
+            Disabled = disabled;
         }
     }
 }

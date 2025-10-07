@@ -150,12 +150,21 @@
         <MudNavLink Match="@(menuItem.Url == "/" ? NavLinkMatch.All : NavLinkMatch.Prefix)"
                     Href="@menuItem.Url"
                     Icon="@menuItem.Icon"
+                    Disabled="@menuItem.Disabled"
                     Style="transition: none;">
             @menuItem.DisplayName
         </MudNavLink>
-
-            @* collapsed state: show arrow that opens on hover *@
-        @if (submenu != null && !menuItem.IsExpanded)
+        @if (menuItem.Disabled)
+        {
+            <div class="expanded-menu-item expanded-menu-item-disabled">
+                <span style="display:flex; align-items: center; gap: 8px">
+                    @menuItem.DisplayName
+                    @* <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small" /> *@
+                </span>
+            </div>
+        }
+        @* collapsed state: show arrow that opens on hover *@
+        else if (submenu != null && !menuItem.IsExpanded)
     {
         <div class="expanded-menu-item"
              @onmouseenter="() => menuItem.IsExpanded = true"
@@ -188,7 +197,7 @@
     private RenderFragment GetSubItem(HUIMenuItem menuItem) => @<div @onclick="() => ResetMenuItem(menuItem)">
         @if (!string.IsNullOrEmpty(menuItem.Url))
     {
-        <MudNavLink Match="NavLinkMatch.Prefix" Href="@menuItem.Url">
+        <MudNavLink Match="NavLinkMatch.Prefix" Href="@menuItem.Url" Disabled="@menuItem.Disabled">
             @menuItem.DisplayName
         </MudNavLink>
     }

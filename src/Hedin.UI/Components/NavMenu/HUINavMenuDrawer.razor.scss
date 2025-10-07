@@ -48,6 +48,9 @@
     width: max-content;
     border-top-right-radius: 8px;
     border-bottom-right-radius: 8px;
+    &.expanded-menu-item-disabled{
+      color: var(--mud-palette-text-disabled);
+    }
   }
 
   .expanded-menu-item:hover .submenu {

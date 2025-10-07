@@ -65,6 +65,7 @@
     {
         return @<MudTabPanel
                     Class="px-6"
+                    Disabled="menuItem.Disabled"
                     OnClick="() => HandleOnTabClick(menuItem)"
                     ToolTip="@menuItem.Tooltip"
                     Icon="@menuItem.Icon">
