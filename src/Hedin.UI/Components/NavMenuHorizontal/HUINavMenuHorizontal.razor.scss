@@ -50,6 +50,9 @@
         &:has(.mud-badge-root):not(:has(.mud-badge-dot)) {
             margin-right: 15px !important;
         }
+        &.mud-disabled{
+          color: var(--mud-palette-text-disabled);
+        }
     }
 
     .mud-tab.mud-tab-active {

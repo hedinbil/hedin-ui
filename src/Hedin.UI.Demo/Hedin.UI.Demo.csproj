@@ -45,18 +45,18 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.SassCompiler" Version="1.86.2" />
+        <PackageReference Include="AspNetCore.SassCompiler" Version="1.93.2" />
         <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0" />
-        <PackageReference Include="Azure.Identity" Version="1.13.2" />
+        <PackageReference Include="Azure.Identity" Version="1.16.0" />
         <PackageReference Include="Brism" Version="1.0.1" />
         <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
-        <PackageReference Include="MudBlazor.Markdown" Version="8.6.0" />
-      <PackageReference Include="Azure.AI.OpenAI" Version="2.2.0-beta.4" />
-      <PackageReference Include="Azure.Search.Documents" Version="11.6.0" />
+        <PackageReference Include="MudBlazor.Markdown" Version="8.11.0" />
+      <PackageReference Include="Azure.AI.OpenAI" Version="2.3.0-beta.2" />
+      <PackageReference Include="Azure.Search.Documents" Version="11.6.1" />
       <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
       <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
-      <PackageReference Include="Microsoft.SemanticKernel" Version="1.55.0" />
-      <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.55.0" />
+      <PackageReference Include="Microsoft.SemanticKernel" Version="1.65.0" />
+      <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.65.0" />
     </ItemGroup>
 
     <ItemGroup>

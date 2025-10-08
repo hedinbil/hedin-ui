@@ -77,7 +77,7 @@ public class HUIPageHelper : IHUIPageHelper
         }
     }
 
-    private HUIMenuItem FindItemByUrl(List<HUIMenuItem> items, string url)
+    private HUIMenuItem? FindItemByUrl(List<HUIMenuItem> items, string url)
     {
         foreach (var item in items)
         {
@@ -96,7 +96,7 @@ public class HUIPageHelper : IHUIPageHelper
         return null;
     }
 
-    private void PopulateSubMenuItems(HUIMenuItem parentItem, IEnumerable<HUIMenuItem> flatMenu)
+    private void PopulateSubMenuItems(HUIMenuItem parentItem, List<HUIMenuItem> flatMenu)
     {
         var subItems = flatMenu.Where(x => x.ParentUrl == parentItem.Url)
                                .OrderBy(x => x.Order)
@@ -121,15 +121,12 @@ public class HUIPageHelper : IHUIPageHelper
         if (routeAttribute == null || settingsAttribute == null)
             return null;
 
-        string route = routeAttribute.Template;
+        var route = routeAttribute.Template;
         if (string.IsNullOrEmpty(route))
             throw new Exception($"RouteAttribute in component '{component.Name}' has empty route template");
 
-
-        string? policy = authorizeAttribute?.Policy;
-
         // Get the parent route from the route template
-        string? parentRoute = GetParentRoute(route);
+        var parentRoute = GetParentRoute(route);
 
         var menuItem = new HUIMenuItem(
             displayName: settingsAttribute.DisplayName,
@@ -137,15 +134,12 @@ public class HUIPageHelper : IHUIPageHelper
             parentUrl: parentRoute, // Set the parent URL
             policy: authorizeAttribute?.Policy ?? "",
             order: settingsAttribute.Order,
-            icon: settingsAttribute.Icon
+            icon: settingsAttribute.Icon,
+            disabled: settingsAttribute.Disabled
         );
         return menuItem;
     }
 
-
-    //allMenuItems = !string.IsNullOrEmpty(brandId)
-    //   ? allMenuItems.Where(x => !x.Brands.Any() || x.Brands.Select(brand => brand.ToLower()).Contains(brandId.ToLower())).ToList()
-    //   : allMenuItems;
     private string? GetParentRoute(string route)
     {
         // Remove the last segment to get the parent route
