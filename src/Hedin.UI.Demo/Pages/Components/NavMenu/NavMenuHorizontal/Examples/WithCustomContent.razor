@@ -1,28 +1,38 @@
-﻿<HUINavMenuHorizontal Items="menuItems2" RequireAuthorization="false" @ref="menuRef" />
+﻿<HUINavMenuHorizontal Items="_menuItems" RequireAuthorization="false" @ref="_menuRef" ActiveItem="_activeMenuItem"/>
 <HUIPage Header="Demo page 2" PageDescription="Here we use the horizontal menu with badges and icons">
     Some content.
     <span>
-        <HUIButton Variant="Variant.Outlined" OnClick="AddBadgeAndIconsToMenu">Refresh menu</HUIButton>
+        <HUIButton Variant="Variant.Outlined" OnClick="@AddBadgeAndIconsToMenu">Refresh menu</HUIButton>
     </span>
 </HUIPage>
 @code {
-    private List<HUIMenuItem> menuItems2 = new List<HUIMenuItem>
-    {
-        new HUIMenuItem("Settings", "url1", "", tooltip:"Settings for all pages"),
-        new HUIMenuItem("Menu option 2", "url2", "", icon: @Icons.Material.Filled.Dangerous, dot:Severity.Error),
-        new HUIMenuItem("Menu option 3", "url3", "", badgeData:"3", badgeColor:Color.Primary),
-    };
+
+    [CascadingParameter] public string Tab { get; set; } = string.Empty;
+    private readonly List<HUIMenuItem> _menuItems =
+    [
+        new("Settings", "/components/menus/nav-menu-horizontal/tab11", "", tooltip: "Settings for all pages"),
+        new("Menu option 2", "/components/menus/nav-menu-horizontal/tab12", "", icon: @Icons.Material.Filled.Dangerous, dot: Severity.Error),
+        new("Menu option 3", "/components/menus/nav-menu-horizontal/tab13", "", badgeData: "3", badgeColor: Color.Primary)
+    ];
+
+    private HUIMenuItem? _activeMenuItem;
     protected override void OnInitialized()
     {
         StateHasChanged();
     }
 
-    private HUINavMenuHorizontal menuRef;
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _activeMenuItem = _menuItems.FirstOrDefault(x => x.Url.TrimEnd('/').EndsWith($"/{Tab}"));
+    }
+
+    private HUINavMenuHorizontal? _menuRef;
     private void AddBadgeAndIconsToMenu(MouseEventArgs obj)
     {
-        menuItems2[0].BadgeData = "!";
-        menuItems2[0].Dot = Severity.Warning;
-        menuItems2[0].Icon = @Icons.Material.Filled.Settings;
-        menuRef.ForceStateHasChanged();
+        _menuItems[0].BadgeData = "!";
+        _menuItems[0].Dot = Severity.Warning;
+        _menuItems[0].Icon = @Icons.Material.Filled.Settings;
+        _menuRef?.ForceStateHasChanged();
     }
 }

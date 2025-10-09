@@ -1,12 +1,7 @@
 ﻿@namespace Hedin.UI
 @inject NavigationManager NavigationManager
 @inject HUILocalizer Localizer
-@inject ILogger<HUINavMenuHorizontal> Logger
-@implements IDisposable
 @using Microsoft.AspNetCore.Components.Authorization
-@using Microsoft.AspNetCore.Components.Routing
-@using Microsoft.Extensions.Localization
-@using Microsoft.Extensions.Logging
 
 @if (Items.Any())
 {
@@ -61,50 +56,33 @@
 
     private void HandleOnTabClick(HUIMenuItem menuItem)
     {
-        var target = menuItem.Url?.Trim();
-        if (string.IsNullOrWhiteSpace(target))
+        var targetRelativePath = menuItem.Url?.Trim().TrimEnd('/');
+        if (string.IsNullOrWhiteSpace(targetRelativePath))
         {
             return;
         }
 
-        var currentUriString = _lastKnownUri ?? NavigationManager.Uri;
-        var targetAbsolute = NavigationManager.ToAbsoluteUri(target).ToString();
+        var currentUri = NavigationManager.Uri.TrimEnd('/');
+        var targetUri = NavigationManager.ToAbsoluteUri(targetRelativePath).ToString();
 
-        if (string.Equals(currentUriString, targetAbsolute, StringComparison.Ordinal))
+        if (TargetIsSameAsCurrent(targetUri, currentUri))
         {
-            Logger?.LogDebug(
-                "HUINavMenuHorizontal: Suppressed navigation for '{DisplayName}' because target '{Target}' equals current URI",
-                menuItem.DisplayName,
-                targetAbsolute);
+            // Do not navigate (push browser history) if the tab hasn't changed
             return;
         }
 
-        Logger?.LogDebug(
-            "HUINavMenuHorizontal: Navigating to '{Target}' from '{Current}' (menu item '{DisplayName}')",
-            target,
-            currentUriString,
-            menuItem.DisplayName);
-        _lastKnownUri = targetAbsolute;
-        NavigationManager.NavigateTo(target);
+        NavigationManager.NavigateTo(targetRelativePath);
     }
 
-    private string? _lastKnownUri;
+    private static bool TargetIsSameAsCurrent(string targetUri, string currentUri)
+    {
+        return string.Equals(targetUri, currentUri, StringComparison.Ordinal);
+    }
+
 
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        _lastKnownUri = NavigationManager.Uri;
-        NavigationManager.LocationChanged += OnLocationChanged;
-    }
-
-    private void OnLocationChanged(object? sender, LocationChangedEventArgs e)
-    {
-        _lastKnownUri = e.Location;
-    }
-
-    public void Dispose()
-    {
-        NavigationManager.LocationChanged -= OnLocationChanged;
     }
 
     private RenderFragment RenderPanel(HUIMenuItem menuItem)

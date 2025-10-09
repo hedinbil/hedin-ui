@@ -1,12 +1,25 @@
-﻿<HUINavMenuHorizontal Items="menuItems" RequireAuthorization="false" />
-<HUIPage Header="Demo page 1" PageDescription="This is usually used as a compliment to the normal NavMenu. Horizontal menu items could be e.g. the 3rd level of items. This component should be placed in the outer most section of your app such as MainLayout above any page content.">
+﻿<HUINavMenuHorizontal Items="_menuItems" RequireAuthorization="false" ActiveItem="_activeMenuItem"/>
+<HUIPage Header="Demo page 1"
+         PageDescription="This is usually used as a compliment to the normal NavMenu. Horizontal menu items could be e.g. the 3rd level of items. This component should be placed in the outer most section of your app such as MainLayout above any page content.">
     Some content.
 </HUIPage>
+
 @code {
-    private List<HUIMenuItem> menuItems = new List<HUIMenuItem>
-        {
-            new HUIMenuItem("Menu option 1", "/components/menus/nav-menu-horizontal", ""),
-            new HUIMenuItem("Menu option 2", "/components/menus/nav-menu-horizontal#tab2", "", disabled: true),
-            new HUIMenuItem("Menu option 3", "/components/menus/nav-menu-horizontal#tab3", ""),
-        };
+    [CascadingParameter] public string Tab { get; set; } = string.Empty;
+
+    private readonly List<HUIMenuItem> _menuItems =
+    [
+        new("Menu option 1", "/components/menus/nav-menu-horizontal/tab1", ""),
+        new("Menu option 2", "/components/menus/nav-menu-horizontal/tab2", "", disabled: true),
+        new("Menu option 3", "/components/menus/nav-menu-horizontal/tab3", "")
+    ];
+
+    private HUIMenuItem? _activeMenuItem = null;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _activeMenuItem = _menuItems.FirstOrDefault(x => x.Url.TrimEnd('/').EndsWith($"/{Tab}"));
+    }
+
 }
