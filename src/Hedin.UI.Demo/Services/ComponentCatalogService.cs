@@ -36,14 +36,15 @@ public class ComponentCatalogService
             // 3) Find the demo *page* type for that component
             //    by looking for [Route] under the same folder namespace
             var pageType = _demoAsm.GetTypes().FirstOrDefault(t =>
-                t.GetCustomAttribute<RouteAttribute>() is not null &&
+                t.GetCustomAttributes<RouteAttribute>().Any() &&
                 t.Namespace is not null &&
                 t.Namespace.Split('.').Contains(compName) &&
                 !t.Namespace.Split('.').Contains("Examples")
             );
 
             // 4) Grab its route template, or fall back to "/{name}"
-            var routeAttr = pageType?.GetCustomAttribute<RouteAttribute>();
+            var routeAttrs = pageType?.GetCustomAttributes<RouteAttribute>();
+            var routeAttr = routeAttrs?.FirstOrDefault();
             var url = routeAttr?.Template.Replace("~", "").Trim()
                         ?? $"/{compName.ToLower()}";
 

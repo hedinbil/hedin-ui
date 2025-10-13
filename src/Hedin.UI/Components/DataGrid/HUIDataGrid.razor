@@ -39,11 +39,11 @@
                  ToolBarContent="@ToolBarContent"
                  MultiSelection="@MultiSelection"
                  SelectedItems="@SelectedItems"
-                 SelectedItemsChanged="@HandleSelectedItemsChanged"
+                 SelectedItemsChanged="@SelectedItemsChanged"
                  ChildRowContent="@ChildRowContent"
                  SelectOnRowClick="@SelectOnRowClick"
                  SelectedItem="@SelectedItem"
-                 SelectedItemChanged="@HandleSelectedItemChanged"
+                 SelectedItemChanged="@SelectedItemChanged"
                  EditMode="@EditMode"
                  StartedEditingItem="@StartedEditingItem"
                  CanceledEditingItem="@CanceledEditingItem"
@@ -456,19 +456,7 @@
         CurrentPage = page;
         await CurrentPageChanged.InvokeAsync(page);
     }
-
-    private async Task HandleSelectedItemsChanged(HashSet<T> selectedItems)
-    {
-        SelectedItems = selectedItems;
-        await SelectedItemsChanged.InvokeAsync(selectedItems);
-    }
-
-    private async Task HandleSelectedItemChanged(T selectedItem)
-    {
-        SelectedItem = selectedItem;
-        await SelectedItemChanged.InvokeAsync(selectedItem);
-    }
-  
+    
     // Severity styling
     private string SeverityRowClassFunc(T data, int i)
     {

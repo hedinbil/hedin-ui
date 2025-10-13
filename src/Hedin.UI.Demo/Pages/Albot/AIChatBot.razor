@@ -27,7 +27,7 @@
                             <MudAvatar Color="Color.Info" Variant="Variant.Outlined">U</MudAvatar>
                         }
                         <MudChatBubble>
-                            <MudMarkdown Value="@chat.Message" CodeBlockTheme="_codeTheme" />
+                            <MudMarkdown Value="@chat.Message" Styling="_styling"/>
                         </MudChatBubble>
                     </MudChat>
                 }
@@ -79,9 +79,15 @@
     private SemanticChatService? ChatService { get; set; }
 
     [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
-    private CodeBlockTheme _codeTheme => DarkMode
-        ? CodeBlockTheme.Windows10Base16
-        : CodeBlockTheme.Windows10LightBase16;
+    
+    private MudMarkdownStyling _styling => new()
+    {
+        CodeBlock =
+        {
+            Theme = DarkMode ? CodeBlockTheme.Windows10Base16 : CodeBlockTheme.Windows10LightBase16,
+        },
+    };
+
 
     protected override void OnInitialized()
     {

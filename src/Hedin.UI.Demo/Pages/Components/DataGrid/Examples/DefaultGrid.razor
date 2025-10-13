@@ -1,18 +1,19 @@
 ﻿@inject ISnackbar Snackbar
 
-<HUIDataGrid Items="cars" T="Car" Height="340px">
+<HUIDataGrid MultiSelection="true" Items="cars" T="Car" Height="340px">
     <Columns>
-        <HUIIconColumn T="Car" Icon="@Icons.Material.Filled.Edit" OnClick="HandleOnRowClick" />
-        <PropertyColumn Property="x => x.OrderNo" Title="Order number" />
-        <PropertyColumn Property="x => x.Model" />
-        <PropertyColumn Property="x => x.RegNo" Title="Reg number" />
-        <PropertyColumn Property="x => x.VIN" />
-        <PropertyColumn Property="x => x.Description" />
-        <PropertyColumn Property="x => x.EntityCode" Title="Entity Code" />
-        <PropertyColumn Property="x => x.Color" />
-        <PropertyColumn Property="x => x.ChangeData" Title="Last factory change" Format="yyyy-MM-dd" />
-        <PropertyColumn Property="x => x.ETA" Title="ETA Port" Format="yyyy-MM-dd" />
-        <PropertyColumn Property="x => x.Status" />
+        <SelectColumn T="Car"></SelectColumn>
+        <HUIIconColumn T="Car" Icon="@Icons.Material.Filled.Edit" OnClick="HandleOnRowClick"/>
+        <PropertyColumn Property="x => x.OrderNo" Title="Order number"/>
+        <PropertyColumn Property="x => x.Model"/>
+        <PropertyColumn Property="x => x.RegNo" Title="Reg number"/>
+        <PropertyColumn Property="x => x.VIN"/>
+        <PropertyColumn Property="x => x.Description"/>
+        <PropertyColumn Property="x => x.EntityCode" Title="Entity Code"/>
+        <PropertyColumn Property="x => x.Color"/>
+        <PropertyColumn Property="x => x.ChangeData" Title="Last factory change" Format="yyyy-MM-dd"/>
+        <PropertyColumn Property="x => x.ETA" Title="ETA Port" Format="yyyy-MM-dd"/>
+        <PropertyColumn Property="x => x.Status"/>
     </Columns>
 </HUIDataGrid>
 

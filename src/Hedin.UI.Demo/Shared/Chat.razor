@@ -10,12 +10,18 @@
 
 @code {
     private List<HUIChatLine> _conversation = new();
-    private RenderFragment<HUIChatLine> RenderAssistant => line => @<MudMarkdown Value="@line.Text" CodeBlockTheme="_codeTheme" />;
+    private RenderFragment<HUIChatLine> RenderAssistant => line => @<MudMarkdown Value="@line.Text" Styling="_styling"/>;
+    
+    [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
+    
+    private MudMarkdownStyling _styling => new()
+    {
+        CodeBlock =
+        {
+            Theme = DarkMode ? CodeBlockTheme.Windows10Base16 : CodeBlockTheme.Windows10LightBase16,
+        },
+    };
 
-        [CascadingParameter(Name = "DarkMode")] public bool DarkMode { get; set; }
-    private CodeBlockTheme _codeTheme => DarkMode
-        ? CodeBlockTheme.Windows10Base16
-        : CodeBlockTheme.Windows10LightBase16;
 
     private async Task SendMessage(string message, CancellationToken ct)
     {
