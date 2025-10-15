@@ -24,7 +24,7 @@ public class SitemapService
             new XElement(xNamespace + "urlset",
                 from route in routes
                 select new XElement(xNamespace + "url",
-                    new XElement(xNamespace + "loc", $"{baseUrl}{route.Route}"),
+                    new XElement(xNamespace + "loc", $"{baseUrl}{(route.Route.StartsWith('/') ? route.Route : "/" + route.Route)}"),
                     new XElement(xNamespace + "lastmod", DateTime.UtcNow.ToString("yyyy-MM-dd")),
                     new XElement(xNamespace + "changefreq", GetChangeFrequency(route)),
                     new XElement(xNamespace + "priority", GetPriority(route))
