@@ -7,12 +7,13 @@ public class HUIPageSettingsAttribute : Attribute
     public int Order { get; }
     public string? Icon { get; }
     public bool Disabled { get; }
+    public string? Id { get; }
 
-    public HUIPageSettingsAttribute(string displayName, int order = 99999, string? icon = "", bool disabled = false)
+    public HUIPageSettingsAttribute(string displayName, int order = 99999, string? icon = "", bool disabled = false, string id = "")
     {
         DisplayName = displayName;
         Order = order;
         Icon = icon;
-        Disabled = disabled;
+        Id = id;
     }
 }

@@ -23,77 +23,85 @@
 
 
 <style>
-  /* Base link styling */
-  .hui-drawer .mud-nav-link {
-    transition: none;
-    padding: 12px 20px;
-  }
-  .hui-drawer .mud-nav-link-text {
-    margin-left: 0;
-    margin-inline-start: 0;
-  }
-  .hui-drawer .submenu > div:last-child .mud-nav-link {
-    border-bottom-right-radius: 8px;
-    border-bottom-left-radius: 8px;
-  }
-  
-  /* Ensure each menu-item can position its fly-out */
-  .hui-drawer .menu-item {
-    position: relative;
-  }
-  .hui-drawer .menu-item > .mud-nav-item {
-    height: 56px;
-  }
+    /* Base link styling */
+    .hui-drawer .mud-nav-link {
+        transition: none;
+        padding: 12px 20px;
+    }
 
-  /* Animated fly-out submenu */
-  .hui-drawer .submenu {
-    position: absolute;
-    top: 0;
-    left: 64px;
-    min-width: 200px;
-    background: var(--mud-palette-surface);
-    box-shadow: var(--mud-shadow-depth-2);
+    .hui-drawer .mud-nav-link-text {
+        margin-left: 0;
+        margin-inline-start: 0;
+    }
 
-    /* start hidden + shifted left */
-    opacity: 0;
-    transform: translateX(-20px);
+    .hui-drawer .submenu > div:last-child .mud-nav-link {
+        border-bottom-right-radius: 8px;
+        border-bottom-left-radius: 8px;
+    }
 
-    /* animate opacity & slide over 1s */
-    transition:
-      opacity 1s ease-out,
-      transform 1s ease-out;
-  }
+    /* Ensure each menu-item can position its fly-out */
+    .hui-drawer .menu-item {
+        position: relative;
+    }
 
-  /* Trigger show on hover of parent or submenu itself */
-  .hui-drawer .menu-item:hover > .submenu,
-  .hui-drawer .menu-item .submenu:hover {
-    opacity: 1;
-    transform: translateX(0);
-  }
+    .hui-drawer .menu-item > .mud-nav-item {
+        height: 56px;
+    }
 
-  /* Active link highlight */
-  .hui-drawer .mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled) {
-    background-color: var(--mud-palette-gray-default);
-  }
+    /* Animated fly-out submenu */
+    .hui-drawer .submenu {
+        position: absolute;
+        top: 0;
+        left: 64px;
+        min-width: 200px;
+        background: var(--mud-palette-surface);
+        box-shadow: var(--mud-shadow-depth-2);
 
-  /* Suppress background on hover of the icon area */
-  .hui-drawer .menu-item > .mud-nav-item a:hover {
-    background: transparent !important;
-  }
+        /* start hidden + shifted left */
+        opacity: 0;
+        transform: translateX(-20px);
+
+        /* animate opacity & slide over 1s */
+        transition: opacity 1s ease-out,
+        transform 1s ease-out;
+    }
+
+    /* Trigger show on hover of parent or submenu itself */
+    .hui-drawer .menu-item:hover > .submenu,
+    .hui-drawer .menu-item .submenu:hover {
+        opacity: 1;
+        transform: translateX(0);
+    }
+
+    /* Active link highlight */
+    .hui-drawer .mud-navmenu.mud-navmenu-default .mud-nav-link.active:not(.mud-nav-link-disabled) {
+        background-color: var(--mud-palette-gray-default);
+    }
+
+    /* Suppress background on hover of the icon area */
+    .hui-drawer .menu-item > .mud-nav-item a:hover {
+        background: transparent !important;
+    }
 </style>
 
 
 @code {
     private bool _open = false;
 
-    [Parameter] public List<HUIMenuItem> Items { get; set; } = new();
-    [Parameter] public string Class { get; set; } = string.Empty;
-    [Parameter] public string Style { get; set; } = string.Empty;
+    [Parameter]
+    public List<HUIMenuItem> Items { get; set; } = new();
+
+    [Parameter]
+    public string Class { get; set; } = string.Empty;
+
+    [Parameter]
+    public string Style { get; set; } = string.Empty;
 
     /// <summary>
     /// If true, honor menuItem.Policy; if false, show everything.
     /// </summary>
-    [Parameter] public bool RequireAuthorization { get; set; } = true;
+    [Parameter]
+    public bool RequireAuthorization { get; set; } = true;
 
     private void ResetMenuItem(HUIMenuItem menuItem)
     {
@@ -108,40 +116,36 @@
         if (menuItem.SubItems.Any())
         {
             submenu = @<div class="submenu"
-                                @onmouseleave="() => ResetMenuItem(menuItem)">
-        <div class="submenu-title">@menuItem.DisplayName</div>
-        @foreach (var child in menuItem.SubItems)
-    {
-        <AuthorizeView Policy="@child.Policy">
-            <Authorized>
-                <div id="@child.Id">
-                    @GetSubItem(child)
-                </div>
-            </Authorized>
-            <NotAuthorized>
-                @if (!RequireAuthorization)
-            {
-                <div id="@child.Id">
-                    @GetSubItem(child)
-                </div>
-            }
-            </NotAuthorized>
-        </AuthorizeView>
-    }
-    </div>;
+                            @onmouseleave="() => ResetMenuItem(menuItem)">
+                          <div class="submenu-title">@menuItem.DisplayName</div>
+                          @foreach (var child in menuItem.SubItems)
+                          {
+                              <AuthorizeView Policy="@child.Policy">
+                                  <Authorized>
+                                          @GetSubItem(child)
+                                  </Authorized>
+                                  <NotAuthorized>
+                                      @if (!RequireAuthorization)
+                                      {
+                                          @GetSubItem(child)
+                                      }
+                                  </NotAuthorized>
+                              </AuthorizeView>
+                          }
+                      </div>;
         }
 
         // wrap parent in AuthorizeView if needed
         if (RequireAuthorization && !string.IsNullOrEmpty(menuItem.Policy))
         {
             return @<AuthorizeView Policy="@menuItem.Policy">
-        <Authorized>
-            @RenderNavItem(menuItem, submenu)
-        </Authorized>
-        <NotAuthorized>
-                            @* hidden when unauthorized *@
-        </NotAuthorized>
-    </AuthorizeView>;
+                <Authorized>
+                    @RenderNavItem(menuItem, submenu)
+                </Authorized>
+                <NotAuthorized>
+                    @* hidden when unauthorized *@
+                </NotAuthorized>
+            </AuthorizeView>;
         }
         else
         {
@@ -149,14 +153,15 @@
         }
     }
 
-    private RenderFragment RenderNavItem(HUIMenuItem menuItem, RenderFragment? submenu) => @<div class="menu-item @(IsActive(menuItem) ? "has-expanded-child" : "")">
+    private RenderFragment RenderNavItem(HUIMenuItem menuItem, RenderFragment? submenu) => @<div
+        class="menu-item @(IsActive(menuItem) ? "has-expanded-child" : "")">
 
         <MudNavLink Match="@(menuItem.Url == "/" ? NavLinkMatch.All : NavLinkMatch.Prefix)"
                     Href="@menuItem.Url"
                     Icon="@menuItem.Icon"
                     Disabled="@menuItem.Disabled"
                     Style="transition: none;"
-                    Id = "@menuItem.Id">
+                    Id="@menuItem.Id">
             @menuItem.DisplayName
         </MudNavLink>
         @if (menuItem.Disabled)
@@ -169,56 +174,57 @@
         }
         @* collapsed state: show arrow that opens on hover *@
         else if (submenu != null && !menuItem.IsExpanded)
-    {
-        <div class="expanded-menu-item"
-             @onmouseenter="() => menuItem.IsExpanded = true"
-             style="cursor: pointer">
+        {
+            <div class="expanded-menu-item"
+                 @onmouseenter="() => menuItem.IsExpanded = true"
+                 style="cursor: pointer">
             <span style="display:flex; align-items: center; gap: 8px">
                 @menuItem.DisplayName
-                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small" />
+                <MudIcon Icon="@Icons.Material.Filled.KeyboardArrowDown" Size="Size.Small"/>
             </span>
-        </div>
-    }
-            @* expanded state: render the submenu fragment *@
-    else if (submenu != null && menuItem.IsExpanded)
-    {
-        @submenu
-    }
-            @* no submenu at all: clicking navigates on the right arrow *@
-    else
-    {
-        <div class="expanded-menu-item"
-             @onclick="() => NavigationManager.NavigateTo(menuItem.Url)"
-             style="cursor: pointer">
+            </div>
+        }
+        @* expanded state: render the submenu fragment *@
+        else if (submenu != null && menuItem.IsExpanded)
+        {
+            @submenu
+        }
+        @* no submenu at all: clicking navigates on the right arrow *@
+        else
+        {
+            <div class="expanded-menu-item"
+                 @onclick="() => NavigationManager.NavigateTo(menuItem.Url)"
+                 style="cursor: pointer">
             <span style="display:flex; align-items: center; gap: 8px">
                 @menuItem.DisplayName
-                <MudIcon Icon="@Icons.Material.Filled.NavigateNext" Size="Size.Small" />
+                <MudIcon Icon="@Icons.Material.Filled.NavigateNext" Size="Size.Small"/>
             </span>
-        </div>
-    }
+            </div>
+        }
     </div>;
 
     private RenderFragment GetSubItem(HUIMenuItem menuItem) => @<div @onclick="() => ResetMenuItem(menuItem)">
         @if (!string.IsNullOrEmpty(menuItem.Url))
-    {
-        <MudNavLink Match="NavLinkMatch.Prefix" Href="@menuItem.Url" Disabled="@menuItem.Disabled">
-            @menuItem.DisplayName
-        </MudNavLink>
-    }
-    else
-    {
-        <span class="submenu-title">@menuItem.DisplayName</span>
-    }
+        {
+            <MudNavLink Match="NavLinkMatch.Prefix" Href="@menuItem.Url" Disabled="@menuItem.Disabled"
+                        id="@menuItem.Id">
+                @menuItem.DisplayName
+            </MudNavLink>
+        }
+        else
+        {
+            <span class="submenu-title">@menuItem.DisplayName</span>
+        }
 
         @if (menuItem.SubItems.Any())
-    {
-        <div class="submenu">
-            @foreach (var child in menuItem.SubItems)
         {
-            @GetSubItem(child)
+            <div class="submenu">
+                @foreach (var child in menuItem.SubItems)
+                {
+                    @GetSubItem(child)
+                }
+            </div>
         }
-        </div>
-    }
     </div>;
 
     private bool IsActive(HUIMenuItem menuItem)

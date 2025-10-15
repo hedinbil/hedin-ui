@@ -51,6 +51,6 @@ public class HUIMenuItem
         BadgeColor = badgeColor;
         Dot = dot;
         Disabled = disabled;
-        Id = id ?? $"menu-item-{(!string.IsNullOrEmpty(displayName) ? displayName.ToLower(): Guid.NewGuid().ToString())}";
+        Id = id;
     }
 }
