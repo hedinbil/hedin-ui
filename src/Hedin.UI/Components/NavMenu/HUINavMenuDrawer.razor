@@ -114,12 +114,16 @@
     {
         <AuthorizeView Policy="@child.Policy">
             <Authorized>
-                @GetSubItem(child)
+                <div id="@child.Id">
+                    @GetSubItem(child)
+                </div>
             </Authorized>
             <NotAuthorized>
                 @if (!RequireAuthorization)
             {
-                @GetSubItem(child)
+                <div id="@child.Id">
+                    @GetSubItem(child)
+                </div>
             }
             </NotAuthorized>
         </AuthorizeView>
@@ -151,7 +155,8 @@
                     Href="@menuItem.Url"
                     Icon="@menuItem.Icon"
                     Disabled="@menuItem.Disabled"
-                    Style="transition: none;">
+                    Style="transition: none;"
+                    Id = "@menuItem.Id">
             @menuItem.DisplayName
         </MudNavLink>
         @if (menuItem.Disabled)

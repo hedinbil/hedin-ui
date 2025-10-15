@@ -12,6 +12,7 @@ public class HUIMenuItem
     public bool IsExpanded { get; set; }
     public string Policy { get; set; }
     public int Order { get; set; }
+    public string? Id { get; set; }
         
     public bool Disabled { get; set; }
         
@@ -36,7 +37,8 @@ public class HUIMenuItem
         string? badgeData = null, 
         Color badgeColor = Color.Default,
         Severity? dot = null,
-        bool disabled = false)
+        bool disabled = false,
+        string? id = null)
     {
         DisplayName = displayName;
         Url = url;
@@ -49,5 +51,6 @@ public class HUIMenuItem
         BadgeColor = badgeColor;
         Dot = dot;
         Disabled = disabled;
+        Id = id ?? $"menu-item-{(!string.IsNullOrEmpty(displayName) ? displayName.ToLower(): Guid.NewGuid().ToString())}";
     }
 }

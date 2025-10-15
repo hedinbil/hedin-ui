@@ -135,7 +135,8 @@ public class HUIPageHelper : IHUIPageHelper
             policy: authorizeAttribute?.Policy ?? "",
             order: settingsAttribute.Order,
             icon: settingsAttribute.Icon,
-            disabled: settingsAttribute.Disabled
+            disabled: settingsAttribute.Disabled,
+            id: $"menu-item-{(!string.IsNullOrEmpty(settingsAttribute.DisplayName.ToLower()) ? settingsAttribute.DisplayName.ToLower(): Guid.NewGuid().ToString())}"
         );
         return menuItem;
     }

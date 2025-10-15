@@ -1,5 +1,5 @@
 ﻿<MudStack Row Style="transform: translate(0, 0);">
-    <HUINavMenuDrawer Items="menuItems" RequireAuthorization="false" />
+    <HUINavMenuDrawer Items="menuItems" RequireAuthorization="false"/>
     <div style="margin-left: 64px">
         <HUIPage Header="NavMenu Drawer">
             <ChildContent>
@@ -17,13 +17,14 @@
     protected override void OnInitialized()
     {
         menuItems =
-                [
+        (List<HUIMenuItem>)[
             new HUIMenuItem(
-        "Dashboard",
-        "/",
-        null,
-        icon: @Icons.Material.Filled.ViewList
-    )
+                "Dashboard",
+                "/",
+                null,
+                icon: @Icons.Material.Filled.ViewList,
+                id: "menu-item-dashboard"
+            )
             {
                 SubItems =
                 [
@@ -44,7 +45,8 @@
                 "Components",
                 "/Components",
                 null,
-                icon: @Icons.Material.Filled.AddToQueue
+                icon: @Icons.Material.Filled.AddToQueue,
+                id: "test-id"
             )
             {
                 SubItems =
