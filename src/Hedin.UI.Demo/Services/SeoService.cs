@@ -1,5 +1,6 @@
 using System.Reflection;
 using Microsoft.AspNetCore.Components;
+using Hedin.UI.Demo.Helpers;
 
 namespace Hedin.UI.Demo.Services;
 
@@ -7,13 +8,26 @@ public class SeoService
 {
     private readonly IHttpContextAccessor _httpContextAccessor;
     private SeoMetadata _currentMetadata = new();
+    private bool _isInitialized = false;
 
     public SeoService(IHttpContextAccessor httpContextAccessor)
     {
         _httpContextAccessor = httpContextAccessor;
     }
 
-    public SeoMetadata CurrentMetadata => _currentMetadata;
+    public SeoMetadata CurrentMetadata
+    {
+        get
+        {
+            // Initialize metadata based on current URL if not already done
+            if (!_isInitialized)
+            {
+                InitializeMetadataFromUrl();
+                _isInitialized = true;
+            }
+            return _currentMetadata;
+        }
+    }
 
     public void SetMetadata(SeoMetadata metadata)
     {
@@ -97,6 +111,102 @@ public class SeoService
 
         // Generate a generic description - pages should set their own specific descriptions
         return $"Hedin UI {componentType.Name} - Component documentation and examples";
+    }
+
+    private void InitializeMetadataFromUrl()
+    {
+        var path = (_httpContextAccessor.HttpContext?.Request.Path.Value ?? "/").TrimEnd('/');
+        if (string.IsNullOrEmpty(path)) path = "/";
+        
+        // Find the component type for this route
+        var componentType = FindComponentTypeForRoute(path);
+        
+        if (componentType != null)
+        {
+            // Check if the component has SeoMetadata attribute
+            var seoAttr = componentType.GetCustomAttribute<SeoMetadataAttribute>();
+            
+            if (seoAttr != null)
+            {
+                _currentMetadata = new SeoMetadata
+                {
+                    Title = seoAttr.Title,
+                    Description = seoAttr.Description,
+                    Keywords = seoAttr.Keywords,
+                    Type = seoAttr.Type,
+                    Url = GetCurrentUrl()
+                };
+                return;
+            }
+        }
+        
+        // Fallback to default metadata
+        _currentMetadata = new SeoMetadata
+        {
+            Title = "Hedin UI - Build Blazor Apps in Minutes",
+            Description = "Hedin UI gives you a polished suite of MudBlazor-based components, themes, and patterns so you can ship UIs faster.",
+            Keywords = "Blazor, MudBlazor, UI Components, C#, .NET, Web Development, Hedin UI",
+            Type = "website",
+            Url = GetCurrentUrl()
+        };
+    }
+
+    private Type? FindComponentTypeForRoute(string path)
+    {
+        var assembly = Assembly.GetExecutingAssembly();
+        
+        // Get all types with RouteAttribute
+        var routableTypes = assembly.GetTypes()
+            .Where(t => t.IsSubclassOf(typeof(ComponentBase)))
+            .ToList();
+
+        foreach (var type in routableTypes)
+        {
+            var routeAttributes = type.GetCustomAttributes<RouteAttribute>();
+            foreach (var routeAttr in routeAttributes)
+            {
+                // Normalize the route template for comparison
+                var template = routeAttr.Template.TrimEnd('/');
+                if (string.IsNullOrEmpty(template)) template = "/";
+                
+                // Simple exact match (we can make this smarter with route parameters if needed)
+                if (template.Equals(path, StringComparison.OrdinalIgnoreCase))
+                {
+                    return type;
+                }
+                
+                // Handle routes with parameters like "/menu/{Tab}"
+                if (template.Contains("{") && MatchesRoutePattern(path, template))
+                {
+                    return type;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private bool MatchesRoutePattern(string path, string template)
+    {
+        // Simple pattern matching for routes with parameters
+        var templateParts = template.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var pathParts = path.Split('/', StringSplitOptions.RemoveEmptyEntries);
+        
+        if (templateParts.Length != pathParts.Length)
+            return false;
+        
+        for (int i = 0; i < templateParts.Length; i++)
+        {
+            // If it's a parameter like {Tab}, it matches anything
+            if (templateParts[i].StartsWith("{") && templateParts[i].EndsWith("}"))
+                continue;
+            
+            // Otherwise, must be exact match
+            if (!templateParts[i].Equals(pathParts[i], StringComparison.OrdinalIgnoreCase))
+                return false;
+        }
+        
+        return true;
     }
 }
 

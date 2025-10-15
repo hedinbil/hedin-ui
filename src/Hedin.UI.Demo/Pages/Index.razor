@@ -1,6 +1,12 @@
-﻿@layout StartLayout
+﻿@using Hedin.UI.Demo.Helpers
+@layout StartLayout
 @attribute [Route("/")]
-@inject SeoService SeoService
+@attribute [SeoMetadata(
+    Title = "Hedin UI - Build Blazor Apps in Minutes",
+    Description = "Hedin UI gives you a polished suite of MudBlazor-based components, themes, and patterns so you can ship UIs faster.",
+    Keywords = "Blazor, MudBlazor, UI Components, C#, .NET, Web Development, Hedin UI",
+    Type = "website"
+)]
 
 <div>
 
@@ -153,15 +159,6 @@
     public record ExternalSource(string Title, string Icon, string Body, string UrlName, string Url);
     private string MyLibVersion = typeof(Hedin.UI.HUIAppBar).Assembly.GetName().Version?.ToString() ?? "1.0.0";
 
-    protected override void OnInitialized()
-    {
-        SeoService.SetMetadata(
-            title: "Hedin UI - Build Blazor Apps in Minutes",
-            description: "Hedin UI gives you a polished suite of MudBlazor-based components, themes, and patterns so you can ship UIs faster. Open source Blazor component library.",
-            keywords: "Blazor, MudBlazor, UI Components, C#, .NET, Web Development, Hedin UI, Open Source, Component Library, Web Framework",
-            image: "/HedinUI.svg"
-        );
-    }
 
   //   private Stat[] stats = new[]
   //   {

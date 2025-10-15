@@ -1,9 +1,15 @@
 ﻿@using Brism
+@using Hedin.UI.Demo.Helpers
 @attribute [Route(PageRoute.GettingStarted)]
 @attribute [HUIPageSettings("Getting started", 0)]
+@attribute [SeoMetadata(
+    Title = "Getting Started - Hedin UI",
+    Description = "Learn how to get started with Hedin UI. Install and configure the Blazor component library in minutes.",
+    Keywords = "Hedin UI, Getting Started, Blazor, Installation, Setup, Tutorial",
+    Type = "article"
+)]
 
 @inject MarkdownReader mdReader
-@inject SeoService SeoService
 
 <HUIPage Header="Getting started" PageDescription="This page does not represent the design of Hedin.UI.">
     <MudContainer MaxWidth="MaxWidth.Large">
@@ -24,13 +30,4 @@
         },
     };
 
-    protected override void OnInitialized()
-    {
-        SeoService.SetMetadata(
-            title: "Getting Started with Hedin UI - Installation Guide",
-            description: "Learn how to install and set up Hedin UI in your Blazor application. Complete installation guide with examples and best practices.",
-            keywords: "Hedin UI, Getting Started, Installation, Blazor, MudBlazor, Setup Guide, Tutorial",
-            type: "article"
-        );
-    }
 }

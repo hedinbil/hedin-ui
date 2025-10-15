@@ -1,9 +1,15 @@
 ﻿@using Brism
 @using System.Globalization
+@using Hedin.UI.Demo.Helpers
 @attribute [Route(PageRoute.Guidelines)]
 @attribute [HUIPageSettings("Guidelines & Tools", 3)]
+@attribute [SeoMetadata(
+    Title = "Design Guidelines - Hedin UI",
+    Description = "Explore the design guidelines and best practices for using Hedin UI components in your Blazor applications.",
+    Keywords = "Hedin UI, Design Guidelines, Best Practices, UI Design, Blazor",
+    Type = "article"
+)]
 @inject NavigationManager NavigationManager
-@inject SeoService SeoService
 
 
 <HUIPage Header="Guidelines" PageDescription="These are rules and guidelines to follow when using Hedin.UI and MudBlazor">
@@ -231,16 +237,6 @@ public class PageModel
 </HUIPage>
 
 @code {
-    protected override void OnInitialized()
-    {
-        SeoService.SetMetadata(
-            title: "Hedin UI Guidelines - Design Patterns & Best Practices",
-            description: "Comprehensive guidelines for using Hedin UI and MudBlazor components. Learn theming, routing, inputs, data grids, and state management best practices.",
-            keywords: "Hedin UI, Guidelines, Design Patterns, Best Practices, Theming, Routing, MudBlazor, Blazor, UI Components",
-            type: "article"
-        );
-    }
-
     private void HandleOnStateTestClick()
     {
         NavigationManager.NavigateTo(PageRoute.DemoStateManagement);
