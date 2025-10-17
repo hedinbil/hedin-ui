@@ -191,6 +191,15 @@
     
 }
 
+/* Additional MudBlazor input styles - scoped to frame items only */
+.hui-frame-item ::deep .mud-input-number-control.mud-input-showspin .mud-input-adornment-end {
+    margin-inline-end: 30px;
+}
+
+.hui-frame-item ::deep .mud-input.mud-input-error {
+    box-shadow: inset 0px -2px 0px 0px var(--mud-palette-error) !important;
+}
+
 /* Responsive width classes for frame items */
 .hui-frame-item-width-25 {
     grid-column: span 1;
