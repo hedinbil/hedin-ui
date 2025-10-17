@@ -2,7 +2,7 @@
 @namespace Hedin.UI
 @if (CanBeEdited)
 {
-    <div class="@($"d-flex flex-column hui-frame-item hui-input-table-grid {primaryClass}")" style="@($"{width}")">
+    <div class="@($"d-flex flex-column hui-frame-item hui-input-table-grid {primaryClass} {GetWidthClass()}")">
         <div class="@($"hui-input-table-grid {primaryClassEditMode} {(Locked || Warning ? "hui-input-table-grid-icons" : null)}")" @onfocusout="CloseEditComponent">
             @ChildContent
             @if (Locked || Warning)
@@ -33,7 +33,7 @@
 }
 else
 {
-    <div class="@($"pa-3 d-flex flex-column hui-frame-item {primaryClass}")" style="@($"{width}")">
+    <div class="@($"pa-3 d-flex flex-column hui-frame-item {primaryClass} {GetWidthClass()}")">
         <span class="d-flex justify-space-between">
             <MudText Class="@($"hui-text-xs mb-1 {primaryClassText}")">@Label</MudText>
         </span>
@@ -94,7 +94,8 @@ else
     
     /// <summary>
     /// Width of the frame item as a percentage.
-    /// Controls the flex basis and sizing behavior.
+    /// Controls the grid column span and sizing behavior.
+    /// Supported values: 25, 50, 75, 100
     /// </summary>
     [Parameter] public string Width { get; set; }
     
@@ -112,8 +113,22 @@ else
 
     private string primaryClass => Primary ? "mud-theme-primary mud-primary-text" : "mud-background";
     private string primaryClassText => Primary ? "" : "mud-text-secondary";
-    private string width => !string.IsNullOrEmpty(Width) ? $"grid-column: span {Math.Max(1, Math.Round(double.Parse(Width, CultureInfo.InvariantCulture) / 25.0))};" : "";
     private string primaryClassEditMode => Primary ? "primary-edit-mode" : "";
+    
+    private string GetWidthClass()
+    {
+        if (string.IsNullOrEmpty(Width)) return "";
+        
+        var widthValue = double.Parse(Width, CultureInfo.InvariantCulture);
+        return widthValue switch
+        {
+            25 => "hui-frame-item-width-25",
+            50 => "hui-frame-item-width-50", 
+            75 => "hui-frame-item-width-75",
+            100 => "hui-frame-item-width-100",
+            _ => ""
+        };
+    }
 
     private bool _isEditing;
 

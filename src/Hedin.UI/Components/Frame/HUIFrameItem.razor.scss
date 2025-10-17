@@ -190,3 +190,57 @@
     }
     
 }
+
+/* Responsive width classes for frame items */
+.hui-frame-item-width-25 {
+    grid-column: span 1;
+}
+
+.hui-frame-item-width-50 {
+    grid-column: span 1;
+    
+    @container panel-container (min-width: 700px) {
+        grid-column: span 1;
+    }
+    
+    @container panel-container (min-width: 900px) {
+        grid-column: span 2;
+    }
+    
+    @container panel-container (min-width: 1100px) {
+        grid-column: span 2;
+    }
+}
+
+.hui-frame-item-width-75 {
+    grid-column: span 1;
+    
+    @container panel-container (min-width: 700px) {
+        grid-column: span 2;
+    }
+    
+    @container panel-container (min-width: 900px) {
+        grid-column: span 2;
+    }
+    
+    @container panel-container (min-width: 1100px) {
+        grid-column: span 3;
+    }
+}
+
+.hui-frame-item-width-100 {
+    grid-column: span 1;
+    
+    @container panel-container (min-width: 700px) {
+        grid-column: span 2;
+    }
+    
+    @container panel-container (min-width: 900px) {
+        grid-column: span 3;
+    }
+    
+    @container panel-container (min-width: 1100px) {
+        grid-column: span 4;
+    }
+}
+
