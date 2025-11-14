@@ -34,7 +34,7 @@ builder.Services.AddUIConfiguration(builder.Configuration);
 Add the following in `appsettings.json`
 ```
   "HedinUI": {
-    "AppTitle": "Hedin UI"          // Applies to PageTitle using HUIPage, AppSwitcher and more.
+    "AppTitle": "Hedin UI",         // Applies to PageTitle using HUIPage, AppSwitcher and more.
     "ShowDevEnvWarning":  true,     //Will show a top banner for dev/stage/test, should not be true in prod
     "GoogleMapsApiKey": ""          //Required with HUIMaps component
   }
