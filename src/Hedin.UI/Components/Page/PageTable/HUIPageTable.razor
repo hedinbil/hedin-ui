@@ -8,7 +8,7 @@
 @if (ChildContent != null)
 {
     <CascadingValue Value="@this" Name="HUIPageTable">
-        <HUIModule Header="@Header" IsExpanded="true" ChildContent="ChildContent">
+        <HUIModule Header="@Header" IsExpanded="true" ChildContent="ChildContent" Expandable="Expandable">
             <Buttons>
                 @Buttons
                 @if (ShowSearchField)
@@ -91,6 +91,12 @@
     /// EventCallback to the refresh button click. The refresh button will be visible only when this parameter is set.
     /// </summary>
     [Parameter] public EventCallback OnRefreshClick { get; set; }
+    
+    
+    /// <summary>
+    /// Set too false to disable expansion of module.
+    /// </summary>
+    [Parameter] public bool Expandable { get; set; } = true;
 
     private string searchString = "";
     private bool showSearchField = false;

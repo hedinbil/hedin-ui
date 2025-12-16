@@ -2,7 +2,7 @@
 @inherits HUIComponentBase
 @inject InternaHUIlLocalizer Localizer
 
-<HUIModule Class="@Class" Header="Filter" IsExpanded="true">
+<HUIModule Class="@Class" Header="Filter" IsExpanded="true" Expandable="Expandable">
     <Buttons>
         @Buttons
         <HUIIconButton Icon="@Icons.Material.Filled.RestartAlt" OnClick="HandleClearClick" Tooltip="@Localizer["HUIPageFilter.ResetFilters"]" />
@@ -74,6 +74,11 @@
     /// Used for custom filter styling.
     /// </summary>
     [Parameter] public string? Class { get; set; }
+
+    /// <summary>
+    /// Set too false to disable expansion of module.
+    /// </summary>
+    [Parameter] public bool Expandable { get; set; } = true;
 
     private void HandleOptionsClick() => OnOptionsClick.InvokeAsync();
     private void HandleSearchClick() => OnSearchClick.InvokeAsync();
