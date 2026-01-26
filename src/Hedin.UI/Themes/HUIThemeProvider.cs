@@ -5,11 +5,12 @@ namespace Hedin.UI;
 public static class HUIThemeExtensions
 {
     // Method to create a customized theme based on the base theme
-    private static MudTheme CreateCustomTheme(MudTheme baseTheme, Action<Palette>? customizePalette, Action<LayoutProperties>? customizeLayout)
+    private static MudTheme CreateCustomTheme(MudTheme baseTheme, Action<Palette>? customizePalette, Action<LayoutProperties>? customizeLayout, Action<Typography>? customizeTypography)
     {
         var customTheme = baseTheme.Clone();
         customizePalette?.Invoke(customTheme.PaletteDark);
         customizeLayout?.Invoke(customTheme.LayoutProperties);
+        customizeTypography?.Invoke(customTheme.Typography);
         return customTheme;
     }
 
@@ -186,10 +187,12 @@ public static class HUIThemeExtensions
     /// </summary>
     /// <param name="theme"></param>
     /// <param name="customizePalette"></param>
+    /// <param name="customizeLayout"></param>
+    /// <param name="customizeTypography"></param>
     /// <returns></returns>
-    public static MudTheme Override(this MudTheme theme, Action<Palette>? customizePalette = null, Action<LayoutProperties>? customizeLayout = null)
+    public static MudTheme Override(this MudTheme theme, Action<Palette>? customizePalette = null, Action<LayoutProperties>? customizeLayout = null, Action<Typography>? customizeTypography = null)
     {
-        return CreateCustomTheme(theme, customizePalette, customizeLayout);
+        return CreateCustomTheme(theme, customizePalette, customizeLayout, customizeTypography);
     }
 #pragma warning restore CS1570 // XML comment has badly formed XML
 }
