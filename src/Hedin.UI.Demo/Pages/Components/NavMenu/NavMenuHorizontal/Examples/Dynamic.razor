@@ -1,0 +1,42 @@
+﻿<HUINavMenuHorizontal Items="_menuItems" RequireAuthorization="false" @ref="_menuRef" ActiveItem="_activeMenuItem" ShowAddButton="true" OnAddButtonClick="OnAddClicked" OnCloseTab="@OnCloseTab"/>
+<HUIPage Header="Demo page 3" PageDescription="Here we use the dynamic horizontal menu with add button">
+    Some content.
+</HUIPage>
+@code {
+
+    [CascadingParameter] public string Tab { get; set; } = string.Empty;
+    private readonly List<HUIMenuItem> _menuItems =
+    [
+        new("Item 1", "/components/menus/nav-menu-horizontal/tab21", ""),
+        new("Item 2", "/components/menus/nav-menu-horizontal/tab32", ""),
+        new("Item 3", "/components/menus/nav-menu-horizontal/tab33", "")
+    ];
+
+    private HUIMenuItem? _activeMenuItem;
+    protected override void OnInitialized()
+    {
+        StateHasChanged();
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _activeMenuItem = _menuItems.FirstOrDefault(x => x.Url.TrimEnd('/').EndsWith($"/{Tab}"));
+    }
+
+    private HUINavMenuHorizontal? _menuRef;
+    private void OnAddClicked()
+    {
+        var id = _menuItems.Count + 1;
+        _menuItems.Add(new HUIMenuItem($"Menu option {id}", $"/components/menus/nav-menu-horizontal/tab3{id}", null)
+        {
+            ShowCloseIcon = true
+        });
+        _menuRef?.ForceStateHasChanged();
+    }
+    private void OnCloseTab(HUIMenuItem item)
+    {
+        _menuItems.Remove(item);
+        _menuRef?.ForceStateHasChanged();
+    }
+}

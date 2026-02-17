@@ -28,6 +28,53 @@
             border-top-right-radius: $border-radius;
         }
     }
+    .mud-dynamic-tabs {
+      .mud-tabs-tabbar {
+        .mud-tabs-tabbar-content {
+          flex: unset;
+          width: unset;
+          padding: 8px 1px 0 12px;
+        }
+        .mud-tab {
+          .mud-tabs-panel-header-after {
+            display: none;
+            &:has(button) {
+              display: flex;
+              margin-right: -8px;
+              margin-top: 2px;
+            }
+            button.mud-icon-button {
+              margin-left: 0;
+              padding: 0;
+            }
+          }
+        }
+      }
+      
+      .mud-tabs-header.mud-tabs-header-after {
+        align-items: end;
+        margin-bottom: 6px;
+        button.mud-icon-button {
+          margin-left: 4px;
+          padding: 4px;
+          .mud-icon-size-medium {
+            font-size: 1rem !important;
+            .mud-ripple-icon:after {
+              display: none;
+            }
+          }
+        }
+      }
+      
+      .mud-tabs-panel-header-after {
+        .mud-icon-size-medium {
+          font-size: 1rem !important;
+          .mud-ripple-icon:after {
+            display: none;
+          }
+        }
+      }
+    }
 
     .mud-chip>.mud-chip-content {  font-size: 12px !important;  font-weight: 600 !important;}
 
@@ -42,6 +89,7 @@
         font-size: 16px;
         font-weight: initial;
         border-radius: 0;
+        padding: 6px 24px;
         
         &:has(.mud-badge-root) {
             margin-right: 9px !important;

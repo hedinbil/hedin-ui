@@ -17,6 +17,8 @@ public class HUIMenuItem
     public bool Disabled { get; set; }
         
     public bool HasExpandedChild { get; set; }
+    
+    public bool ShowCloseIcon { get; set; }
 
     public string? Tooltip { get; set; }
     public string? BadgeData { get; set; }

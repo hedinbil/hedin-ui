@@ -6,22 +6,43 @@
 @if (Items.Any())
 {
     <div class="tabs-wrapper">
-        <MudTabs ActivePanelIndex="GetActiveTabIndex()" Elevation="0" Color="Color.Transparent" Rounded="true" MinimumTabWidth="32px" HideSlider="true">
-            @foreach (var menuItem in Items)
-            {
-                <AuthorizeView Policy="@menuItem.Policy">
-                    <Authorized>
-                        @RenderPanel(menuItem)
-                    </Authorized>
-                    <NotAuthorized>
-                        @if (!RequireAuthorization)
-                        {
+        @if(!ShowAddButton){
+            <MudTabs ActivePanelIndex="GetActiveTabIndex()" Elevation="0" Color="Color.Transparent" Rounded="true" MinimumTabWidth="32px" HideSlider="true">
+                @foreach (var menuItem in Items)
+                {
+                    <AuthorizeView Policy="@menuItem.Policy">
+                        <Authorized>
                             @RenderPanel(menuItem)
-                        }
-                    </NotAuthorized>
-                </AuthorizeView>
-            }
-        </MudTabs>
+                        </Authorized>
+                        <NotAuthorized>
+                            @if (!RequireAuthorization)
+                            {
+                                @RenderPanel(menuItem)
+                            }
+                        </NotAuthorized>
+                    </AuthorizeView>
+                }
+            </MudTabs>
+        }
+        else
+        {
+            <MudDynamicTabs ActivePanelIndex="GetActiveTabIndex()" Elevation="0" Color="Color.Transparent" Rounded="true" MinimumTabWidth="32px" HideSlider="true" AddTab="@OnAddButtonClick" CloseTab="@(panel => CloseTab(panel))" AddTabIcon="@AddTabIcon">
+                @foreach (var menuItem in Items)
+                {
+                    <AuthorizeView Policy="@menuItem.Policy">
+                        <Authorized>
+                            @RenderPanel(menuItem)
+                        </Authorized>
+                        <NotAuthorized>
+                            @if (!RequireAuthorization)
+                            {
+                                @RenderPanel(menuItem)
+                            }
+                        </NotAuthorized>
+                    </AuthorizeView>
+                }
+            </MudDynamicTabs>
+        }
     </div>
 }
 
@@ -44,6 +65,26 @@
     /// </summary>
     [Parameter] public bool RequireAuthorization { get; set; } = true;
  
+    /// <summary>
+    /// Controls whether the add button is shown. Default is false.
+    /// </summary>
+    [Parameter] public bool ShowAddButton { get; set; }
+    
+    /// <summary>
+    /// Event callback for the add button click.
+    /// </summary>
+    [Parameter] public EventCallback OnAddButtonClick { get; set; }
+
+    /// <summary>
+    /// Event callback for the close tab click. Only applicable if ShowAddButton is true.
+    /// </summary>
+    [Parameter] public EventCallback<HUIMenuItem> OnCloseTab { get; set; }
+
+    /// <summary>
+    /// Icon for the add button. Only applicable if ShowAddButton is true. Default is Icons.Material.Filled.Add.
+    /// </summary>
+    [Parameter] public string? AddTabIcon { get; set; }
+
     private int GetActiveTabIndex()
     {
         if (ActiveItem == null)
@@ -88,21 +129,23 @@
     private RenderFragment RenderPanel(HUIMenuItem menuItem)
     {
         return @<MudTabPanel
-                    Class="px-6"
-                    Disabled="menuItem.Disabled"
+                    ID="@menuItem"
+                    ShowCloseIcon="@menuItem.ShowCloseIcon"
+                    Class=""
+                    Disabled="@menuItem.Disabled"
                     OnClick="() => HandleOnTabClick(menuItem)"
                     ToolTip="@menuItem.Tooltip"
                     Icon="@menuItem.Icon">
-                    <TabContent>
-                        <MudStack Spacing="2" Row Justify="Justify.Center" AlignItems="AlignItems.Center">
-                            @if(!string.IsNullOrWhiteSpace(menuItem.Icon))
-                            {
-                                <MudIcon Icon="@menuItem.Icon" Size="Size.Small"/>
-                            }
-                            @Localizer[menuItem.DisplayName]
-                            @RenderBadge(menuItem)
-                        </MudStack>
-                    </TabContent>
+                   <TabContent>
+                       <MudStack Spacing="2" Row Justify="Justify.Center" AlignItems="AlignItems.Center">
+                           @if(!string.IsNullOrWhiteSpace(menuItem.Icon))
+                           {
+                               <MudIcon Icon="@menuItem.Icon" Size="Size.Small"/>
+                           }
+                           @Localizer[menuItem.DisplayName]
+                           @RenderBadge(menuItem)
+                       </MudStack>
+                   </TabContent>
                </MudTabPanel>;
     }
     
@@ -113,8 +156,12 @@
     {
         StateHasChanged();
     }
-}
-@code {
+
+    private Task CloseTab(MudTabPanel panel)
+    {
+        return OnCloseTab.InvokeAsync((HUIMenuItem)panel.ID!);
+    }
+
     private RenderFragment? RenderBadge(HUIMenuItem menuItem)
     {
         if (menuItem.Dot != null)
