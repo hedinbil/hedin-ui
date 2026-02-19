@@ -6,9 +6,9 @@ public class HUIMenuItem
 {
     public string DisplayName { get; set; }
     public string Url { get; set; }
-    public HUIMenuItem? Parent { get; set; } // Change type to HUIMenuItem?
+    public HUIMenuItem? Parent { get; set; }
     public string? ParentUrl { get; set; }
-    public List<HUIMenuItem> SubItems { get; set; } = new List<HUIMenuItem>();
+    public List<HUIMenuItem> SubItems { get; set; } = [];
     public bool IsExpanded { get; set; }
     public string Policy { get; set; }
     public int Order { get; set; }
@@ -27,6 +27,11 @@ public class HUIMenuItem
     public Severity? Dot { get; set; }
 
     public string? Icon { get; set; }
+    
+    /// <summary>
+    /// Adds a divider in the tab panel after this item when used in HUINavMenuHorizontal
+    /// </summary>
+    public bool ShowDivider { get; set; }
         
     public HUIMenuItem(
         string displayName, 

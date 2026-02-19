@@ -131,7 +131,7 @@
         return @<MudTabPanel
                     ID="@menuItem"
                     ShowCloseIcon="@menuItem.ShowCloseIcon"
-                    Class=""
+                    Class="@(menuItem.ShowDivider ? "hui-tabpanel-divider" : string.Empty)"
                     Disabled="@menuItem.Disabled"
                     OnClick="() => HandleOnTabClick(menuItem)"
                     ToolTip="@menuItem.Tooltip"

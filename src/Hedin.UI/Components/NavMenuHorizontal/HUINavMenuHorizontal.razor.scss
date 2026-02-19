@@ -27,6 +27,10 @@
         div:last-child:has(.mud-tab:not(.mud-tab-active)) .mud-tab{
             border-top-right-radius: $border-radius;
         }
+
+        div:has(>.hui-tabpanel-divider):not(:last-child) {
+          margin-right: 12px;
+        }
     }
     .mud-dynamic-tabs {
       .mud-tabs-tabbar {
