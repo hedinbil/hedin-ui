@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Hedin.UI" Version="1.0.16" />
+    <PackageReference Include="Hedin.UI" Version="1.0.17" />
   </ItemGroup>
 
   <ItemGroup>
