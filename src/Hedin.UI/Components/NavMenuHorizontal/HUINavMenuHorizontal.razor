@@ -26,7 +26,7 @@
         }
         else
         {
-            <MudDynamicTabs ActivePanelIndex="GetActiveTabIndex()" Elevation="0" Color="Color.Transparent" Rounded="true" MinimumTabWidth="32px" HideSlider="true" AddTab="@OnAddButtonClick" CloseTab="@(panel => CloseTab(panel))" AddTabIcon="@AddTabIcon">
+            <MudDynamicTabs ActivePanelIndex="GetActiveTabIndex()" Elevation="0" Color="Color.Transparent" Rounded="true" MinimumTabWidth="32px" HideSlider="true" AddTab="@OnAddButtonClick" CloseTab="@(panel => CloseTab(panel))" AddTabIcon="@(string.IsNullOrEmpty(AddTabIcon) ? Icons.Material.Filled.Add : AddTabIcon)">
                 @foreach (var menuItem in Items)
                 {
                     <AuthorizeView Policy="@menuItem.Policy">

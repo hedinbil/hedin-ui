@@ -12,92 +12,92 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\Hedin.UI\Hedin.UI.csproj" />
+        <ProjectReference Include="..\Hedin.UI\Hedin.UI.csproj"/>
     </ItemGroup>
 
-  <ItemGroup>
-    <None Update="Pages\Components\BlogPost\BlogPost.razor.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Pages\Components\Dialog\Dialog.razor.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Pages\Components\Maps.razor.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
+    <ItemGroup>
+        <None Update="Pages\Components\BlogPost\BlogPost.razor.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Pages\Components\Dialog\Dialog.razor.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+        <None Update="Pages\Components\Maps.razor.txt">
+            <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </None>
+    </ItemGroup>
 
     <ItemGroup>
-        <Folder Include="wwwroot\css\" />
+        <Folder Include="wwwroot\css\"/>
     </ItemGroup>
 
     <ItemGroup>
         <None Include="..\..\CONTRIBUTING.md" Link="CONTRIBUTING.md">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Include="..\..\docs\getting-started.md" Link="getting-started.md">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
         <None Include="..\..\SECURITY.md" Link="SECURITY.md">
-          <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
-        <None Include="Pages\Guidelines\CssUtilization.razor" />
+        <None Include="Pages\Guidelines\CssUtilization.razor"/>
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.SassCompiler" Version="1.93.2" />
-        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0" />
-        <PackageReference Include="Azure.Identity" Version="1.16.0" />
-        <PackageReference Include="Brism" Version="1.0.1" />
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.4" />
-        <PackageReference Include="MudBlazor.Markdown" Version="8.11.0" />
-      <PackageReference Include="Azure.AI.OpenAI" Version="2.3.0-beta.2" />
-      <PackageReference Include="Azure.Search.Documents" Version="11.6.1" />
-      <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3" />
-      <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3" />
-      <PackageReference Include="Microsoft.SemanticKernel" Version="1.65.0" />
-      <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.65.0" />
+        <PackageReference Include="AspNetCore.SassCompiler" Version="1.97.1" />
+        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0"/>
+        <PackageReference Include="Azure.Identity" Version="1.17.1" />
+        <PackageReference Include="Brism" Version="1.0.1"/>
+        <PackageReference Include="Microsoft.Extensions.Configuration" Version="9.0.13" />
+        <PackageReference Include="MudBlazor.Markdown" Version="8.11.0"/>
+        <PackageReference Include="Azure.AI.OpenAI" Version="2.8.0-beta.1" />
+        <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
+        <PackageReference Include="ModelContextProtocol" Version="0.2.0-preview.3"/>
+        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="0.2.0-preview.3"/>
+        <PackageReference Include="Microsoft.SemanticKernel" Version="1.71.0"/>
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.71.0"/>
     </ItemGroup>
 
     <ItemGroup>
-        <UpToDateCheckInput Remove="wwwroot\css\site.scss" />
+        <UpToDateCheckInput Remove="wwwroot\css\site.scss"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="Styles\site.scss" />
+        <Content Include="Styles\site.scss"/>
     </ItemGroup>
 
     <ItemGroup>
-        <UpToDateCheckInput Remove="Pages\Guidelines\CssUtilization.razor" />
+        <UpToDateCheckInput Remove="Pages\Guidelines\CssUtilization.razor"/>
     </ItemGroup>
 
     <ItemGroup>
-        <_ContentIncludedByDefault Remove="Pages\Guidelines\CssUtilization.razor" />
+        <_ContentIncludedByDefault Remove="Pages\Guidelines\CssUtilization.razor"/>
     </ItemGroup>
 
-  <ItemGroup>
-    <EmbeddedResource Include="Pages\Components\**\*.razor" />
-  </ItemGroup>
+    <ItemGroup>
+        <EmbeddedResource Include="Pages\Components\**\*.razor"/>
+    </ItemGroup>
 
 
-  <PropertyGroup>
-    <EnableDefaultContentItems>false</EnableDefaultContentItems>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Content Include="**\*.*" Exclude="bin\**;obj\**;node_modules\**;**\*.cs;**\*.csproj;**\*.razor.css">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  
-  <ItemGroup>
-    <EmbeddedResource Remove="Pages\Components\Module\Module\Examples\ButtonsVisibleModule.razor" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <Content Update="Pages\Components\Module\Module\Examples\ButtonsVisibleModule.razor">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
+    <PropertyGroup>
+        <EnableDefaultContentItems>false</EnableDefaultContentItems>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Content Include="**\*.*" Exclude="bin\**;obj\**;node_modules\**;**\*.cs;**\*.csproj;**\*.razor.css">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <EmbeddedResource Remove="Pages\Components\Module\Module\Examples\ButtonsVisibleModule.razor"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Update="Pages\Components\Module\Module\Examples\ButtonsVisibleModule.razor">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
 
 </Project>
