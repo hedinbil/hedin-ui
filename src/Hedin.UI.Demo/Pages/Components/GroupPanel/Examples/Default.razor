@@ -1,0 +1,65 @@
+@using Hedin.UI.Components.GroupPanel
+<MudStack Spacing="1">
+    <HUIGroupPanel>
+        <TitleContent>
+            <MudStack Row Spacing="2">
+                <MudIcon Icon="@Icons.Material.Filled.Info" Size="Size.Small" Color="Color.Info"/>
+                <MudText Typo="Typo.body2">General Information</MudText>
+            </MudStack>
+        </TitleContent>
+        <InfoContent>
+            <MudText>Om finansiering behöver en förklaring så kan den redogöras för här.</MudText>
+            <MudLink Href="#">Link</MudLink>
+        </InfoContent>
+        <ChildContent>
+            <HUIFrame>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudTextField T="string" Label="Purchase agreement number" Value="@("233969")"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudSelect T="string" Label="Selling company" Value="@("Eklanda Bil")" Variant="Variant.Outlined"
+                               Margin="Margin.Dense">
+                        <MudSelectItem Value="@("Eklanda Bil")">Eklanda Bil</MudSelectItem>
+                    </MudSelect>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudSelect T="string" Label="Location" Value="@("Hedin Automotive Mölndal")"
+                               Variant="Variant.Outlined" Margin="Margin.Dense">
+                        <MudSelectItem Value="@("Hedin Automotive Mölndal")">Hedin Automotive Mölndal</MudSelectItem>
+                    </MudSelect>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudDatePicker Label="Label" Date="@(new DateTime(2025, 11, 30))" Variant="Variant.Outlined"
+                                   Margin="Margin.Dense"/>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudDatePicker Label="Printed date" Date="@(new DateTime(2025, 11, 30))" Variant="Variant.Outlined"
+                                   Margin="Margin.Dense"/>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudTextField T="string" Label="Order or commission number" Value="@("2105886354")"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudTextField T="string" Label="Seller e-mail address" Value="@("name.surname@company.com")"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudTextField T="string" Label="Carriage card number" Value="@("020400485763")"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"/>
+                </HUIFrameItem>
+                <HUIFrameItem CanBeEdited Width="100">
+                    <MudCheckBox T="bool" Label="Distance purchase" Value="true" Size="Size.Small"/>
+                </HUIFrameItem>
+            </HUIFrame>
+        </ChildContent>
+    </HUIGroupPanel>
+    <HUIGroupPanel Title="General">
+        <HUIFrame>
+            <HUIFrameItem Width="100" CanBeEdited>
+                <MudTextField T="string" Label="General information" Variant="Variant.Outlined" Margin="Margin.Dense"/>
+            </HUIFrameItem>
+        </HUIFrame>
+    </HUIGroupPanel>
+</MudStack>

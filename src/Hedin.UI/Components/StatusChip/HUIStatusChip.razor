@@ -1,7 +1,7 @@
 ﻿@namespace Hedin.UI
 
 <span class="d-flex gap-2 align-center">
-    <MudIcon Class="@("mud-" + Severity.ToDescriptionString() + "-text")" Size="Size.Small" Icon="@Icons.Material.Filled.Circle" Style="width: 0.5rem; height: 0.5rem;" />
+    <MudIcon Class="@("mud-" + this.Severity.ToString().ToLowerInvariant() + "-text")" Size="Size.Small" Icon="@Icons.Material.Filled.Circle" Style="width: 0.5rem; height: 0.5rem;" />
     @ChildContent
 </span>
 

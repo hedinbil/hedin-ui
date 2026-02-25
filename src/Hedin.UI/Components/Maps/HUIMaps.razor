@@ -36,9 +36,7 @@
     /// Ensures all points are visible within the map bounds.
     /// </summary>
     [Parameter] public bool AutoFit { get; set; } = true;
-    
-    private bool _darkMode;
-    
+
     /// <summary>
     /// Enables dark mode styling for the map when true.
     /// Provides better visibility in low-light conditions.
@@ -46,19 +44,19 @@
     [Parameter]
     public bool DarkMode
     {
-        get => _darkMode;
+        get;
         set
         {
-            if (_darkMode != value)
+            if (field != value)
             {
-                _darkMode = value;
+                field = value;
                 // if the map is already rendered, immediately swap styles
                 if (!_needsInit)
-                    _ = JS.InvokeVoidAsync("googleMaps.setStyle", _mapId, _darkMode);
+                    _ = JS.InvokeVoidAsync("googleMaps.setStyle", _mapId, field);
             }
         }
     }
-    
+
     /// <summary>
     /// Configuration options for map controls and behavior.
     /// Controls which UI elements are displayed and map interaction settings.

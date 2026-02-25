@@ -1,6 +1,7 @@
 ﻿@attribute [Route(PageRoute.AIChatBot)]
 @attribute [HUIPageSettings("Albot")]
 @inject ExternalResourceStatus Status
+@using MudX
 @inherits OwningComponentBase
 
 <MudGrid Class="d-flex flex-column gap-3 align-center" Style="height:calc(100vh - var(--mud-appbar-height));">
@@ -14,8 +15,8 @@
                     var name = chat.IsBot ? "Albot" : "You";
                     var time = chat.Timestamp.ToString("HH:mm:ss");
 
-                    <MudChat ChatPosition="position">
-                        <MudChatHeader Name="@name" Time="@time" />
+                    <MudXChat ChatPosition="position">
+                        <MudXChatHeader Name="@name" Time="@time" />
                         @if (chat.IsBot)
                         {
                             <MudAvatar Square="true" Style="background-color:transparent;">
@@ -26,23 +27,23 @@
                         {
                             <MudAvatar Color="Color.Info" Variant="Variant.Outlined">U</MudAvatar>
                         }
-                        <MudChatBubble>
+                        <MudXChatBubble>
                             <MudMarkdown Value="@chat.Message" Styling="_styling"/>
-                        </MudChatBubble>
-                    </MudChat>
+                        </MudXChatBubble>
+                    </MudXChat>
                 }
 
                 @* Show skeleton only while loading and before first chunk arrives *@
                 @if (_isLoading && _conversation.Any() && string.IsNullOrEmpty(_conversation.Last().Message))
                 {
-                    <MudChat ChatPosition="ChatBubblePosition.Start">
-                        <MudChatBubble>
+                    <MudXChat ChatPosition="ChatBubblePosition.Start">
+                        <MudXChatBubble>
                             <span class="d-flex flex-column gap-2">
                                 <HUISkeletonList Count="1" Width="190px" Height="14px" Class="rounded" />
                                 <HUISkeletonList Count="2" Width="140px" Height="12px" Class="rounded" />
                             </span>
-                        </MudChatBubble>
-                    </MudChat>
+                        </MudXChatBubble>
+                    </MudXChat>
                 }
             </div>
 
@@ -51,11 +52,13 @@
                 <MudTextField @bind-Value="_userInput"
                 Placeholder="Type a message…"
                 Lines="1"
-                AutoGrow="true"
+                Sizing="InputSizing.Auto"
                 MaxLines="5"
                 Disabled="_isLoading || Status.Offline"
                 Clearable="true"
                 Immediate="true"
+                Variant="Variant.Outlined"
+                Margin="Margin.Dense"
                 OnKeyDown="@(async e => { if (e.Key == "Enter" && !e.ShiftKey) await SendAsync(); })" />
 
                 <HUIButton Variant="Variant.Filled"

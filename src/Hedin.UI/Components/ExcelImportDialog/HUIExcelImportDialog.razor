@@ -9,12 +9,10 @@
         <MudText Typo="Typo.h6">@title</MudText>
     </TitleContent>
     <DialogContent>
-        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnInputFileChanged" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20 cursor-pointer" InputStyle="opacity:0" @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Accept="@supportedFileTypes">
-            <ActivatorContent>
-                <MudPaper Height="150px" Outlined="true" Class="@dragClass">
-                    <MudText Typo="Typo.h6">@DragDropText</MudText>
-                </MudPaper>
-            </ActivatorContent>
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnInputFileChanged" Hidden="false" Class="flex-1" InputClass="absolute mud-width-full mud-height-full overflow-hidden z-20 cursor-pointer opacity-0" @ondragenter="@SetDragClass" @ondragleave="@ClearDragClass" @ondragend="@ClearDragClass" Accept="@supportedFileTypes">
+            <MudPaper Height="150px" Outlined="true" Class="@dragClass">
+                <MudText Typo="Typo.h6">@DragDropText</MudText>
+            </MudPaper>
         </MudFileUpload>
         <div class="my-6">
             @foreach (var file in selectedFiles)

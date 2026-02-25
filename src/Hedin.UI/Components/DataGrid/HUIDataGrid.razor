@@ -81,8 +81,8 @@
     /// Function that provides server-side data for the grid.
     /// Used for server-side pagination, filtering, and sorting.
     /// </summary>
-    [Parameter] public Func<GridState<T>, Task<GridData<T>>>? ServerData { get; set; }
-    
+    [Parameter] public Func<GridState<T>, CancellationToken, Task<GridData<T>>>? ServerData { get; set; }
+
     /// <summary>
     /// Indicates whether the grid is currently loading data.
     /// Shows a loading indicator when true.
@@ -303,7 +303,7 @@
     /// Event callback when editing is committed for an item.
     /// Provides the item with committed changes.
     /// </summary>
-    [Parameter] public EventCallback<T> CommittedItemChanges { get; set; }
+    [Parameter] public Func<T, Task<DataGridEditFormAction>>? CommittedItemChanges { get; set; }
     
     /// <summary>
     /// Determines what triggers editing mode.

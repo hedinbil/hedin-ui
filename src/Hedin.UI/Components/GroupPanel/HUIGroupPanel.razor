@@ -1,0 +1,56 @@
+<div class="hui-group-panel">
+    <MudStack Spacing="3">
+        <MudDivider Class="hui-group-panel-divider"></MudDivider>
+        <MudGrid class="hui-group-panel-content">
+            <MudItem xs="12" sm="4">
+                <MudStack Spacing="1">
+                    <MudStack Spacing="1" Row AlignItems="AlignItems.Center">
+                        @if (TitleContent == null)
+                        {
+                            <div class="hui-group-panel-title">@Title</div>
+                        }
+                        else
+                        {
+                            @TitleContent
+                        }
+                    </MudStack>
+                    @if (InfoContent != null)
+                    {
+                        @InfoContent
+                    }
+                </MudStack>
+            </MudItem>
+            <MudItem xs="12" sm="8">
+                @ChildContent
+            </MudItem>
+        </MudGrid>
+    </MudStack>
+</div>
+
+@code {
+
+    /// <summary>
+    /// Title displayed in the group panel.
+    /// </summary>
+    [Parameter]
+    public string? Title { get; set; }
+
+    /// <summary>
+    /// Content displayed in the group panel to the right of the title.
+    /// </summary>
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+
+    /// <summary>
+    /// Optional content displayed below the title in the group panel. Can be used for additional information or controls related to the group.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? InfoContent { get; set; }
+
+    /// <summary>
+    /// Override the default title with custom content. If set, this will replace the Title parameter and allow for more complex title layouts, such as including additional controls or styling.
+    /// </summary>
+    [Parameter]
+    public RenderFragment? TitleContent { get; set; }
+    
+}

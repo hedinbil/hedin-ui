@@ -30,12 +30,14 @@
                         {
                             <MudForm @ref="@_form" Validation="_validator.ValidateValue" Model="_model">
                                 @HUISuggestionBody
-                                <MudTextField AutoGrow
-                                              For="(() => _model.FeedbackText)"
+                                <MudTextField For="(() => _model.FeedbackText)"
+                                              Sizing="InputSizing.Auto"
                                               Lines="3"
                                               @bind-Value="@_model.FeedbackText"
                                               Immediate="true" PlaceHolder="@Localizer["HUISuggestionBox.Placeholder"]"
-                                              FullWidth></MudTextField>
+                                              FullWidth
+                                              Variant="Variant.Outlined"
+                                              Margin="Margin.Dense"></MudTextField>
                             </MudForm>
                             <MudStack Spacing="0" AlignItems="AlignItems.End" Justify="Justify.FlexEnd"
                                       Class="align-self-stretch">

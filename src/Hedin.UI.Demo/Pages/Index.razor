@@ -67,9 +67,9 @@
                     applications faster. We welcome contributions and feedback from developers 
                     worldwide as we continue to enhance and expand this toolkit.
                 </MudText>
-                <MudPaper Elevation="1" Class="pa-3" Style="max-width: 400px;">
+                <MudPaper Elevation="1" Class="pa-3" Style="max-width: 450px;">
                     <MudText Typo="Typo.subtitle2" Class="mb-2">Current version: <strong>@MyLibVersion</strong></MudText>
-                    dotnet add package Hedin.UI --version @MyLibVersion
+                    dotnet add package Hedin.UI --version @MyLibVersion<br/>
                     <MudLink Typo="Typo.caption" Href="@PageRoute.GettingStarted" Class="mt-2">Installation guide</MudLink>
                 </MudPaper>
             </MudContainer>
@@ -100,7 +100,7 @@
                 @foreach (var f in features)
                 {
                     <MudItem xs="12" sm="6" md="3">
-                        <MudCard Hover="true" Elevation="1">
+                        <MudCard Elevation="1">
                             <MudCardContent Class="text-center">
                                 <MudIcon Icon="@f.Icon" Size="Size.Large" Color="Color.Primary" Class="mb-2" />
                                 <MudText Typo="Typo.h6">@f.Title</MudText>

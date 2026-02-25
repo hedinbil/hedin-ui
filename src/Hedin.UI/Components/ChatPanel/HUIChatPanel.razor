@@ -68,8 +68,10 @@
         <MudTextField @ref="_inputRef"
         @bind-Value="_message"
         Label="Write here…"
-        AutoGrow="true"
         MaxLines="5"
+        Sizing="InputSizing.Auto"
+        Variant="Variant.Outlined"
+        Margin="Margin.Dense"
         Immediate="true"
         Disabled="_isLoadingInternal"
         OnKeyDown="@(async e => { if (e.Key == "Enter" && !e.ShiftKey) await TriggerSend(); })" />

@@ -196,9 +196,9 @@
         set { AddValue(value); }
     }
 
-    public async Task Validate()
+    public async Task ValidateAsync()
     {
-        await _autoComplete!.Validate();
+        await _autoComplete!.ValidateAsync();
     }
 
     private async Task HandleSelectAllClick(bool value)
@@ -218,7 +218,7 @@
         SelectAll = value;
         RefreshBinding();
         await _autoComplete!.CloseMenuAsync();
-        await _autoComplete!.Validate();
+        await _autoComplete!.ValidateAsync();
     }
 
     public async Task CloseMenuAsync()

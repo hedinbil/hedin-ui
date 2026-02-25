@@ -19,7 +19,7 @@ namespace Hedin.UI
         {
             services.AddMudServices(config =>
             {
-                config.SnackbarConfiguration.SnackbarVariant = MudBlazor.Variant.Outlined;
+                config.SnackbarConfiguration.SnackbarVariant = Variant.Outlined;
                 config.SnackbarConfiguration.PreventDuplicates = false;
                 config.SnackbarConfiguration.VisibleStateDuration = 10000;
                 config.SnackbarConfiguration.HideTransitionDuration = 500;
@@ -35,15 +35,11 @@ namespace Hedin.UI
             services.AddTransient<ITableStateService, TableStateService>();
             services.AddTransient<IHUISettingsService, HUISettingsService>();
             services.AddScoped<IStateService, StateService>();
-
         }
 
         private static void ApplyDefaultVariants()
         {
-            MudGlobal.InputDefaults.Variant = Variant.Outlined;
-            MudGlobal.InputDefaults.Margin = Margin.Dense;
             MudGlobal.TooltipDefaults.Duration = TimeSpan.FromMilliseconds(0);
-            //MudGlobal.ButtonDefaults.Variant = Variant.Outlined;
         }
     }
 }

@@ -7,7 +7,7 @@
     <HUIPageFilter OnClearClick="HandleClearClick">
         @foreach (var field in searchFields.Where(x => x.Visible))
         {
-            <MudTextField T="string" @bind-Value="field.Value" AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="() => HandleFieldVisibilityClick(field)" Label="@field.Label"></MudTextField>
+            <MudTextField T="string" @bind-Value="field.Value" AdornmentIcon="@Icons.Material.Filled.Visibility" OnAdornmentClick="() => HandleFieldVisibilityClick(field)" Label="@field.Label" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
         }
 
     </HUIPageFilter>

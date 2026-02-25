@@ -27,6 +27,7 @@
         public const string Page = $"{Components}/page";
         public const string Dialog = $"{Components}/dialog";
         public const string Frame = $"{Components}/frame";
+        public const string GroupPanel = $"{Components}/group-panel";
         public const string Maps = $"{Components}/maps";
         public const string MainContainer = $"{Components}/main-container";
         public const string Tooltip = $"{Components}/tooltip";

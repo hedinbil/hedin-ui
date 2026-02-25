@@ -47,16 +47,16 @@ public class McpPluginProvider
                 }
 
                 var httpClient = _http.CreateClient();
-                var options = new SseClientTransportOptions
+                var options = new ModelContextProtocol.Client.HttpClientTransportOptions
                 {
                     Endpoint = endpointUri,
                     TransportMode = HttpTransportMode.AutoDetect,
                     AdditionalHeaders = s.Headers
                 };
-                var transport = new SseClientTransport(options, httpClient);
+                var transport = new HttpClientTransport(options, httpClient);
 
                 // <-- add ConfigureAwait(false) to prevent deadlock -->
-                var mcp = await McpClientFactory
+                var mcp = await McpClient
                                   .CreateAsync(transport)
                                   .ConfigureAwait(false);
                 var tools = await mcp

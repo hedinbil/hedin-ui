@@ -291,7 +291,7 @@
         return null;
     }
 
-    DefaultConverter<object> _converter = new DefaultConverter<object>() { Culture = CultureInfo.InvariantCulture };
+    DefaultConverter<object> _converter = new() { Culture = () => CultureInfo.InvariantCulture };
 
     private string PresentDefaultValue(object @default)
     {
@@ -311,11 +311,11 @@
         if (@default.GetType().IsEnum)
             return $"{@default.GetType().Name}.{@default}";
         if (Nullable.GetUnderlyingType(@default.GetType()) != null)
-            return _converter.Set(@default)!;
+            return _converter.Convert(@default)!;
         if (@default.GetType().IsGenericType) // for instance event callbacks
             return "";
         if (@default.GetType().IsValueType)
-            return _converter.Set(@default)!;
+            return _converter.Convert(@default)!;
         return "";
     }
 
