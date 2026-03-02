@@ -1,23 +1,27 @@
-﻿using Microsoft.AspNetCore.Components;
-using System.Reflection;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace Hedin.UI.Demo.Services.MCP.Server;
 
-public static class HedinUiExampleTools
+public static partial class HedinUiExampleTools
 {
-    private static readonly Lazy<List<ComponentExampleDto>> _cachedExamples = new(() =>
+    private static readonly Lazy<List<ComponentExampleDto>> CachedExamples = new(() =>
     {
-        var allRazorFiles = Directory.GetFiles(AppContext.BaseDirectory,
-                                               "*.razor",
-                                               SearchOption.AllDirectories);
+        var assembly = typeof(HedinUiExampleTools).Assembly;
+        var resourceNames = assembly.GetManifestResourceNames()
+            .Where(n => n.EndsWith(".razor", StringComparison.OrdinalIgnoreCase))
+            .ToList();
 
-        return allRazorFiles.Select(path =>
+        return resourceNames.Select(resourceName =>
         {
-            var razorCode = File.ReadAllText(path);
+            using var stream = assembly.GetManifestResourceStream(resourceName)!;
+            using var reader = new StreamReader(stream);
+            var razorCode = reader.ReadToEnd();
 
-            // Hitta ALLA taggar som börjar med HUI* (t.ex. <HUIButton>, <HUIAppBar>)
-            var matches = Regex.Matches(razorCode, @"<(?<tag>HUI[A-Za-z0-9]+)");
+            // Resource name format: Hedin.UI.Demo.Pages.Components.AppBar.AppBar.razor
+            var withoutExtension = resourceName[..^".razor".Length];
+            var componentName = withoutExtension.Split('.').Last();
+
+            var matches = MyRegex().Matches(razorCode);
 
             var usedComponents = matches
                                  .Select(m => m.Groups["tag"].Value)
@@ -26,20 +30,19 @@ public static class HedinUiExampleTools
 
             return new ComponentExampleDto
             {
-                ComponentName = Path.GetFileNameWithoutExtension(path),
+                ComponentName = componentName,
                 RazorCode = razorCode,
-                RelativePath = Path.GetRelativePath(AppContext.BaseDirectory, path),
-                UsedComponents = usedComponents           // 🆕
+                RelativePath = resourceName,
+                UsedComponents = usedComponents
             };
         }).ToList();
     });
 
-    public static List<ComponentExampleDto> GetAllExamples() => _cachedExamples.Value;
+    public static List<ComponentExampleDto> GetAllExamples() => CachedExamples.Value;
 
     public static List<ComponentExampleDto> GetExamplesByComponent(string componentName)
     {
-        // Filtrera på både filnamn OCH om koden faktiskt använder t.ex. <HUIButton>
-        return _cachedExamples.Value
+        return CachedExamples.Value
             .Where(x =>
                 x.ComponentName.Contains(componentName, StringComparison.OrdinalIgnoreCase) ||
                 x.UsedComponents.Any(u =>
@@ -49,11 +52,13 @@ public static class HedinUiExampleTools
 
     public static List<string> ListComponentNames()
     {
-        // Nu returnerar vi en lista på ALLA HUI-taggar som förekommer i exem­plen
-        return _cachedExamples.Value
+        return CachedExamples.Value
             .SelectMany(e => e.UsedComponents)
             .Distinct()
             .OrderBy(x => x)
             .ToList();
     }
+
+    [GeneratedRegex(@"<(?<tag>HUI[A-Za-z0-9]+)")]
+    private static partial Regex MyRegex();
 }
