@@ -1,0 +1,40 @@
+<HUIDataGrid Items="cars" T="Car" Height="340px"
+             PagerRowsPerPageString="Rader per sida:"
+             PagerInfoFormat="{first_item}-{last_item} av {all_items}"
+             PagerAllItemsText="Alla"
+             PagerPageSizeOptions="new[] { 10, 25, 50, int.MaxValue }">
+    <Columns>
+        <PropertyColumn Property="x => x.OrderNo" Title="Order number"/>
+        <PropertyColumn Property="x => x.Model"/>
+        <PropertyColumn Property="x => x.RegNo" Title="Reg number"/>
+        <PropertyColumn Property="x => x.Status"/>
+    </Columns>
+</HUIDataGrid>
+
+@code {
+    public List<Car> cars = new();
+
+    protected override void OnInitialized()
+    {
+        for (int i = 0; i < 100; i++)
+        {
+            cars.Add(new Car($"R1542A{i}", "Megan E-Tech Electric", $"AAA00{i}", "Factory order"));
+        }
+    }
+
+    public class Car
+    {
+        public string OrderNo { get; set; }
+        public string Model { get; set; }
+        public string RegNo { get; set; }
+        public string Status { get; set; }
+
+        public Car(string orderNo, string model, string regNo, string status)
+        {
+            OrderNo = orderNo;
+            Model = model;
+            RegNo = regNo;
+            Status = status;
+        }
+    }
+}
