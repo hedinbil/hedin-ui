@@ -226,6 +226,26 @@
     /// Overrides the default pager when provided.
     /// </summary>
     [Parameter] public RenderFragment PagerContent { get; set; }
+
+    /// <summary>
+    /// Localized label for the rows-per-page selector.
+    /// Defaults to MudBlazor's built-in text when not set.
+    /// </summary>
+    [Parameter] public string? PagerRowsPerPageString { get; set; }
+
+    /// <summary>
+    /// Format string for the page info label.
+    /// Supports {first_item}, {last_item}, and {all_items} placeholders.
+    /// Example: "{first_item}-{last_item} av {all_items}"
+    /// Defaults to MudBlazor's built-in format when not set.
+    /// </summary>
+    [Parameter] public string? PagerInfoFormat { get; set; }
+
+    /// <summary>
+    /// Text shown in the page-size dropdown for "All items" (int.MaxValue).
+    /// Defaults to MudBlazor's built-in text when not set.
+    /// </summary>
+    [Parameter] public string? PagerAllItemsText { get; set; }
     
     /// <summary>
     /// Content displayed when no records are available.
@@ -382,6 +402,13 @@
     /// Affects pagination and performance.
     /// </summary>
     [Parameter] public int RowsPerPage { get; set; } = 10;
+
+    /// <summary>
+    /// Available page size options in the pager dropdown.
+    /// Add int.MaxValue to include an "All" option (use PagerAllItemsText to localize its label).
+    /// Defaults to 10, 25, 50, 100 when not set.
+    /// </summary>
+    [Parameter] public int[] PagerPageSizeOptions { get; set; } = [10, 25, 50, 100];
     
     /// <summary>
     /// Event callback when the rows per page changes.
@@ -544,7 +571,15 @@
         StateHasChanged();
     }
 
-    private RenderFragment? GetPager() => ShowPager ? @<MudDataGridPager T="T" Class="hui-datagrid-pager" /> : null;
+    private RenderFragment? GetPager() =>
+        PagerContent ?? (ShowPager
+            ? @<MudDataGridPager T="T"
+                   Class="hui-datagrid-pager"
+                   RowsPerPageString="@(PagerRowsPerPageString ?? string.Empty)"
+                   InfoFormat="@(PagerInfoFormat ?? string.Empty)"
+                   AllItemsText="@(PagerAllItemsText ?? string.Empty)"
+                   PageSizeOptions="PagerPageSizeOptions" />
+            : null);
     /// <summary>
     /// Force the state of the component to change.
     /// </summary>
