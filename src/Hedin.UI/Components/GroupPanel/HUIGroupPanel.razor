@@ -1,6 +1,10 @@
+@namespace Hedin.UI
 <div class="hui-group-panel">
-    <MudStack Spacing="3">
-        <MudDivider Class="hui-group-panel-divider"></MudDivider>
+    <MudStack Spacing="5">
+        @if (!_isFirst)
+        {
+            <MudDivider Class="hui-group-panel-divider"></MudDivider>
+        }
         <MudGrid class="hui-group-panel-content">
             <MudItem xs="12" sm="4">
                 <MudStack Spacing="1">
@@ -29,6 +33,11 @@
 
 @code {
 
+    private bool _isFirst;
+
+    [CascadingParameter]
+    private HUIGroupPanelContainer? Container { get; set; }
+
     /// <summary>
     /// Title displayed in the group panel.
     /// </summary>
@@ -52,5 +61,12 @@
     /// </summary>
     [Parameter]
     public RenderFragment? TitleContent { get; set; }
-    
+
+    protected override void OnInitialized()
+    {
+        if (Container is not null)
+        {
+            _isFirst = Container.RegisterChild() == 0;
+        }
+    }
 }

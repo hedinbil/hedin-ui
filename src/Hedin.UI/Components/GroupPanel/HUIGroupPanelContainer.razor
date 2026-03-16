@@ -1,0 +1,28 @@
+@namespace Hedin.UI
+<div class="hui-group-panel-container d-flex flex-column gap-4 @Class">
+    <CascadingValue Value="this" IsFixed>
+        @ChildContent
+    </CascadingValue>
+</div>
+
+@code {
+
+    private int _childCount;
+
+    /// <summary>
+    /// Additional CSS class names to apply to the container element.
+    /// </summary>
+    [Parameter]
+    public string? Class { get; set; }
+
+    /// <summary>
+    /// The group panels to display inside the container.
+    /// </summary>
+    [Parameter]
+    public required RenderFragment ChildContent { get; set; }
+
+    internal int RegisterChild()
+    {
+        return _childCount++;
+    }
+}
