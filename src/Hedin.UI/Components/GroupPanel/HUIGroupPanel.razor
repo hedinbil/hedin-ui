@@ -6,7 +6,7 @@
             <MudDivider Class="hui-group-panel-divider"></MudDivider>
         }
         <MudGrid class="hui-group-panel-content">
-            <MudItem xs="12" sm="4">
+            <MudItem xs="12" sm="@TitleWidth">
                 <MudStack Spacing="1">
                     <MudStack Spacing="1" Row AlignItems="AlignItems.Center">
                         @if (TitleContent == null)
@@ -24,7 +24,7 @@
                     }
                 </MudStack>
             </MudItem>
-            <MudItem xs="12" sm="8">
+            <MudItem xs="12" sm="@ContentWidth">
                 @ChildContent
             </MudItem>
         </MudGrid>
@@ -34,6 +34,7 @@
 @code {
 
     private bool _isFirst;
+    private int TitleWidth => 12 - ContentWidth;
 
     [CascadingParameter]
     private HUIGroupPanelContainer? Container { get; set; }
@@ -62,11 +63,28 @@
     [Parameter]
     public RenderFragment? TitleContent { get; set; }
 
+    /// <summary>
+    /// Width of the main content section on small screens and up. Must be between 2 and 10.
+    /// The title and info section will use the remaining width.
+    /// </summary>
+    [Parameter]
+    public int ContentWidth { get; set; } = 8;
+
     protected override void OnInitialized()
     {
         if (Container is not null)
         {
             _isFirst = Container.RegisterChild() == 0;
+        }
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+
+        if (ContentWidth is < 2 or > 10)
+        {
+            throw new ArgumentOutOfRangeException(nameof(ContentWidth), ContentWidth, $"{nameof(ContentWidth)} must be between 2 and 10.");
         }
     }
 }
