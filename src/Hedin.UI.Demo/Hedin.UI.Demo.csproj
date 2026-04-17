@@ -1,10 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
-        <TargetFramework>net10.0</TargetFramework>
         <OutputType>Exe</OutputType>
-        <Nullable>enable</Nullable>
-        <ImplicitUsings>enable</ImplicitUsings>
         <ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
         <ContainerRegistry>hedinit.azurecr.io</ContainerRegistry>
         <ContainerRepository>ims/hedin-ui-admin-demo</ContainerRepository>
@@ -37,19 +34,19 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="AspNetCore.SassCompiler" Version="1.97.1" />
-        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.4.0"/>
-        <PackageReference Include="Azure.Identity" Version="1.17.1" />
-        <PackageReference Include="Brism" Version="1.0.1"/>
-        <PackageReference Include="Microsoft.Extensions.Configuration" Version="10.0.3" />
-        <PackageReference Include="MudBlazor.Markdown" Version="9.0.0" />
-        <PackageReference Include="Azure.AI.OpenAI" Version="2.8.0-beta.1" />
-        <PackageReference Include="Azure.Search.Documents" Version="11.7.0" />
-        <PackageReference Include="ModelContextProtocol" Version="1.0.0"/>
-        <PackageReference Include="ModelContextProtocol.AspNetCore" Version="1.0.0"/>
-        <PackageReference Include="Microsoft.SemanticKernel" Version="1.72.0" />
-        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.72.0" />
-        <PackageReference Include="MudX.MudBlazor.Extension" Version="9.0.0" />
+        <PackageReference Include="AspNetCore.SassCompiler" />
+        <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" />
+        <PackageReference Include="Azure.Identity" />
+        <PackageReference Include="Brism" />
+        <PackageReference Include="Microsoft.Extensions.Configuration" />
+        <PackageReference Include="MudBlazor.Markdown" />
+        <PackageReference Include="Azure.AI.OpenAI" />
+        <PackageReference Include="Azure.Search.Documents" />
+        <PackageReference Include="ModelContextProtocol" />
+        <PackageReference Include="ModelContextProtocol.AspNetCore" />
+        <PackageReference Include="Microsoft.SemanticKernel" />
+        <PackageReference Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" />
+        <PackageReference Include="MudX.MudBlazor.Extension" />
     </ItemGroup>
 
     <ItemGroup>

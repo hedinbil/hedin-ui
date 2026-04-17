@@ -14,7 +14,7 @@ public class HUIInputRowTests : UiTestBase
         EventCallback<TestItem>? onAddClick = null,
         EventCallback<TestItem>? onDeleteClick = null)
     {
-        return RenderComponent<HUIInputRow<TestItem>>(parameters => parameters
+        return Render<HUIInputRow<TestItem>>(parameters => parameters
             .Add(p => p.Item, item ?? new TestItem { Id = 1, Name = "Test Item" })
             .Add(p => p.ChildContent, childContent ?? (builder => builder.AddContent(0, "Default Content")))
             .Add(p => p.OnAddClick, onAddClick ?? EventCallback.Factory.Create<TestItem>(this, _ => { }))

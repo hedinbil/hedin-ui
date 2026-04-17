@@ -14,7 +14,7 @@ public class HUIAttachmentCardTests : UiTestBase
         EventCallback? onViewClick = null,
         EventCallback? onRemoveClick = null)
     {
-        return RenderComponent<HUIAttachmentCard>(parameters => parameters
+        return Render<HUIAttachmentCard>(parameters => parameters
             .Add(p => p.Buttons, buttons)
             .Add(p => p.FileInformation, fileInformation)
             .Add(p => p.ImgSrc, imgSrc)

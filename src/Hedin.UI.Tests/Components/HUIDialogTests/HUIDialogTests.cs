@@ -14,7 +14,7 @@ public class HUIDialogTests : UiTestBase
         EventCallback<bool>? showUnsavedChangesChanged = null,
         RenderFragment? titleButtons = null)
     {
-        return RenderComponent<HUIDialog>(parameters => parameters
+        return Render<HUIDialog>(parameters => parameters
             .Add(p => p.OnCancelClick, onCancelClick ?? EventCallback.Factory.Create(this, () => { }))
             .Add(p => p.ShowUnsavedChanges, showUnsavedChanges)
             .Add(p => p.ShowUnsavedChangesChanged, showUnsavedChangesChanged ?? EventCallback.Factory.Create<bool>(this, _ => { }))

@@ -12,7 +12,7 @@ public class HUIFrameTests : UiTestBase
         string? @class = null,
         string? style = null)
     {
-        return RenderComponent<HUIFrame>(parameters => parameters
+        return Render<HUIFrame>(parameters => parameters
             .Add(p => p.ChildContent, childContent ?? (builder => builder.AddContent(0, "Default Content")))
             .Add(p => p.Class, @class ?? "")
             .Add(p => p.Style, style ?? "")

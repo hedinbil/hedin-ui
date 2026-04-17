@@ -17,7 +17,7 @@ public class HUITooltipTests : UiTestBase
         string pointerEvents = "auto",
         string text = "")
     {
-        return RenderComponent<HUITooltip>(parameters => parameters
+        return Render<HUITooltip>(parameters => parameters
             .Add(p => p.ChildContent, childContent)
             .Add(p => p.TooltipContent, tooltipContent)
             .Add(p => p.Placement, placement)

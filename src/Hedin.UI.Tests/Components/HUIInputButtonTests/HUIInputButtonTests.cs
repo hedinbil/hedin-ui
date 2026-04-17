@@ -21,7 +21,7 @@ public class HUIInputButtonTests : UiTestBase
         bool showInput = false,
         EventCallback<bool>? showInputChanged = null)
     {
-        return RenderComponent<HUIInputButton>(parameters => parameters
+        return Render<HUIInputButton>(parameters => parameters
             .Add(p => p.Value, value)
             .Add(p => p.ValueChanged, valueChanged ?? EventCallback.Factory.Create<string?>(this, _ => { }))
             .Add(p => p.AutoFocus, autoFocus)

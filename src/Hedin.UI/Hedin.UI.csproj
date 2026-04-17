@@ -1,26 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
     <PackageId>$(AssemblyName)</PackageId>
-    <Company>Hedin IT</Company>
-    <Authors>Hedin IT</Authors>
     <Product>Hedin.UI</Product>
     <Description>A custom razor (Blazor) component library built by and to be used by Hedin IT.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <SignAssembly>False</SignAssembly>
     <DelaySign>False</DelaySign>
-    <Version>1.1.4</Version>
-    <NeutralLanguage>en-001</NeutralLanguage>
+    <Version>1.1.5</Version>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <RepositoryUrl>https://github.com/hedinbil/hedin-ui</RepositoryUrl>
     <PackageIcon>nuget.png</PackageIcon>
     <PackageProjectUrl>https://hedin-ui.hedinit.io/</PackageProjectUrl>
     <PackAsTool>False</PackAsTool>
     <IncludeSymbols>False</IncludeSymbols>
-    <AnalysisLevel>latest</AnalysisLevel>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
@@ -41,14 +34,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="AspNetCore.SassCompiler" Version="1.97.1" />
-    <PackageReference Include="Blazor-ApexCharts" Version="6.1.0" />
-    <PackageReference Include="Blazored.LocalStorage" Version="4.5.0" />
-    <PackageReference Include="ClosedXML" Version="0.105.0" />
-    <PackageReference Include="FluentValidation" Version="12.1.1" />
-    <PackageReference Include="MudBlazor" Version="9.0.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.3" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="10.0.3" />
+    <PackageReference Include="AspNetCore.SassCompiler" />
+    <PackageReference Include="Blazor-ApexCharts" />
+    <PackageReference Include="Blazored.LocalStorage" />
+    <PackageReference Include="ClosedXML" />
+    <PackageReference Include="FluentValidation" />
+    <PackageReference Include="MudBlazor" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Web" />
   </ItemGroup>
   
   <ItemGroup>

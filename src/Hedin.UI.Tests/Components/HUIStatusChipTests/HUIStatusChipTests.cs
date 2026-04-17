@@ -12,7 +12,7 @@ public class HUIStatusChipTests : UiTestBase
         Severity severity = Severity.Normal,
         RenderFragment? childContent = null)
     {
-        return RenderComponent<HUIStatusChip>(parameters => parameters
+        return Render<HUIStatusChip>(parameters => parameters
             .Add(p => p.Severity, severity)
             .Add(p => p.ChildContent, childContent)
         );

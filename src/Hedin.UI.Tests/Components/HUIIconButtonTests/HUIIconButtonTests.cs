@@ -21,7 +21,7 @@ public class HUIIconButtonTests : UiTestBase
         string? target = null,
         string tooltipPointerEvents = "auto")
     {
-        return RenderComponent<HUIIconButton>(parameters => parameters
+        return Render<HUIIconButton>(parameters => parameters
             .Add(p => p.Loading, loading)
             .Add(p => p.Tooltip, tooltip)
             .Add(p => p.Color, color)

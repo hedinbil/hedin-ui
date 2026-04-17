@@ -1,0 +1,36 @@
+<Project>
+
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageVersion Include="AspNetCore.SassCompiler" Version="1.99.0" />
+    <PackageVersion Include="Azure.AI.OpenAI" Version="2.9.0-beta.1" />
+    <PackageVersion Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.0" />
+    <PackageVersion Include="Azure.Identity" Version="1.21.0" />
+    <PackageVersion Include="Azure.Search.Documents" Version="11.7.0" />
+    <PackageVersion Include="Blazor-ApexCharts" Version="6.1.0" />
+    <PackageVersion Include="Blazored.LocalStorage" Version="4.5.0" />
+    <PackageVersion Include="Brism" Version="1.0.1" />
+    <PackageVersion Include="bunit" Version="2.7.2" />
+    <PackageVersion Include="ClosedXML" Version="0.105.0" />
+    <PackageVersion Include="coverlet.collector" Version="8.0.1" />
+    <PackageVersion Include="FluentValidation" Version="12.1.1" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Authorization" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.AspNetCore.Components.Web" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.Extensions.Configuration" Version="10.0.6" />
+    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="18.4.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel" Version="1.74.0" />
+    <PackageVersion Include="Microsoft.SemanticKernel.Connectors.AzureOpenAI" Version="1.74.0" />
+    <PackageVersion Include="ModelContextProtocol" Version="1.2.0" />
+    <PackageVersion Include="ModelContextProtocol.AspNetCore" Version="1.2.0" />
+    <PackageVersion Include="MudBlazor" Version="9.3.0" />
+    <PackageVersion Include="MudBlazor.Markdown" Version="9.0.0" />
+    <PackageVersion Include="MudX.MudBlazor.Extension" Version="9.0.0" />
+    <PackageVersion Include="Shouldly" Version="4.3.0" />
+    <PackageVersion Include="xunit" Version="2.9.3" />
+    <PackageVersion Include="xunit.runner.visualstudio" Version="3.1.5" />
+  </ItemGroup>
+
+</Project>

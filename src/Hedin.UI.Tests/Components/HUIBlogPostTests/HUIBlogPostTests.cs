@@ -19,7 +19,7 @@ public class HUIBlogPostTests : UiTestBase
         bool imgLazyLoad = false,
         int maxBodyLength = 300)
     {
-        return RenderComponent<HUIBlogPost>(parameters => parameters
+        return Render<HUIBlogPost>(parameters => parameters
             .Add(p => p.Header, header)
             .Add(p => p.SubHeader, subHeader)
             .Add(p => p.BodyText, bodyText)

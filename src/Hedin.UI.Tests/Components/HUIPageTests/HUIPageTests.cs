@@ -25,7 +25,7 @@ public class HUIPageTests : UiTestBase
     {
         Services.AddSingleton<IOptions<TitleService>>(Options.Create(new TitleService { AppTitle = appTitle ?? "" }));
 
-        return RenderComponent<HUIPage>(parameters => parameters
+        return Render<HUIPage>(parameters => parameters
             .Add(p => p.Header, header)
             .Add(p => p.PageDescription, pageDescription)
             .Add(p => p.PageInfo, pageInfo)
@@ -47,7 +47,7 @@ public class HUIPageTests : UiTestBase
 
         // Assert
         comp.Markup.Contains("My Page");
-        comp.Markup.Contains("My Page – App");
+        comp.Markup.Contains("My Page ï¿½ App");
     }
 
     [Fact]

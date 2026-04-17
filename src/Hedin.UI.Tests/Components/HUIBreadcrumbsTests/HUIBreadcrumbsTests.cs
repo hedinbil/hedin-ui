@@ -17,7 +17,7 @@ public class HUIBreadcrumbsTests : UiTestBase
         Services.AddSingleton<NavigationManager>(new TestNavigationManager());
         Services.AddSingleton<IJSRuntime>(new TestJSRuntime());
 
-        return RenderComponent<HUIBreadcrumbs>(parameters => parameters
+        return Render<HUIBreadcrumbs>(parameters => parameters
             .Add(p => p.Breadcrumbs, breadcrumbs ?? new List<BreadcrumbItem>())
         );
     }

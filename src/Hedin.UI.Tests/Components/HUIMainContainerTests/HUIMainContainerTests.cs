@@ -15,7 +15,7 @@ public class HUIMainContainerTests : UiTestBase
         string? style = null,
         MaxWidth maxWidth = MaxWidth.False)
     {
-        return RenderComponent<HUIMainContainer>(parameters => parameters
+        return Render<HUIMainContainer>(parameters => parameters
             .Add(p => p.ChildContent, childContent ?? (builder => builder.AddContent(0, "Default Content")))
             .Add(p => p.ZIndex, zIndex)
             .Add(p => p.Class, @class ?? "")

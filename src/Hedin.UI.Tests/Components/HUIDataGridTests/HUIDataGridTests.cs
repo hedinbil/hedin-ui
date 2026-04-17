@@ -72,7 +72,7 @@
 //        Services.AddSingleton<ITableStateService>(new TestTableStateService());
 //        Services.AddSingleton<ILocalStorageSettingsService>(new TestLocalStorageSettingsService());
 
-//        return RenderComponent<HUIDataGrid<TestData>>(parameters => parameters
+//        return Render<HUIDataGrid<TestData>>(parameters => parameters
 //            .Add(p => p.Items, items)
 //            .Add(p => p.ServerData, serverData)
 //            .Add(p => p.Loading, loading)

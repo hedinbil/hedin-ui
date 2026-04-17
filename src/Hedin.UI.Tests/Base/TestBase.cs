@@ -1,11 +1,7 @@
-﻿using System.Collections.Generic;
-using System.Security.Claims;
-using System.Threading.Tasks;
+﻿using System.Security.Claims;
 using Bunit;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using MudBlazor.Services;
-using MudBlazor;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Localization;
 using Microsoft.AspNetCore.Authorization;
@@ -14,12 +10,22 @@ using Microsoft.AspNetCore.Components.Authorization;
 namespace Hedin.UI.Tests.Base;
 /// <summary>
 /// Base class for Blazor component tests.
-/// Provides a TestContext with Hedin.UI services configured
+/// Provides a BunitContext with Hedin.UI services configured
 /// and a minimal IConfiguration.
 /// </summary>
-public abstract class UiTestBase : TestContext
+public abstract class UiTestBase : BunitContext, IAsyncLifetime
 {
     protected IConfiguration Configuration { get; }
+
+    // MudBlazor registers services that are IAsyncDisposable-only (e.g. KeyInterceptorService,
+    // PointerEventsNoneService). xUnit 2.9 calls IDisposable.Dispose on test classes, which
+    // triggers a synchronous ServiceProvider.Dispose and throws. Route disposal through
+    // IAsyncLifetime.DisposeAsync and no-op the sync path.
+    protected override void Dispose(bool disposing) { }
+
+    Task IAsyncLifetime.InitializeAsync() => Task.CompletedTask;
+
+    async Task IAsyncLifetime.DisposeAsync() => await ((IAsyncDisposable)this).DisposeAsync();
 
     protected UiTestBase(IDictionary<string, string?>? seedConfig = null)
     {
@@ -55,12 +61,7 @@ public abstract class UiTestBase : TestContext
         Action<ComponentParameterCollectionBuilder<TComponent>> parameterBuilder)
         where TComponent : class, IComponent
     {
-        // Build params -> fragment that renders <TComponent ... />
-        var fragment = new ComponentParameterCollectionBuilder<TComponent>(parameterBuilder)
-            .Build()
-            .ToRenderFragment<TComponent>();
-
-        var shell = RenderComponent<MudTestHost>(host => host.Add(h => h.ChildContent, fragment));
+        var shell = Render<MudTestHost>(host => host.Add<TComponent>(h => h.ChildContent, parameterBuilder));
         return shell.FindComponent<TComponent>();
     }
 
@@ -68,13 +69,11 @@ public abstract class UiTestBase : TestContext
         params (string Name, object? Value)[] parameters)
         where TComponent : class, IComponent
     {
-        var builder = new ComponentParameterCollectionBuilder<TComponent>();
-        foreach (var (name, value) in parameters)
-            builder.TryAdd(name, value); // name/value fallback
-
-        var fragment = builder.Build().ToRenderFragment<TComponent>();
-
-        var shell = RenderComponent<MudTestHost>(host => host.Add(h => h.ChildContent, fragment));
+        var shell = Render<MudTestHost>(host => host.Add<TComponent>(h => h.ChildContent, child =>
+        {
+            foreach (var (name, value) in parameters)
+                child.TryAdd(name, value);
+        }));
         return shell.FindComponent<TComponent>();
     }
     
@@ -137,7 +136,7 @@ public abstract class UiTestBase : TestContext
         
         public event AuthenticationStateChangedHandler? AuthenticationStateChanged;
         
-        public void NotifyAuthenticationStateChanged(Task<AuthenticationState> task)
+        public new void NotifyAuthenticationStateChanged(Task<AuthenticationState> task)
         {
             AuthenticationStateChanged?.Invoke(task);
         }

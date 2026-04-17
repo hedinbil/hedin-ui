@@ -13,7 +13,7 @@ public class HUIButtonTests : UiTestBase
     public void Renders_ChildContent_When_NotLoading()
     {
         // Arrange & Act
-        var cut = RenderComponent<HUIButton>(parameters => parameters
+        var cut = Render<HUIButton>(parameters => parameters
             .Add(p => p.Loading, false)
             .AddChildContent("<span>Click me</span>")
         );
@@ -26,7 +26,7 @@ public class HUIButtonTests : UiTestBase
     [Fact]
     public void Shows_Spinner_And_Disables_Button_When_Loading()
     {
-        var cut = RenderComponent<HUIButton>(parameters => parameters
+        var cut = Render<HUIButton>(parameters => parameters
             .Add(p => p.Loading, true)
             .AddChildContent("Doing work")
         );
@@ -47,7 +47,7 @@ public class HUIButtonTests : UiTestBase
     {
         var clicked = false;
 
-        var cut = RenderComponent<HUIButton>(parameters => parameters
+        var cut = Render<HUIButton>(parameters => parameters
             .Add(p => p.Loading, false)
             .Add(p => p.OnClick, EventCallback.Factory.Create<MouseEventArgs>(this, () => clicked = true))
             .AddChildContent("Go")
@@ -63,7 +63,7 @@ public class HUIButtonTests : UiTestBase
     {
         var clicked = false;
 
-        var cut = RenderComponent<HUIButton>(parameters => parameters
+        var cut = Render<HUIButton>(parameters => parameters
             .Add(p => p.Loading, true)
             .Add(p => p.OnClick, EventCallback.Factory.Create<MouseEventArgs>(this, () => clicked = true))
             .AddChildContent("Wait…")
@@ -77,7 +77,7 @@ public class HUIButtonTests : UiTestBase
     [Fact]
     public void Forwards_Common_MudButton_Parameters()
     {
-        var cut = RenderComponent<HUIButton>(parameters => parameters
+        var cut = Render<HUIButton>(parameters => parameters
             .Add(p => p.Loading, false)
             .Add(p => p.Color, Color.Secondary)
             .Add(p => p.Variant, Variant.Filled)

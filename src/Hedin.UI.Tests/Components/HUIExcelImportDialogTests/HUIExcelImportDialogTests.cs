@@ -15,7 +15,7 @@ public class HUIExcelImportDialogTests : UiTestBase
         string dragDropText = "Drag and drop files here or click to open",
         bool multipleFiles = false)
     {
-        return RenderComponent<HUIExcelImportDialog>(parameters => parameters
+        return Render<HUIExcelImportDialog>(parameters => parameters
             .Add(p => p.CancelText, cancelText)
             .Add(p => p.OkText, okText)
             .Add(p => p.ClearText, clearText)

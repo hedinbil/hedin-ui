@@ -29,7 +29,7 @@
 //        Services.AddSingleton<NavigationManager>(new TestNavigationManager());
 //        Services.AddSingleton<IJSRuntime>(new TestJSRuntime());
 
-//        return RenderComponent<HUIAppBar>(parameters => parameters
+//        return Render<HUIAppBar>(parameters => parameters
 //            .Add(p => p.ChildContent, childContent)
 //            .Add(p => p.MenuButtonVisibilityChanged, menuButtonVisibilityChanged ?? EventCallback.Factory.Create<bool>(this, _ => { }))
 //            .Add(p => p.MenuButtonClicked, menuButtonClicked ?? EventCallback.Factory.Create(this, () => { }))
