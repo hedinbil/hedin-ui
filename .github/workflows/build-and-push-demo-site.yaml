@@ -26,35 +26,33 @@ jobs:
       - uses: AutoModality/action-clean@v1
       
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
         with:
           path: hedin-ui-admin
 
       - name: Setup .NET Core
-        uses: actions/setup-dotnet@v4
+        uses: actions/setup-dotnet@v5
         with:
           dotnet-version: '9.x'
-          
+           
       - name: Az CLI login
-        uses: azure/login@v1
+        uses: azure/login@v3
         with:
           client-id: ${{ secrets.AZURE_CLIENT_ID }}
           tenant-id: ${{ secrets.AZURE_TENANT_ID }}
           subscription-id: ${{ secrets.OPERATIONS_HUB_CORE_PROD_AZURE_SUBSCRIPTION_ID }}
-      
-      - uses: benjlevesque/short-sha@v2.2
-        id: short-sha
-        with:
-          length: 7
-      - run: echo $SHA
-        env:
-          SHA: ${{ steps.short-sha.outputs.sha }}
+       
+      - name: Set short SHA
+        run: echo "SHA=${GITHUB_SHA::7}" >> "$GITHUB_ENV"
+
+      - name: Print short SHA
+        run: echo "$SHA"
 
       - name: Build and push
         run: |
           az acr login --name hedinit
           cd hedin-ui-admin/src/Hedin.UI.Demo/
-          dotnet publish . --os linux --arch x64 /t:PublishContainer -c Release -p ContainerImageTags='main-${{ env.SHA }}'  -p ContainerRegistryImageName='hedinit.azurecr.io/ims/hedin-ui-admin-demo'
+          dotnet publish . --os linux --arch x64 /t:PublishContainer -c Release -p ContainerImageTags="main-${SHA}"  -p ContainerRegistryImageName='hedinit.azurecr.io/ims/hedin-ui-admin-demo'
           
   deploy_to_dev:
     name: 'Deploy to dev'
