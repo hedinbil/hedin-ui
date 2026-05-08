@@ -8,7 +8,7 @@
             <div class="dp-app-icons d-flex justify-center flex-wrap">
                 @foreach (var app in Apps)
                 {
-                    <InternalAppIcon Icon="@app.Icon" AppName="@app.AppName" AppUrl="@app.AppUrl" />
+                    <InternalAppIcon Icon="@app.Icon" AppName="@app.AppName" AppUrl="@app.AppUrl" OpenInNewTab="@app.OpenInNewTab" />
                 }
             </div>
 

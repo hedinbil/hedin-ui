@@ -90,6 +90,11 @@ html, body * {
         cursor: pointer;
     }
 
+    .hui-app-icon-link {
+        color: inherit;
+        text-decoration: none;
+    }
+
     .dp-app-icons {
         display: flex;
         gap: 30px;

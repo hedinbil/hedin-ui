@@ -1,11 +1,23 @@
 ﻿@inject NavigationManager NavigationManager
 
-<div class="d-flex flex-column gap-3 align-center" @onclick="HandleNavigationClick">
-    <div class="hui-app-icon-container">
-        <MudImage Src="@Icon" Width="64" Height="64" Class="hui-app-icon"></MudImage>
+@if (OpenInNewTab)
+{
+    <a href="@AppUrl" target="_blank" rel="noopener noreferrer" class="hui-app-icon-link d-flex flex-column gap-3 align-center">
+        <div class="hui-app-icon-container">
+            <MudImage Src="@Icon" Width="64" Height="64" Class="hui-app-icon"></MudImage>
+        </div>
+        <MudText>@AppName</MudText>
+    </a>
+}
+else
+{
+    <div class="d-flex flex-column gap-3 align-center" @onclick="HandleNavigationClick">
+        <div class="hui-app-icon-container">
+            <MudImage Src="@Icon" Width="64" Height="64" Class="hui-app-icon"></MudImage>
+        </div>
+        <MudText>@AppName</MudText>
     </div>
-    <MudText>@AppName</MudText>
-</div>
+}
 
 @code {
     /// <summary>
@@ -24,7 +36,13 @@
     /// URL to navigate to when the app icon is clicked.
     /// Used for switching between different services or applications.
     /// </summary>
-    [Parameter] public string AppUrl { get; set; }
+    [Parameter] public string AppUrl { get; set; } = string.Empty;
+
+    /// <summary>
+    /// Opens the app URL in a new browser tab when selected.
+    /// Defaults to false to preserve existing navigation behavior.
+    /// </summary>
+    [Parameter] public bool OpenInNewTab { get; set; }
 
     private void HandleNavigationClick()
     {
