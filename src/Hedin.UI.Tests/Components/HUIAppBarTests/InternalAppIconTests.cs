@@ -11,7 +11,7 @@ public class InternalAppIconTests : UiTestBase
     public void Given_DefaultAppIcon_When_Rendered_Then_UsesExistingNavigationBehavior()
     {
         // Arrange & Act
-        var cut = RenderComponent<InternalAppIcon>(parameters => parameters
+        var cut = Render<InternalAppIcon>(parameters => parameters
             .Add(p => p.Icon, "icons/app.svg")
             .Add(p => p.AppName, "Portal")
             .Add(p => p.AppUrl, "/portal"));
@@ -25,7 +25,7 @@ public class InternalAppIconTests : UiTestBase
     public void Given_AppIconWithOpenInNewTab_When_Rendered_Then_RendersBlankTargetLink()
     {
         // Arrange & Act
-        var cut = RenderComponent<InternalAppIcon>(parameters => parameters
+        var cut = Render<InternalAppIcon>(parameters => parameters
             .Add(p => p.Icon, "icons/app.svg")
             .Add(p => p.AppName, "Portal")
             .Add(p => p.AppUrl, "https://portal.example.com")
