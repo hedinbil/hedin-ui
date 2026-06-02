@@ -15,6 +15,7 @@
                  Filterable="@Filterable"
                  SortMode="@SortMode"
                  Groupable="@Groupable"
+                 GroupTemplate="@GroupTemplate"
                  HorizontalScrollbar="@HorizontalScrollbar"
                  Hover="@Hover"
                  Elevation="@Elevation"
@@ -107,6 +108,13 @@
     /// </summary>
     [Parameter] public bool Groupable { get; set; } = false;
     
+    /// <summary>
+    /// The default template used to display column grouping for any column that is grouped.
+    /// </summary>
+    /// <remarks>Can be overridden by using the column level GroupTemplate, defaults to <c>null</c>.</remarks>
+    [Parameter]
+    public RenderFragment<GroupDefinition<T>>? GroupTemplate { get; set; }
+
     /// <summary>
     /// Enables hover effects on grid rows.
     /// Provides visual feedback when hovering over rows.
