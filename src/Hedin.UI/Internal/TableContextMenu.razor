@@ -55,7 +55,19 @@
 
     private bool IsHideDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || (!column.Hideable ?? !DataGrid.InnerGridRef.Hideable);
 
-    private bool IsMoveDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || (!column.DragAndDropEnabled ?? !DataGrid.InnerGridRef.DragDropColumnReordering);
+    // Deliberately independent of DragAndDropEnabled / DragDropColumnReordering. These arrows do not use
+    // MudBlazor's drag-and-drop at all - TableStateService.ApplyColumnOrder rewrites RenderedColumns directly,
+    // which also works for TemplateColumns, where MudBlazor's own drag-reorder does not (MudBlazor#9504).
+    //
+    // The old predicate was `IsNullOrWhiteSpace(Title) || (!column.DragAndDropEnabled ?? !grid.DragDropColumnReordering)`.
+    // MudBlazor's TemplateColumn hard-overrides DragAndDropEnabled to false, so `!false` is non-null, the ??
+    // fallback never runs, and every template column's arrows were padlocked whatever the grid flag said. A
+    // grid built from template columns therefore had no working way to reorder columns at all - and no drag
+    // handle either, since HeaderCell gates the drag indicator on `DragAndDropEnabled ?? true`.
+    //
+    // Untitled columns stay locked: ApplyColumnOrder keeps them at their own index, so moving one has nothing
+    // to write - and it is what pins a sticky action column in place.
+    private bool IsMoveDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title);
 
     public async Task ToggleOpenAsync()
     {

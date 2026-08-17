@@ -146,8 +146,11 @@
     [Parameter] public Func<T, int, string> RowClassFunc { get; set; }
     
     /// <summary>
-    /// Enables drag and drop column reordering.
-    /// Users can rearrange columns by dragging them.
+    /// Enables MudBlazor's drag-and-drop column reordering, letting users rearrange columns by dragging the
+    /// headers. This covers property columns only: MudBlazor's <c>TemplateColumn</c> hard-overrides
+    /// <c>DragAndDropEnabled</c> to <c>false</c>, so template columns render no drag handle and cannot be
+    /// dragged whatever this is set to (MudBlazor#9504). The table-settings popup's up/down arrows are
+    /// unaffected either way - they reorder through <c>ITableStateService</c> rather than drag-and-drop.
     /// </summary>
     [Parameter] public bool DragDropColumnReordering { get; set; } = true;
     
