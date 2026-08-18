@@ -55,7 +55,10 @@
 
     private bool IsHideDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || (!column.Hideable ?? !DataGrid.InnerGridRef.Hideable);
 
-    private bool IsMoveDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || (!column.DragAndDropEnabled ?? !DataGrid.InnerGridRef.DragDropColumnReordering);
+    // Sticky columns are pinned deliberately, and MudBlazor styles them with a flat left:0 / right:0 rather
+    // than an offset computed from their position - a sticky column moved into the middle of the table renders
+    // on top of its neighbours. ApplyColumnOrder has no notion of stickiness, so the guard has to live here.
+    private bool IsMoveDisabled(Column<T> column) => string.IsNullOrWhiteSpace(column.Title) || column.StickyLeft || column.StickyRight || (!column.DragAndDropEnabled ?? !DataGrid.InnerGridRef.DragDropColumnReordering);
 
     public async Task ToggleOpenAsync()
     {
@@ -129,14 +132,24 @@
         DataGrid.ApplyColumnOrder(currentOrder);
     }
 
+    // Titles are the key because that is what ApplyColumnOrder and the persisted state are keyed on, but they
+    // are not guaranteed unique - consumers localize them at runtime, so two different resource keys can
+    // resolve to the same string. ToDictionary would throw ArgumentException on that, taking down the grid on
+    // an arrow press. Assigning through the indexer keeps the last occurrence, which is what
+    // TableStateService.ApplyColumnOrder already does when it reads the order back.
     public Dictionary<string, int> GetColumnOrder()
     {
-        int tempIdCounter = 0;
-        return DataGrid.InnerGridRef.RenderedColumns
-            .Select((col, index) => new { col, index })
-            .ToDictionary(
-                x => !string.IsNullOrWhiteSpace(x.col.Title) ? x.col.Title : $"TempId_{tempIdCounter++}",
-                x => x.index);
+        var order = new Dictionary<string, int>();
+        var tempIdCounter = 0;
+
+        for (var index = 0; index < DataGrid.InnerGridRef.RenderedColumns.Count; index++)
+        {
+            var column = DataGrid.InnerGridRef.RenderedColumns[index];
+            var key = !string.IsNullOrWhiteSpace(column.Title) ? column.Title : $"TempId_{tempIdCounter++}";
+            order[key] = index;
+        }
+
+        return order;
     }
 
     private bool _resetLoading = false;
