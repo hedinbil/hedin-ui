@@ -8,7 +8,7 @@ on:
   workflow_dispatch:
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: linux-runner-arc
     steps:
       - uses: actions/checkout@v5
       - name: Setup .NET Core
