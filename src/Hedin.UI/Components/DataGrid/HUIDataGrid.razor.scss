@@ -65,4 +65,43 @@
     ::deep .mud-table-hover .mud-table-root .mud-table-head .mud-table-cell:hover {
         color: var(--mud-palette-info);
     }
+
+    // Sticky horizontal scroll (StickyHorizontalScroll). The module sets data-hui-sticky-hscroll on the root only while
+    // the table overflows. A data attribute, not a class: Blazor owns this element's class and would overwrite ours.
+    .hui-datagrid-hscroll-bar {
+        display: none;
+        position: sticky;
+        bottom: var(--hui-datagrid-sticky-hscroll-bottom, 0);
+        z-index: 10;
+        overflow-x: auto;
+        overflow-y: hidden;
+        background: var(--mud-palette-surface);
+
+        > div {
+            height: 1px;
+        }
+    }
+
+    // With a pager the bar is rendered inside MudDataGrid's pager wrapper. display: contents removes that wrapper's box,
+    // so the bar sticks within the whole table instead of only the pager (whose overflow: auto would also trap it).
+    > ::deep .mud-table > .mud-table-pagination:has(> .hui-datagrid-hscroll-bar) {
+        display: contents;
+    }
+
+    // Child combinators only, so a grid nested in ChildRowContent is never affected by its parent's state.
+    &[data-hui-sticky-hscroll] {
+        > .hui-datagrid-hscroll-bar,
+        > ::deep .mud-table > .mud-table-pagination > .hui-datagrid-hscroll-bar {
+            display: block;
+        }
+
+        // The native bar sits at the bottom of the (tall) table; the proxy takes over. Wheel and trackpad scrolling still work.
+        > ::deep .mud-table > .mud-table-container {
+            scrollbar-width: none;
+        }
+
+        > ::deep .mud-table > .mud-table-container::-webkit-scrollbar {
+            display: none;
+        }
+    }
 }

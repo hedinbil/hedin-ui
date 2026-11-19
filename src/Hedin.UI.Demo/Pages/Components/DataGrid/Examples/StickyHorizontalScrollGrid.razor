@@ -1,0 +1,26 @@
+<HUIDataGrid Items="cars" T="Car" StickyHorizontalScroll="true" RowsPerPage="100">
+    <Columns>
+        <PropertyColumn Property="x => x.OrderNo" Title="Order number" />
+        <PropertyColumn Property="x => x.Model" />
+        <PropertyColumn Property="x => x.RegNo" Title="Reg number" />
+        <PropertyColumn Property="x => x.VIN" />
+        <PropertyColumn Property="x => x.Description" />
+        <PropertyColumn Property="x => x.EntityCode" Title="Entity Code" />
+        <PropertyColumn Property="x => x.Color" />
+        <PropertyColumn Property="x => x.Dealer" />
+        <PropertyColumn Property="x => x.Location" />
+        <PropertyColumn Property="x => x.ChangeData" Title="Last factory change" Format="yyyy-MM-dd" />
+        <PropertyColumn Property="x => x.ETA" Title="ETA Port" Format="yyyy-MM-dd" />
+        <PropertyColumn Property="x => x.Status" />
+    </Columns>
+</HUIDataGrid>
+
+@code {
+    private readonly List<Car> cars = Enumerable.Range(0, 100)
+        .Select(i => new Car($"R1542A{i}", "Megan E-Tech Electric", $"AAA00{i}", $"UU1dJF00970000{i}", "Megane Electric",
+            "SLB7 MD 6U S", "OV369", "Hedin Bil Göteborg, Mölndalsvägen", "Warehouse B, row 14", DateTime.Now, DateTime.Now.AddDays(-6), "Factory order"))
+        .ToList();
+
+    private sealed record Car(string OrderNo, string Model, string RegNo, string VIN, string Description, string EntityCode,
+        string Color, string Dealer, string Location, DateTime ChangeData, DateTime ETA, string Status);
+}

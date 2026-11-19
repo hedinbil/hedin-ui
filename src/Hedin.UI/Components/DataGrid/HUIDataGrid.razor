@@ -4,8 +4,10 @@
 @inject ITableStateService TableStateService
 @inject ILocalStorageSettingsService LocalStorage
 @attribute [CascadingTypeParameter(nameof(T))]
+@implements IAsyncDisposable
+@inject IJSRuntime JsRuntime
 
-<div class="hui-datagrid">
+<div class="hui-datagrid" @ref="_host">
     <MudDataGrid T="T"
                  @ref="InnerGridRef"
                  Items="@Items"
@@ -35,7 +37,7 @@
                  FixedHeader="@FixedHeader"
                  Dense="@Dense"
                  FooterClass="@FooterClass"
-                 PagerContent="GetPager()"
+                 PagerContent="GetPagerWithStickyBar()"
                  NoRecordsContent="@NoRecordsContent"
                  ToolBarContent="@ToolBarContent"
                  MultiSelection="@MultiSelection"
@@ -62,6 +64,10 @@
                  CurrentPage="@CurrentPage"
                  CurrentPageChanged="@HandleCurrentPageChanged">
     </MudDataGrid>
+    @if (StickyHorizontalScroll && GetPager() is null)
+    {
+        @StickyScrollBar
+    }
 </div>
 
 @code {
@@ -222,6 +228,19 @@
     /// Useful for grids with many columns.
     /// </summary>
     [Parameter] public bool HorizontalScrollbar { get; set; }
+
+    /// <summary>
+    /// Keeps the horizontal scrollbar pinned to the bottom of the viewport while the grid is taller than the screen,
+    /// without giving the grid a fixed height. A thin proxy scrollbar is rendered below the grid and synced with the
+    /// table; the native scrollbar is hidden only while the proxy is active.
+    /// </summary>
+    /// <remarks>
+    /// Opt-in, defaults to <c>false</c>. The bar only sticks to the viewport when no ancestor between the grid and the
+    /// page scroller clips or scrolls its content (<c>overflow</c> other than <c>visible</c>); otherwise it sticks to
+    /// that ancestor instead and a warning is written to the browser console. Not supported in right-to-left layouts.
+    /// Use the <c>--hui-datagrid-sticky-hscroll-bottom</c> CSS variable to offset the bar above a fixed footer.
+    /// </remarks>
+    [Parameter] public bool StickyHorizontalScroll { get; set; } = false;
     
     /// <summary>
     /// CSS class applied to the grid footer.
@@ -451,6 +470,15 @@
     private Dictionary<string, int> _defaultColumnOrder = new();
     private Dictionary<string, bool> _defaultColumnVisibility = new();
 
+    private ElementReference _host;
+    private IJSObjectReference? _stickyModule;
+    private IJSObjectReference? _stickyScroll;
+    private bool _stickyBusy;
+    private bool _stickyFailed;
+    private bool _stickyRestart;
+    private bool _stickyTarget;
+    private bool _disposed;
+
     public bool CanSaveAndLoad => EnableSettingsMenu && !string.IsNullOrWhiteSpace(Id);
 
     /// <summary>
@@ -477,6 +505,93 @@
             _defaultColumnOrder = GetColumnOrder();
             _defaultColumnVisibility = GetColumnVisibility();
             await LoadState();
+        }
+
+        await SyncStickyHorizontalScrollAsync();
+    }
+
+    // Initialised lazily so grids that don't opt in never load the module, and re-evaluated on every render so the
+    // parameter can be switched at runtime. JS problems degrade silently: the native scrollbar then stays visible.
+    // A render that arrives while a JS call is in flight is skipped; if it changed the parameter, the work is redone
+    // from scratch afterwards (the proxy bar element may have been replaced, so the old JS instance is released).
+    private async Task SyncStickyHorizontalScrollAsync()
+    {
+        if (_stickyBusy)
+        {
+            _stickyRestart |= StickyHorizontalScroll != _stickyTarget;
+            return;
+        }
+        _stickyBusy = true;
+        try
+        {
+            do
+            {
+                if (_stickyRestart) await ReleaseStickyScrollAsync();
+                _stickyRestart = false;
+                _stickyTarget = StickyHorizontalScroll;
+                if (_stickyTarget)
+                {
+                    if (_stickyScroll is null && !_stickyFailed && !_disposed)
+                    {
+                        _stickyModule ??= await JsRuntime.InvokeAsync<IJSObjectReference>(
+                            "import", "./_content/Hedin.UI/Components/DataGrid/HUIDataGrid.razor.js");
+                        _stickyScroll = await _stickyModule.InvokeAsync<IJSObjectReference?>("init", _host);
+                    }
+                }
+                else
+                {
+                    _stickyFailed = false;
+                    await ReleaseStickyScrollAsync();
+                }
+            } while (_stickyRestart && !_disposed);
+        }
+        catch (Exception ex) when (ex is JSException or JSDisconnectedException or InvalidOperationException or OperationCanceledException)
+        {
+            _stickyFailed = true;
+        }
+        finally
+        {
+            _stickyBusy = false;
+            // DisposeAsync ran while a JS call was in flight and left the cleanup to us.
+            if (_disposed) await DisposeStickyAsync();
+        }
+    }
+
+    private async Task ReleaseStickyScrollAsync()
+    {
+        var scroll = _stickyScroll;
+        _stickyScroll = null;
+        if (scroll is null) return;
+        try
+        {
+            await scroll.InvokeVoidAsync("dispose");
+            await scroll.DisposeAsync();
+        }
+        catch (Exception ex) when (ex is JSException or JSDisconnectedException or InvalidOperationException or OperationCanceledException)
+        {
+            // Element or circuit already gone; nothing to release.
+        }
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _disposed = true;
+        if (!_stickyBusy) await DisposeStickyAsync();
+    }
+
+    private async Task DisposeStickyAsync()
+    {
+        await ReleaseStickyScrollAsync();
+        var module = _stickyModule;
+        _stickyModule = null;
+        if (module is null) return;
+        try
+        {
+            await module.DisposeAsync();
+        }
+        catch (Exception ex) when (ex is JSException or JSDisconnectedException or InvalidOperationException or OperationCanceledException)
+        {
+            // circuit already gone
         }
     }
 
@@ -588,6 +703,26 @@
                    AllItemsText="@(PagerAllItemsText ?? string.Empty)"
                    PageSizeOptions="PagerPageSizeOptions" />
             : null);
+
+    // Proxy bar for StickyHorizontalScroll. Rendered by Blazor, never by JS: the module only reads the DOM and syncs
+    // scrollLeft. Hidden until the table overflows. The inner div is the spacer whose width JS sets to the scroll range.
+    private RenderFragment StickyScrollBar =>
+        @<div class="hui-datagrid-hscroll-bar" aria-hidden="true" tabindex="-1">
+            <div></div>
+        </div>;
+
+    // Places the proxy bar at the top of the pager slot, so it sits between the rows and the pager like the native bar.
+    // Without a pager it is rendered directly after the grid instead (see markup).
+    private RenderFragment? GetPagerWithStickyBar()
+    {
+        var pager = GetPager();
+        if (!StickyHorizontalScroll || pager is null) return pager;
+        return builder =>
+        {
+            builder.AddContent(0, StickyScrollBar);
+            builder.AddContent(1, pager);
+        };
+    }
     /// <summary>
     /// Force the state of the component to change.
     /// </summary>

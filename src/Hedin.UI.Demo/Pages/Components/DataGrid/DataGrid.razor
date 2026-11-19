@@ -11,4 +11,12 @@
     <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.DataGrid.Examples.LocalizedPagerGrid)">
         <MudText>Localized pager text using PagerRowsPerPageString, PagerInfoFormat, and PagerAllItemsText.</MudText>
     </DemoExample>
+    <DemoExample ComponentType="typeof(Hedin.UI.Demo.Pages.Components.DataGrid.Examples.StickyHorizontalScrollGrid)">
+        <MudText>
+            StickyHorizontalScroll keeps the horizontal scrollbar pinned to the bottom of the viewport on a tall, wide grid
+            without giving it a fixed height. Opt-in. It only sticks to the viewport if no ancestor between the grid and the
+            page scroller clips or scrolls its content; otherwise it sticks to that ancestor and a console warning is written.
+            Use the CSS variable --hui-datagrid-sticky-hscroll-bottom to offset it above a fixed footer.
+        </MudText>
+    </DemoExample>
 </DemoPageLayout>

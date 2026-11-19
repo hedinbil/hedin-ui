@@ -133,6 +133,12 @@ $field-gap: 12px;
     overflow: visible;
 }
 
+/* MudBlazor gives an open collapse's wrapper (expansion panels, MudCollapse) overflow-y: auto, which would make it the
+   scroll container of a sticky HUIDataGrid horizontal scrollbar instead of the page. Only grids that opted in render the bar. */
+.mud-collapse-entered .mud-collapse-wrapper:has(.hui-datagrid-hscroll-bar) {
+    overflow: visible;
+}
+
 /* Hiding g-maps labels */
 .gm-style .gm-style-cc {
     display: none !important;
