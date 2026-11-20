@@ -4,39 +4,37 @@
 @inject CodeBlockService cbService
 @inject SeoService SeoService
 
-<CascadingValue TValue="Type" Value="HUIComponent" Name="HUIComponent">
-    <PageTitle>Hedin UI - @_title</PageTitle>
-    <MudContainer MaxWidth="MaxWidth">
-        @if (!string.IsNullOrEmpty(OriginalDocsUrl))
+<PageTitle>Hedin UI - @_title</PageTitle>
+<MudContainer MaxWidth="MaxWidth">
+    @if (!string.IsNullOrEmpty(OriginalDocsUrl))
+    {
+        <span class="pa-3">
+            <MudLink Underline="Underline.Always" Class="cursor-pointer" Href="@OriginalDocsUrl" Target="_blank" Color="Color.Secondary">Open original docs</MudLink>
+        </span>
+    }
+    <MudTabs Class="mt-3" Elevation="4" Rounded="true" Border="true">
+        <MudTabPanel Text="Preview" Icon="@Icons.Material.Filled.Preview">
+            <HUIPage Header="@_title">
+                @ChildContent
+            </HUIPage>
+        </MudTabPanel>
+        @if(!string.IsNullOrWhiteSpace(_codeBlock))
         {
-            <span class="pa-3">
-                <MudLink Underline="Underline.Always" Class="cursor-pointer" Href="@OriginalDocsUrl" Target="_blank" Color="Color.Secondary">Open original docs</MudLink>
-            </span>
-        }
-        <MudTabs Class="mt-3" Elevation="4" Rounded="true" Border="true">
-            <MudTabPanel Text="Preview" Icon="@Icons.Material.Filled.Preview">
-                <HUIPage Header="@_title">
-                    @ChildContent
-                </HUIPage>
+            <MudTabPanel Text="Code" Icon="@Icons.Material.Filled.Code">
+
+                <CodeBlock Code="@_codeBlock"
+                           Language="CodeLanguage.Razor"
+                           EnableLineNumbers="true" />
             </MudTabPanel>
-            @if(!string.IsNullOrWhiteSpace(_codeBlock))
-            {
-                <MudTabPanel Text="Code" Icon="@Icons.Material.Filled.Code">
-    
-                    <CodeBlock Code="@_codeBlock"
-                               Language="CodeLanguage.Razor"
-                               EnableLineNumbers="true" />
-                </MudTabPanel>
-            }
-            @if (HUIComponent != null)
-            {
-                <MudTabPanel Text="API" Icon="@Icons.Material.Filled.Api">
-                    <ApiDocsList Type="HUIComponent" Children="ChildHUIComponent"></ApiDocsList>
-                </MudTabPanel>
-            }
-        </MudTabs>
-    </MudContainer>
-</CascadingValue>
+        }
+        @if (HUIComponent != null)
+        {
+            <MudTabPanel Text="API" Icon="@Icons.Material.Filled.Api">
+                <ApiDocsList Type="HUIComponent" Children="ChildHUIComponent"></ApiDocsList>
+            </MudTabPanel>
+        }
+    </MudTabs>
+</MudContainer>
 
 @code {
     [Parameter, EditorRequired] public RenderFragment? ChildContent { get; set; }

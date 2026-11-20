@@ -14,7 +14,6 @@
 
         public const string Guidelines = "/guidelines";
 
-        public const string AIChatBot = $"albot";
 
 
         public const string Components = "/components";

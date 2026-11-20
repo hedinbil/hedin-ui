@@ -645,9 +645,20 @@
     /// Apply the column visibility to the grid.
     /// </summary>
     /// <param name="visibility"></param>
+    [Obsolete("Use ApplyColumnVisibilityAsync. This overload does not wait for the columns to update.")]
     public void ApplyColumnVisibility(Dictionary<string, bool> visibility)
     {
-        TableStateService.ApplyColumnVisibility(InnerGridRef, visibility);
+        _ = ApplyColumnVisibilityAsync(visibility);
+    }
+
+    /// <summary>
+    /// Apply the column visibility to the grid. Columns missing from <paramref name="visibility"/> are shown.
+    /// </summary>
+    /// <param name="visibility">Column title to hidden flag.</param>
+    public async Task ApplyColumnVisibilityAsync(Dictionary<string, bool> visibility)
+    {
+        await TableStateService.ApplyColumnVisibilityAsync(InnerGridRef, visibility);
+        StateHasChanged();
     }
 
     /// <summary>
@@ -690,7 +701,7 @@
 
         await LocalStorage.SetSettings(settings);
         ApplyColumnOrder(_defaultColumnOrder);
-        ApplyColumnVisibility(_defaultColumnVisibility);
+        await ApplyColumnVisibilityAsync(_defaultColumnVisibility);
         StateHasChanged();
     }
 

@@ -1,3 +1,4 @@
+using Microsoft.Extensions.DependencyInjection;
 using Bunit;
 using Shouldly;
 using Hedin.UI.Tests.Base;
@@ -32,5 +33,21 @@ public class HUIExcelImportDialogTests : UiTestBase
 
         // Assert
         cut.FindComponent<MudDialog>().ShouldNotBeNull();
+    }
+
+    [Fact]
+    public async Task Renders_DropZone_With_DragDropText()
+    {
+        // Arrange
+        var provider = Render<MudDialogProvider>();
+        var dialogService = Services.GetRequiredService<IDialogService>();
+
+        // Act
+        await provider.InvokeAsync(() => dialogService.ShowAsync<HUIExcelImportDialog>("Import",
+            new DialogParameters<HUIExcelImportDialog> { { p => p.DragDropText, "Drop it here" } }));
+
+        // Assert: the drop zone must be rendered inside the file upload, not swallowed as an unknown attribute
+        var upload = provider.FindComponent<MudFileUpload<IReadOnlyList<IBrowserFile>>>();
+        upload.FindComponent<MudPaper>().Markup.ShouldContain("Drop it here");
     }
 }

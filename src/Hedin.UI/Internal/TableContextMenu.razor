@@ -1,5 +1,6 @@
 ﻿@inject InternaHUIlLocalizer Localizer
 @typeparam T
+@using MudBlazor.Extensions
 
 @if (DataGrid != null)
 {
@@ -18,7 +19,7 @@
                             var hideDisabled = IsHideDisabled(column);
                             var moveDisabled = IsMoveDisabled(column);
                             <span class="d-flex align-center gap-12 justify-space-between">
-                                <MudCheckBox T="bool" Value="!column.Hidden" ValueChanged="(v) => ToggleVisibility(column, v)" Size="Size.Small" Disabled="hideDisabled">@column.Title</MudCheckBox>
+                                <MudCheckBox T="bool" Value="!column.GetState(x => x.Hidden)" ValueChanged="(v) => ToggleVisibility(column, v)" Size="Size.Small" Disabled="hideDisabled">@column.Title</MudCheckBox>
                                 @if (!moveDisabled)
                                 {
                                     <span class="d-flex">
@@ -72,18 +73,11 @@
     }
     private async Task ToggleVisibility(Column<T> c, bool v)
     {
+        // Show/HideAsync update the column state and raise HiddenChanged; don't write the Hidden parameter.
         if (v)
-        {
             await c.ShowAsync();
-            c.Hidden = false;
-            await c.HiddenChanged.InvokeAsync(false);
-        }
         else
-        {
             await c.HideAsync();
-            c.Hidden = true;
-            await c.HiddenChanged.InvokeAsync(true);
-        }
         DataGrid.ForceStateChange();
     }
 

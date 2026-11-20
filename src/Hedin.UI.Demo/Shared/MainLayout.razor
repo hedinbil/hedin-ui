@@ -1,7 +1,6 @@
 ﻿@inherits LayoutComponentBase
 @inject IHUIPageHelper HUIPageHelper
 @inject IOptions<TitleService> TitleService
-@inject AiMessageStateService MessageService
 @inject ILocalStorageSettingsService LocalStorageSettings
 
 <HUIThemeProvider Theme="_currentTheme" />
@@ -24,7 +23,6 @@
                 <MudBadge Dot="true" Color="Color.Info" Overlap="true">
                     <HUIIconButton Icon="@Icons.Material.Outlined.Notifications" OnClick="ToggleNotifications"></HUIIconButton>
                 </MudBadge>
-                <HUIIconButton Icon="@Icons.Material.Outlined.SmartToy" OnClick="ToggleChat" Tooltip="Albot"></HUIIconButton>
             </span>
         </ChildContent>
     </HUIAppBar>
@@ -60,10 +58,6 @@
             }
 
         }
-        else if (_activeRightPane == RightPane.Chat)
-        {
-            <Chat @ref="chat" />
-        }
 
     </MudDrawer>
 </MudLayout>
@@ -72,7 +66,6 @@
 }
 
 @code {
-    Chat? chat;
     private string? _currentVersion => AssemblyName.GetAssemblyName(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Hedin.UI.dll")).Version?.ToString();
 
     private string _mainContainerClass => "px-3" + (_drawerLeftOpen ? " pl-md-0" : "");
@@ -138,7 +131,6 @@
     protected override async Task OnInitializedAsync()
     {
         _menuItems = await HUIPageHelper.GetMenuItems([typeof(App).Assembly]);
-        MessageService.OnMessage += async msg => await HandleAiMessage(msg);
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -161,30 +153,10 @@
             : RightPane.Notifications;
     }
 
-    void ToggleChat()
-    {
-        _activeRightPane =
-            _activeRightPane == RightPane.Chat
-            ? RightPane.None
-            : RightPane.Chat;
-    }
-
-    private async Task HandleAiMessage(string message)
-    {
-        _activeRightPane = RightPane.Chat;
-        await InvokeAsync(StateHasChanged);
-
-        await Task.Yield();
-        if (chat is not null)
-            await chat.Message(message);
-    }
-
-
     private enum RightPane
     {
         None,
-        Notifications,
-        Chat
+        Notifications
     }
 
 }

@@ -1,7 +1,4 @@
-﻿using Azure.AI.OpenAI;
-using Azure;
-using Azure.Identity;
-using Azure.Search.Documents;
+﻿using Azure.Identity;
 using Hedin.UI.Demo.Services;
 using Hedin.UI.Demo.Data;
 using MudBlazor;
@@ -14,63 +11,43 @@ public static class WebApplicationBuilderExtensions
 
     public static WebApplicationBuilder AddExternalServices(this WebApplicationBuilder builder)
     {
-
-        var externalResourceStatus = new ExternalResourceStatus();
         try
         {
-            builder
-                .AddKeyVault()
-                .AddAIChatBot();
+            builder.AddKeyVault();
         }
         catch (Exception e)
         {
             Console.WriteLine(e.ToString());
             Console.WriteLine("Failed to connect to keyvault. Running offline!");
-            externalResourceStatus.SetOffline();
         }
-        builder.Services.AddSingleton(externalResourceStatus);
         return builder;
-
     }
+
     public static WebApplicationBuilder AddKeyVault(this WebApplicationBuilder builder)
     {
 
         var keyVaultName = builder.Configuration.GetValue<string>("KeyVaultName");
         ArgumentException.ThrowIfNullOrWhiteSpace(keyVaultName);
-        builder.Configuration.AddAzureKeyVault(new Uri($"https://{keyVaultName}.vault.azure.net/"), new DefaultAzureCredential());
+        var credential = builder.Environment.IsDevelopment()
+            ? new DefaultAzureCredential(new DefaultAzureCredentialOptions
+            {
+                ExcludeManagedIdentityCredential = true,
+                ExcludeWorkloadIdentityCredential = true,
+                ExcludeEnvironmentCredential = true,
+            })
+            : new DefaultAzureCredential();
+        builder.Configuration.AddAzureKeyVault(new Uri($"https://{keyVaultName}.vault.azure.net/"), credential);
         return builder;
     }
-
-    public static WebApplicationBuilder AddAIChatBot(this WebApplicationBuilder builder)
-    {
-        builder.Services.AddSingleton(provider =>
-        {
-            var azureClient = new AzureOpenAIClient(
-                new Uri(builder.Configuration["AzureOpenAI:Endpoint"]!),
-                new AzureKeyCredential(builder.Configuration["AzureOpenAI:ApiKey"]!)
-            );
-            return azureClient;
-        });
-
-        // Register the ChatClient
-        builder.Services.AddSingleton(provider =>
-        {
-            var azureClient = provider.GetRequiredService<AzureOpenAIClient>();
-            return azureClient.GetChatClient(builder.Configuration["AzureOpenAI:DeploymentName"]!);
-        });
-
-        return builder;
-    }
-
-
 
     public static WebApplicationBuilder AddServices(this WebApplicationBuilder builder)
     {
         builder.Services.AddSingleton<CodeBlockService>();
         builder.Services.AddSingleton<MarkdownReader>();
         builder.Services.AddTransient<HUILocalizer>();
-        builder.Services.AddSingleton<AiMessageStateService>();
         builder.Services.AddScoped<CookieConsentService>();
+        builder.Services.AddScoped<SeoService>();
+        builder.Services.AddScoped<SitemapService>();
         return builder;
     }
     public static WebApplicationBuilder AddUIConfiguration(this WebApplicationBuilder builder)

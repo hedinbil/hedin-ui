@@ -2,7 +2,6 @@ using Hedin.UI;
 using Hedin.UI.Demo;
 using Hedin.UI.Demo.Configuration;
 using Hedin.UI.Demo.Services;
-using Hedin.UI.Demo.Services.MCP.Client;
 using Hedin.UI.Demo.Services.MCP.Server;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -12,7 +11,7 @@ builder
     .AddExternalServices()
     .AddUIConfiguration()
     .AddServices()
-    .AddSemanticAi();
+    .AddMcpServer();
 
 #if DEBUG
 builder.Services.AddSassCompiler();

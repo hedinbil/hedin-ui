@@ -1,5 +1,6 @@
 ﻿using Hedin.UI.Services;
 using MudBlazor;
+using MudBlazor.Extensions;
 
 internal interface ITableStateService
 {
@@ -7,7 +8,7 @@ internal interface ITableStateService
     Dictionary<string, int> GetColumnOrder<T>(MudDataGrid<T> grid);
     void ApplyColumnOrder<T>(MudDataGrid<T> grid, Dictionary<string, int> newOrder);
     Dictionary<string, bool> GetColumnVisibility<T>(MudDataGrid<T> grid);
-    void ApplyColumnVisibility<T>(MudDataGrid<T> grid, Dictionary<string, bool> visibility);
+    Task ApplyColumnVisibilityAsync<T>(MudDataGrid<T> grid, Dictionary<string, bool> visibility);
     Task UpdateState<T>(string id, MudDataGrid<T> grid);
 }
 
@@ -90,35 +91,31 @@ internal class TableStateService : ITableStateService
             {
                 title = $"Column_{i}";
             }
-            visibility[title] = grid.RenderedColumns[i].Hidden;
+            // Read the column's live state, not the Hidden parameter: HideAsync/ShowAsync update the state only.
+            visibility[title] = grid.RenderedColumns[i].GetState(x => x.Hidden);
         }
         return visibility;
     }
 
-    public void ApplyColumnVisibility<T>(MudDataGrid<T> grid, Dictionary<string, bool> visibility)
+    // HideAsync/ShowAsync update the column's state and raise HiddenChanged themselves, so the Hidden
+    // parameter must not be written here (MudBlazor overwrites parameters set from outside on the next render).
+    public async Task ApplyColumnVisibilityAsync<T>(MudDataGrid<T> grid, Dictionary<string, bool> visibility)
     {
-        for (int i = 0; i < grid.RenderedColumns.Count; i++)
+        // Copy first: awaiting HiddenChanged can re-render the grid and touch RenderedColumns.
+        var columns = grid.RenderedColumns.ToList();
+        for (int i = 0; i < columns.Count; i++)
         {
-            var column = grid.RenderedColumns[i];
+            var column = columns[i];
             var title = column.Title;
             if (string.IsNullOrWhiteSpace(title))
             {
                 title = $"Column_{i}";
             }
 
-            if (visibility.TryGetValue(title, out var hidden))
-            {
-                if (hidden)
-                    column.HideAsync();
-                else
-                    column.ShowAsync();
-                column.Hidden = hidden;
-                column.HiddenChanged.InvokeAsync(hidden);
-            }
+            if (visibility.TryGetValue(title, out var hidden) && hidden)
+                await column.HideAsync();
             else
-            {
-                column.Hidden = false;
-            }
+                await column.ShowAsync();
         }
     }
 
@@ -141,7 +138,7 @@ internal class TableStateService : ITableStateService
                     var newOrder = HandleColumnChanges(currentOrder, columnOrder);
 
                     ApplyColumnOrder(grid, newOrder);
-                    ApplyColumnVisibility(grid, columnVisibility ?? new Dictionary<string, bool>());
+                    await ApplyColumnVisibilityAsync(grid, columnVisibility ?? new Dictionary<string, bool>());
                 }
                 else
                 {
