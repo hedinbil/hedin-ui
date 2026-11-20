@@ -14,7 +14,7 @@ on:
 jobs:
   docker_build_push_acr:
     name: 'Docker Build and Push to ACR'
-    runs-on: linux-runner-arc
+    runs-on: ubuntu-latest
 
     environment: dev
     
@@ -56,7 +56,7 @@ jobs:
           
   deploy_to_dev:
     name: 'Deploy to dev'
-    runs-on: linux-runner-arc
+    runs-on: ubuntu-latest
     needs: docker_build_push_acr
     environment: dev
     defaults:
